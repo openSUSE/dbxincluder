@@ -2,6 +2,10 @@
 __pycache__/
 *.py[cod]
 
+# Kate
+*.kate-swp
+*.~
+
 # C extensions
 *.so
 
@@ -22,6 +26,8 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+tmp/
+.tmp/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
