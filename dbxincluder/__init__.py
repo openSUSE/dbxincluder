@@ -9,8 +9,8 @@
 # GNU General Public License for more details.
 #
 
-from dbxincluder.core import __version__
-from dbxincluder.cli import main
+from .core import __version__
+from .cli import main
 
 if __name__ == '__main__':
     sys.exit(main())
