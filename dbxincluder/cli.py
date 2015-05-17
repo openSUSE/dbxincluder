@@ -13,6 +13,7 @@
 """
 
 from .core import __version__, __package__
+from .xml import parsexml
 
 
 def parsecli(cliargs=None):
@@ -35,7 +36,8 @@ def parsecli(cliargs=None):
                         action='count',
                         help="Increase verbosity level"
                         )
-    parser.add_argument("files",
+    parser.add_argument("file",
+                        # nargs='+',
                         help="One or more DocBook XML files."
                         )
 
@@ -47,4 +49,6 @@ def main(cliargs=None):
 
     :param list cliargs: Arguments to parse or None (=use sys.argv)
     """
-    return parsecli(cliargs)
+    args = parsecli(cliargs)
+    print(args)
+    parsexml(args.file)
