@@ -15,7 +15,7 @@
 from .core import __version__, __package__
 
 
-def parsecli():
+def parsecli(cliargs=None):
     import argparse
     parser = argparse.ArgumentParser(prog=__package__,
                                      description=__doc__
@@ -34,7 +34,7 @@ def parsecli():
                         action='count',
                         help="Increase verbosity level"
                         )
-    return parser.parse_args()
+    return parser.parse_args(args=cliargs)
 
 def main():
     return parsecli()
