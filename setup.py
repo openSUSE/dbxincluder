@@ -24,13 +24,13 @@ PACKAGE = 'dbxincluder'
 here = path.abspath(path.dirname(__file__))
 
 def get_version(package):
-    """Returns the version number from __init__.py file in
+    """Returns the version number from core.py file in
        variable __version__
     """
     import re
     version_re = re.compile(r"^__version__ = [\"']([\w_.-]+)[\"']$")
     package_components = package.split('.')
-    init_path = path.join(here, *(package_components + ['__init__.py']))
+    init_path = path.join(here, *(package_components + ['core.py']))
     with open(init_path, 'r', 'utf-8') as f:
         for line in f:
             match = version_re.match(line[:-1])
@@ -110,8 +110,8 @@ setup(
         'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
 
         # Supported Python versions
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.2',
+        #'Programming Language :: Python :: 3',
+        #'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
 
@@ -137,10 +137,10 @@ setup(
     # dependencies). You can install these using the following syntax,
     # for example:
     # $ pip install -e .[dev,test]
-    # extras_require={
+    extras_require={
     #    'dev': ['check-manifest'],
-    #    'test': ['pytest', ],
-    #},
+        'test': ['pytest', ],
+    },
 
     # If there are data files included in your packages that need to be
     # installed, specify them here.  If using Python 2.6 or less, then these
@@ -169,7 +169,7 @@ setup(
     ],
 
     # Required packages for testing
-    test_suite='tests',
+    # test_suite='tests',
     tests_require=['pytest'],
 
     #
