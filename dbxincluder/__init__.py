@@ -10,11 +10,3 @@
 #
 
 from core import __version__
-
-
-NS = {
-    'trans': 'http://docbook.org/ns/transclusion',
-    'db': 'http://docbook.org/ns/docbook',
-    'xi': 'http://www.w3.org/2001/XInclude',
-    'local': 'http://www.w3.org/2001/XInclude/local-attributes',
-}

@@ -12,3 +12,11 @@ __author__ = "Thomas Schraitle"
 __author_email__ = "<tom_schr@web.de>"
 __url__ = "https://github.com/tomschr/dbxincluder"
 __license__ = "GPL 3.0"
+
+# Our namespaces
+NS = {
+    'trans': 'http://docbook.org/ns/transclusion',
+    'db':    'http://docbook.org/ns/docbook',
+    'xi':    'http://www.w3.org/2001/XInclude',
+    'local': 'http://www.w3.org/2001/XInclude/local-attributes',
+}
