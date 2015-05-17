@@ -1,3 +1,5 @@
+#
+# This program is free software; you can redistribute it and/or
 # modify it under the terms of version 3 of the GNU General Public License as
 # published by the Free Software Foundation.
 #
@@ -5,7 +7,6 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
-#
 
 __version__ = "0.0.0"
 __author__ = "Thomas Schraitle"
