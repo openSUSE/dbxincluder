@@ -12,6 +12,7 @@ __author__ = "Thomas Schraitle"
 __author_email__ = "<tom_schr@web.de>"
 __url__ = "https://github.com/tomschr/dbxincluder"
 __license__ = "GPL 3.0"
+__package__ = "dbxincluder"
 
 # Our namespaces
 NS = {

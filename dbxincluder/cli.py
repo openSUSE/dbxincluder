@@ -12,12 +12,12 @@
 """XInclude 1.1 transcluder
 """
 
-from core import __version__
+from .core import __version__, __package__
 
 
-def _parser():
+def parsecli():
     import argparse
-    parser = argparse.ArgumentParser(prog="foo",
+    parser = argparse.ArgumentParser(prog=__package__,
                                      description=__doc__
                                      )
 
@@ -37,4 +37,4 @@ def _parser():
     return parser.parse_args()
 
 def main():
-    return _parser()
+    return parsecli()
