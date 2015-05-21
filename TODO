@@ -8,7 +8,7 @@ Following items needs to be implemented
   * Scrutinizer: ok
 
 * Add services files for
-  * Travis CI (`.travis.yml`):
+  * Travis CI (`.travis.yml`): Ok
   * Landscape (`.landscape.yml`):
   * Scrutinizer (should/could be configured through their Web site)
 
