@@ -22,7 +22,7 @@ Status: Planning
 
 
 .. |landscape| image:: https://landscape.io/github/openSUSE/dbxincluder/master/landscape.svg?style=flat
-    :target: https://landscape.io/github/openSUSE/dbxincluder/master
+    :target: https://landscape.io/github/openSUSE/dbxincluder/develop
     :alt: Code Quality Status
 
 .. |scrutinizer| image:: https://img.shields.io/scrutinizer/g/openSUSE/dbxincluder/develop.svg?style=flat
