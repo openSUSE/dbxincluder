@@ -8,8 +8,7 @@ Status: Planning
     :stub-columns: 1
 
     * - tests
-      - | |travis| 
-        | |landscape| |scrutinizer|
+      - | |travis| |landscape| |scrutinizer|
 
 
 .. |travis| image:: http://img.shields.io/travis/openSUSE/dbxincluder/develop.svg?style=flat&label=Travis
@@ -45,6 +44,7 @@ Installation
 Documentation
 =============
 
+TBD, but use the sources in the docs folder
 .. 
     https://dbxincluder.readthedocs.org/
 
