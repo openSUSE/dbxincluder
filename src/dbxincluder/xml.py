@@ -26,40 +26,39 @@ def getxmlparser(**kwargs):
     :rtype: lxml.etree.XMLParser
     """
 
-    xmldict = dict(
-                # These values are "our":
-                remove_blank_text = False,
-                resolve_entities = False,
-                load_dtd         = False,
-                dtd_validation   = False,
-                ns_clean         = True,
-                # These are the default values:
-                encoding = None,
-                attribute_defaults = False,
-                no_network = True,
-                recover = False,
-                schema = None,
-                remove_comments = False,
-                remove_pis = False,
-                strip_cdata = True,
-                collect_ids = True,
-                target = None,
-                compact = True,
-        )
+    xmldict = dict( # These values are "our": # flake8: noqa
+                   remove_blank_text=False,
+                   resolve_entities=False,
+                   load_dtd=False,
+                   dtd_validation=False,
+                   ns_clean=True,
+                   # These are the default values:
+                   encoding=None,
+                   attribute_defaults=False,
+                   no_network=True,
+                   recover=False,
+                   schema=None,
+                   remove_comments=False,
+                   remove_pis=False,
+                   strip_cdata=True,
+                   collect_ids=True,
+                   target=None,
+                   compact=True,
+                   )
 
-    dictkeys = ('encoding',
-                'attribute_defaults',
-                'no_network',
-                'recover',
-                'schema',
-                'remove_blank_text',
-                'remove_comments',
-                'remove_pis',
-                'strip_cdata',
-                'collect_ids',
-                'target',
-                'compact',
-               )
+    # dictkeys = ('encoding',
+    #            'attribute_defaults',
+    #            'no_network',
+    #            'recover',
+    #            'schema',
+    #            'remove_blank_text',
+    #            'remove_comments',
+    #            'remove_pis',
+    #            'strip_cdata',
+    #            'collect_ids',
+    #            'target',
+    #            'compact',
+    #            )
 
     # Combine it with passed values from kwargs, but ignore any other
     # values
@@ -70,21 +69,23 @@ def getxmlparser(**kwargs):
     except KeyError:
         resolvers = []
 
+    parser = etree.XMLParser(**xmldict)
     for resolver in resolvers:
         parser.resolver.add(resolver)
-
-    parser =  etree.XMLParser(**xmldict)
     return parser
 
 
 def adjust_ids(tree):
     pass
 
+
 def adjust_idrefs(tree):
     pass
 
+
 def transclude_cleanup(tree):
     pass
+
 
 def transclude(tree):
     pass

@@ -9,8 +9,8 @@
 # GNU General Public License for more details.
 #
 
-from .core import __version__
 from .cli import main
+import sys
 
 if __name__ == '__main__':
     sys.exit(main())

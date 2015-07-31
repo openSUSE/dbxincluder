@@ -8,7 +8,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 
-__version__ = "0.0.0"
+__version__ = "0.1.0"
 __author__ = "Thomas Schraitle"
 __author_email__ = "<tom_schr@web.de>"
 __url__ = "https://github.com/tomschr/dbxincluder"
