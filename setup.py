@@ -25,7 +25,7 @@ def read(*names, **kwargs):
 setup(
     name='dbxincluder',
     version='0.1.0',
-    license='BSD',
+    license='GPL 3.0',
     description='Transclusions for DocBook with XInclude 1.1',
     long_description='%s\n%s' % (read('README.rst'), re.sub(':[a-z]+:`~?(.*?)`', r'``\1``', read('CHANGELOG.rst'))),
     author='Thomas Schraitle',
@@ -38,24 +38,25 @@ setup(
     zip_safe=False,
     classifiers=[
         # complete classifier list: http://pypi.python.org/pypi?%3Aaction=list_classifiers
-        'Development Status :: 5 - Production/Stable',
+        'Development Status :: 1 - Planning'
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: BSD License',
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+        'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
         'Operating System :: Unix',
         'Operating System :: POSIX',
         'Operating System :: Microsoft :: Windows',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.6',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: Implementation :: CPython',
-        'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Utilities',
+        'Topic :: Documentation',
+        'Topic :: Software Development :: Documentation',
     ],
     keywords=[
         # eg: 'keyword1', 'keyword2', 'keyword3',
+        "docbook", "xinclude"
     ],
     install_requires=[
         # eg: 'aspectlib==1.1.1', 'six>=1.7',
