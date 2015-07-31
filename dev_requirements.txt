@@ -3,5 +3,7 @@
 -rrequirements.txt
 pytest
 pytest-capturelog
+flake8
+pep8-naming
 coverage
 coveralls
