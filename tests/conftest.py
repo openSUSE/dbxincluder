@@ -25,7 +25,7 @@ testdir = py.path.local(py.path.local(__file__).dirname)
 
 # Add current directory; this makes it possible to import all
 # docmanager related files
-sys.path.append('.')
+# sys.path.append('.')
 
 # ------------------------------------------------------
 # Markers

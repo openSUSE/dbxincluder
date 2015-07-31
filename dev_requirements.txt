@@ -1,0 +1,7 @@
+#
+#
+-rrequirements.txt
+pytest
+pytest-capturelog
+coverage
+coveralls
