@@ -21,7 +21,7 @@ Status: Planning
         :target: https://ci.appveyor.com/project/openSUSE/dbxincluder
 
 
-.. |landscape| image:: https://landscape.io/github/openSUSE/dbxincluder/master/landscape.svg?style=flat
+.. |landscape| image:: https://landscape.io/github/openSUSE/dbxincluder/develop/landscape.svg?style=flat
     :target: https://landscape.io/github/openSUSE/dbxincluder/develop
     :alt: Code Quality Status
 
@@ -45,6 +45,7 @@ Documentation
 =============
 
 TBD, but use the sources in the docs folder
+
 .. 
     https://dbxincluder.readthedocs.org/
 
