@@ -9,6 +9,7 @@
 # GNU General Public License for more details.
 #
 
+from .core import __version__# flake8: noqa
 from .cli import main
 import sys
 
