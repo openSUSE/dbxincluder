@@ -12,7 +12,7 @@
 """XInclude 1.1 transcluder
 """
 
-from .core import __version__, __package__
+from .core import __version__
 from .xml import parsexml
 
 
@@ -24,7 +24,7 @@ def parsecli(cliargs=None):
     :rtype: argparse.Namespace
     """
     import argparse
-    parser = argparse.ArgumentParser(prog=__package__,
+    parser = argparse.ArgumentParser(prog='dbxincluder',
                                      description=__doc__
                                      )
 
