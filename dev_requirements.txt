@@ -4,6 +4,7 @@
 pytest
 pytest-capturelog
 flake8
+flake8-todo
 pep8-naming
 coverage
 coveralls
