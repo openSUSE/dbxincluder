@@ -2,9 +2,10 @@
 __pycache__/
 *.py[cod]
 
-# Kate
+# Kate, vi
 *.kate-swp
 *.~
+*.swp
 
 # C extensions
 *.so
@@ -60,6 +61,7 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
+docs/.build/
 
 # PyBuilder
 target/
