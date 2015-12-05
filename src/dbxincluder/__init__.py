@@ -13,5 +13,12 @@ from .core import __version__# flake8: noqa
 from .cli import main
 import sys
 
+"""
+.. module:: dbxincluder
+   :synopsis: resolve any XInclude elements
+
+.. moduleauthor:: Thomas Schraitle
+"""
+
 if __name__ == '__main__':
     sys.exit(main())

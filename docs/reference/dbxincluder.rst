@@ -1,5 +1,0 @@
-dbxincluder
-===========
-
-.. automodule:: dbxincluder
-    :members:
