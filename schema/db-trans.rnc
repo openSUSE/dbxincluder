@@ -1,0 +1,67 @@
+#
+# DocBook Schema with Transclusion attributes
+#
+
+default namespace db = "http://docbook.org/ns/docbook"
+
+namespace a = "http://relaxng.org/ns/compatibility/annotations/1.0"
+namespace ctrl = "http://nwalsh.com/xmlns/schema-control/"
+namespace html = "http://www.w3.org/1999/xhtml"
+namespace mml = "http://www.w3.org/1998/Math/MathML"
+namespace svg = "http://www.w3.org/2000/svg"
+namespace s = "http://www.ascc.net/xml/schematron"
+namespace xlink = "http://www.w3.org/1999/xlink"
+namespace local = ""
+
+#
+namespace trans = "http://docbook.org/ns/transclusion"
+namespace localattr = "http://www.w3.org/2001/XInclude/local-attributes"
+namespace xi = "http://www.w3.org/2001/XInclude"
+
+datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes"
+
+div {
+  db.xi.suffix.attribute =
+    ## This attribute defines the value of the suffix property used when
+    ## trans:idfixup="suffix".
+    attribute trans:suffix { text }
+
+  db.xi.fixup.attribute =
+    ## Defines the 
+    attribute trans:idfixup {
+      ## The suffix property is set to an empty string.
+      "none" |
+      ## The suffix property is set to the concatenation of the inherited
+      ## suffix value and the value specified in the trans:suffix attribute.
+      "suffix" |
+      ## The suffix property is set to a unique value for each element.
+      "auto"
+    }
+
+  db.xi.linkscope.attribute =
+    ## This attribute defines the value of the suffix property used when
+    ## trans:idfixup="suffix".
+    attribute trans:linkscope {
+      ## No adjustment is made.
+      "user" |
+      ## The value of the suffix property is added to every ID reference as a suffix.
+      "local" |
+      ## Each ID reference is adjusted to point to the closest element that has a matching ID.
+      "near" |
+      ## Each ID reference is adjusted to point to the first element in document order that has a matching ID.
+      "global"
+    }
+}
+
+include "docbookxi.rnc" {
+
+div {
+  db.any.other.attribute = attribute * - (local:* | trans:*) { text }
+
+  db.xi.include.attlist &=
+    db.xi.suffix.attribute*,
+    db.xi.linkscope.attribute*,
+    db.xi.fixup.attribute*,
+    db.any.other.attribute*
+  }
+}
