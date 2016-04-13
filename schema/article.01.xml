@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="file:/local/repos/GH/dbxincluder/schema/db-trans.rnc" type="application/relax-ng-compact-syntax"?>
+<article version="5.1"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:tr="http://docbook.org/ns/transclusion"
+         xmlns:local="http://www.w3.org/2001/XInclude/local-attributes"
+         xmlns:xi="http://www.w3.org/2001/XInclude">
+ <title>Sample Article</title>
+ <para></para>
+ <xi:include href="x.xml" local:os="foo"/>
+</article>
