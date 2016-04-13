@@ -1,4 +1,5 @@
 import os
+import sys
 import pytest
 
 import dbxincluder
@@ -21,7 +22,19 @@ def test_help(capsys):
     capsys.readouterr()
 
 
+def test_stdin(capsys):
+    location = os.path.dirname(os.path.realpath(__file__))
+    stdin = sys.stdin # Mock stdin
+    sys.stdin = open(location + "/cases/basicxml.case.xml")
+    outputxml = open(location + "/cases/basicxml.case.xml").read()
+    ret = dbxincluder.main(["", "-"])
+    sys.stdin.close()
+    sys.stdin = stdin
+    assert ret == 0
+    assert capsys.readouterr()[0] == outputxml
+
+
 def test_xml(xmltestcase):
-    input = open(xmltestcase).read()
-    output = open(xmltestcase[:-8] + "out.xml").read()
-    assert dbxincluder.process_xml(input) == output
+    inputxml = open(xmltestcase).read()
+    outputxml = open(xmltestcase[:-8] + "out.xml").read()
+    assert dbxincluder.process_xml(inputxml) == outputxml

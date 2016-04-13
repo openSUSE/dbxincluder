@@ -31,8 +31,7 @@ def process_xml(xml):
 def main(argv=None):
     """Default entry point.
     Parses argv (sys.argv if None) and does stuff."""
-    if argv is None:
-        argv = sys.argv
+    argv = argv if argv else sys.argv
 
     if len(argv) != 2 or "--help" in argv:
         # Print usage
@@ -50,10 +49,10 @@ def main(argv=None):
 
     try:
         file = sys.stdin if argv[1] == "-" else open(argv[1], "r")
-        input = file.read()
+        inputxml = file.read()
     except IOError as ioex:
         sys.stderr.write("Could not read {0!r}: {1}!\n".format(argv[1], ioex.strerror))
         return 1
 
-    sys.stdout.write(process_xml(input))
+    sys.stdout.write(process_xml(inputxml))
     return 0
