@@ -16,10 +16,16 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
+"""Main module. Contains everything needed to transclude."""
+
+import sys
 
 __version__ = "0.0"
 
-import sys
+
+def process_xml(xml):
+    """Does nothing"""
+    return xml
 
 
 def main(argv=None):
@@ -32,11 +38,22 @@ def main(argv=None):
         # Print usage
         print("dbxincluder {0}".format(__version__))
         print("""Usage:
-              \tdbxincluder --help
-              \tdbxincluder --version
-              \tdbxincluder <xml file>""")
+\tdbxincluder --help    \tPrint help
+\tdbxincluder --version \tPrint version
+\tdbxincluder <xml file>\tProcess file and output to STDOUT
+\tdbxincluder -         \tProcess STDIN and output to STDOUT""")
         return 2
     elif argv[1] == "--version":
         # Print version
         print("dbxincluder {0}".format(__version__))
         return 0
+
+    try:
+        file = sys.stdin if argv[1] == "-" else open(argv[1], "r")
+        input = file.read()
+    except IOError as ioex:
+        sys.stderr.write("Could not read {0!r}: {1}!\n".format(argv[1], ioex.strerror))
+        return 1
+
+    sys.stdout.write(process_xml(input))
+    return 0

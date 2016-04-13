@@ -19,3 +19,9 @@ def test_version(capsys):
 def test_help(capsys):
     assert dbxincluder.main(["", "--help"]) == 2
     capsys.readouterr()
+
+
+def test_xml(xmltestcase):
+    input = open(xmltestcase).read()
+    output = open(xmltestcase[:-8] + "out.xml").read()
+    assert dbxincluder.process_xml(input) == output

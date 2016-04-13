@@ -16,8 +16,11 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
-import dbxincluder
+"""This file is responsible for getting the invocation
+   as module working: python3 -m dbxincluder"""
+
 import sys
+import dbxincluder
 
 if __name__ == "__main__":
     sys.exit(dbxincluder.main(sys.argv))
