@@ -19,9 +19,16 @@
 
 __version__ = "0.0"
 
+import sys
 
-def main(argv):
-    if len(argv) != 1 or "--help" in argv:
+
+def main(argv=None):
+    """Default entry point.
+    Parses argv (sys.argv if None) and does stuff."""
+    if argv is None:
+        argv = sys.argv
+
+    if len(argv) != 2 or "--help" in argv:
         # Print usage
         print("dbxincluder {0}".format(__version__))
         print("""Usage:
@@ -29,7 +36,7 @@ def main(argv):
               \tdbxincluder --version
               \tdbxincluder <xml file>""")
         return 2
-    elif argv[0] == "--version":
+    elif argv[1] == "--version":
         # Print version
         print("dbxincluder {0}".format(__version__))
         return 0

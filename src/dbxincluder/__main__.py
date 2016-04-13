@@ -20,4 +20,4 @@ import dbxincluder
 import sys
 
 if __name__ == "__main__":
-    sys.exit(dbxincluder.main(sys.argv[1:]))
+    sys.exit(dbxincluder.main(sys.argv))
