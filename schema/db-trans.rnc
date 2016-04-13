@@ -41,6 +41,7 @@ div {
   db.xi.linkscope.attribute =
     ## This attribute defines the value of the suffix property used when
     ## trans:idfixup="suffix".
+    [ a:defaultValue = "near" ]
     attribute trans:linkscope {
       ## No adjustment is made.
       "user" |
@@ -58,7 +59,15 @@ include "docbookxi.rnc" {
 div {
   db.any.other.attribute = attribute * - (local:* | trans:*) { text }
 
-  db.xi.include.attlist &=
+  db.xi.include.attlist =
+    attribute href {
+      xsd:anyURI { pattern = "[^#]+" }
+    }?,
+    [ a:defaultValue = "xml" ] attribute parse { "xml" | "text" }?,
+    attribute xpointer { text }?,
+    attribute encoding { text }?,
+    attribute accept { text }?,
+    attribute accept-language { text }?,
     db.xi.suffix.attribute*,
     db.xi.linkscope.attribute*,
     db.xi.fixup.attribute*,
