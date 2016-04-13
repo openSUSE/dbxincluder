@@ -1,0 +1,14 @@
+include .bumpversion.cfg
+include .coverage*
+include .landscape.yml
+include .travis.yml
+include *requirements.txt
+include tox.ini
+include *.md
+include LICENSE
+
+graft tests
+
+recursive-include src
+
+global-exclude *.py[cod] __pycache__ *.so *.dylib *~ *.bak

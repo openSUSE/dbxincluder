@@ -49,7 +49,6 @@ setup(
     version='0.1.0',
     license='GPL 3.0',
     description='Transclusions for DocBook with XInclude 1.1',
-    long_description='%s' % read('README.md'),
     author='Thomas Schraitle',
     author_email='toms@opensuse.org',
     url='https://github.com/openSUSE/dbxincluder',
