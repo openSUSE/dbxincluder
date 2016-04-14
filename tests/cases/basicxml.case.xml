@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="basicxml" xml:base="a-an.xml">
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="basicxml" xml:base="basicxml.case.xml">
     <title>Basic XML</title>
     <para xml:id="an.id">
         This should not be a problem for any parser.
