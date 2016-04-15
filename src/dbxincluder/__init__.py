@@ -91,10 +91,10 @@ def handle_xinclude(elem, base_url, file=None):
     # Include as text
     if elem.get("parse", "xml") != "xml":
         prev = elem.getprevious()
-        if prev:
-            prev.tail += content + saved_tail
+        if prev is not None:
+            prev.tail += str(content, encoding="utf-8") + saved_tail
         else:
-            elem.getparent().text += content + saved_tail
+            elem.getparent().text += str(content, encoding="utf-8") + saved_tail
         return
 
     # Parse as XML

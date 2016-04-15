@@ -43,7 +43,7 @@ def test_target():
     with pytest.raises(dbxincluder.DBXIException):
         dbxincluder.get_target(lxml.etree.fromstring("<xinclude href='nonexistant'/>"), os.path.curdir)
     with pytest.raises(dbxincluder.DBXIException):
-        dbxincluder.get_target(lxml.etree.fromstring("<xinclude href='nonexistant'/>"), 'file://' + os.path.curdir)
+        dbxincluder.get_target(lxml.etree.fromstring("<xinclude href='nonexistant'/>"), 'file://' + os.path.abspath(os.path.curdir) + "/")
 
     # Try to load this file
     quine = "<xinclude href={0!r}/>".format(os.path.relpath(__file__))
@@ -53,5 +53,10 @@ def test_target():
 def test_xml(xmltestcase):
     """Runs one XML testcase"""
     inputxml = open(xmltestcase, "rb").read()
-    outputxml = open(xmltestcase[:-8] + "out.xml", "r").read()
-    assert dbxincluder.process_xml(inputxml, os.path.relpath(xmltestcase), xmltestcase) == outputxml
+    filepart = xmltestcase[:-8]
+    outputxml = open(filepart + "out.xml", "r").read() if os.path.isfile(filepart + "out.xml") else ""
+    outputerr = open(filepart + "err.xml", "r").read() if os.path.isfile(filepart + "err.xml") else ""
+    try:
+        assert dbxincluder.process_xml(inputxml, os.path.relpath(xmltestcase), os.path.relpath(xmltestcase)) == outputxml
+    except dbxincluder.DBXIException as exc:
+        assert str(exc) + "\n" == outputerr

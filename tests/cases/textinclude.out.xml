@@ -1,0 +1,28 @@
+<article xmlns="http://docbook.org/ns/docbook" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:base="tests/cases/textinclude.case.xml">
+  <title>Transclusions demo</title>
+  &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;sect1 version="5.0"
+    xmlns="http://docbook.org/ns/docbook"&gt;
+    &lt;sect2 xml:id="sec.first"&gt;
+        &lt;para&gt;First section!&lt;/para&gt;
+    &lt;/sect2&gt;
+    &lt;sect2 xml:id="sec.ond"&gt;
+        &lt;para&gt;Second section!&lt;/para&gt;
+    &lt;/sect2&gt;
+&lt;/sect1&gt;
+
+  <xi:include href="xinclude1.xml" parse="text"/><sect1>
+    Here it comes again: &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;sect1 version="5.0"
+    xmlns="http://docbook.org/ns/docbook"&gt;
+    &lt;sect2 xml:id="sec.first"&gt;
+        &lt;para&gt;First section!&lt;/para&gt;
+    &lt;/sect2&gt;
+    &lt;sect2 xml:id="sec.ond"&gt;
+        &lt;para&gt;Second section!&lt;/para&gt;
+    &lt;/sect2&gt;
+&lt;/sect1&gt;
+
+    That was it.
+  <xi:include href="xinclude1.xml" parse="text"/></sect1>
+</article>
