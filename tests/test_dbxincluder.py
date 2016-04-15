@@ -23,7 +23,8 @@ def test_help(capsys):
 
 
 def test_stdin(capsys):
-    location = os.path.dirname(os.path.realpath(__file__))
+    # Use relative paths to ensure the output looks always the same
+    location = os.path.relpath(os.path.dirname(os.path.realpath(__file__)))
     stdin = sys.stdin  # Mock stdin
     sys.stdin = open(location + "/cases/basicxml.case.xml")
     outputxml = open(location + "/cases/basicxml.out.xml").read()
@@ -37,4 +38,4 @@ def test_stdin(capsys):
 def test_xml(xmltestcase):
     inputxml = open(xmltestcase, "rb").read()
     outputxml = open(xmltestcase[:-8] + "out.xml", "r").read()
-    assert dbxincluder.process_xml(inputxml, os.path.dirname(xmltestcase)) == outputxml
+    assert dbxincluder.process_xml(inputxml, os.path.relpath(os.path.dirname(xmltestcase)), xmltestcase) == outputxml

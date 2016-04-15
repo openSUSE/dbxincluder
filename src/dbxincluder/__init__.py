@@ -27,10 +27,15 @@ __version__ = "0.0"
 
 
 class DBXIException(Exception):
-    pass
+    """ Exception type for XML errors"""
+    def __init__(self, elem, message=None, file=None):
+        file = file if file is not None else ""
+        message = ": " + message if message else ""
+        self.error = "Error at {0}:{1}{2}".format(file, elem.sourceline, message)
+        super(Exception, self).__init__(self.error)
 
 
-def handle_xinclude(elem, base_url):
+def handle_xinclude(elem, base_url, file=None):
     """Process the xi:include tag elem"""
     assert elem.tag == "{http://www.w3.org/2001/XInclude}include", "Not an XInclude"
     assert elem.getparent() is not None, "XInclude without parent"
@@ -38,7 +43,7 @@ def handle_xinclude(elem, base_url):
     # Get href
     href = elem.get("href")
     if href is None:
-        raise DBXIException("Missing href in {0}:{1}".format(base_url, elem.sourceline))
+        raise DBXIException(elem, "Missing href attribute", file)
 
     # Get base (nearest xml:base or current directory)
     base_urls = elem.xpath("./ancestor-or-self::*[@xml:base][1]/@xml:base",
@@ -46,19 +51,19 @@ def handle_xinclude(elem, base_url):
 
     base_url = base_urls[0] if len(base_urls) == 1 else base_url
     if base_url is None:
-        raise DBXIException("Could not get base URL for {0}:{1}".format(base_url, elem.sourceline))
+        raise DBXIException(elem, "Could not get base URL", file)
 
     # Build full URL
     url = base_url + "/" + href
 
     try:
-        target = urllib.request.urlopen(base_url)
-    except ValueError:
         try:
+            target = urllib.request.urlopen(base_url)
+        except ValueError:
             # Add file:// for URLs without scheme
             target = urllib.request.urlopen("file://" + os.path.abspath(url))
-        except ValueError as exc:
-            raise DBXIException("Could not get target for {0}:{1}: {2}".format(base_url, elem.sourceline, exc.args[0]))
+    except urllib.error.URLError:
+        raise DBXIException(elem, "Could not get target {0!r}".format(url), file)
 
     # Load, parse and process subtree
     subtree = lxml.etree.fromstring(target.read())
@@ -67,7 +72,8 @@ def handle_xinclude(elem, base_url):
     # Replace XInclude by subtree
     elem.getparent().replace(elem, subtree)
 
-def process_tree(tree, base_url=None):
+
+def process_tree(tree, base_url=None, file=None):
     """Processes an ElementTree:
        - Search and process xi:include
        - Replace xml:id (TODO)
@@ -78,19 +84,19 @@ def process_tree(tree, base_url=None):
 
     for elem in tree.getiterator():
         if elem.tag == "{http://www.w3.org/2001/XInclude}include":
-            handle_xinclude(elem, base_url)
+            handle_xinclude(elem, base_url, file)
 
     return tree
 
 
-def process_xml(xml, base_url=None):
+def process_xml(xml, base_url=None, file=None):
     """Does nothing"""
     if not isinstance(xml, bytes):
         xml = bytes(xml, encoding="UTF-8")
 
     tree = lxml.etree.fromstring(xml)
 
-    tree = process_tree(tree, base_url)
+    tree = process_tree(tree, base_url, file)
 
     return lxml.etree.tostring(tree.getroottree(), encoding='unicode',
                                pretty_print=True)
@@ -116,6 +122,7 @@ def main(argv=None):
         return 0
 
     base_url = None if argv[1] == "-" else os.path.dirname(argv[1])
+    path = "<stdin>" if argv[1] == "-" else argv[1]
     try:
         file = sys.stdin if argv[1] == "-" else open(argv[1], "r")
         inputxml = file.read()
@@ -123,5 +130,10 @@ def main(argv=None):
         sys.stderr.write("Could not read {0!r}: {1}!\n".format(argv[1], ioex.strerror))
         return 1
 
-    sys.stdout.write(process_xml(inputxml, base_url))
+    try:
+        sys.stdout.write(process_xml(inputxml, base_url, path))
+    except DBXIException as exc:
+        sys.stderr.write(str(exc) + "\n")
+        return 1
+
     return 0

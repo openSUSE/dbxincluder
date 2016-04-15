@@ -1,6 +1,6 @@
-<article xmlns="http://docbook.org/ns/docbook" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:base="/home/fabian/doku/dbxincluder/tests/cases">
+<article xmlns="http://docbook.org/ns/docbook" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:base="tests/cases">
   <title>Transclusions demo</title>
-  <sect1 version="5.0" xml:base="/home/fabian/doku/dbxincluder/tests/cases">
+  <sect1 version="5.0" xml:base="tests/cases">
     <sect2 xml:id="sec.first">
         <para>First section!</para>
     </sect2>
