@@ -1,4 +1,4 @@
-Style checker for SUSE documentation
+Non-XInclude conformant preprocessor
 ====================================
 
 [![Build Status](https://travis-ci.org/openSUSE/dbxincluder.svg)](https://travis-ci.org/openSUSE/dbxincluder)
