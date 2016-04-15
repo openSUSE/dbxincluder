@@ -106,6 +106,10 @@ def handle_xinclude(elem, base_url, file=None):
                                 namespaces={'xml': "http://www.w3.org/XML/1998/namespace"})
         if len(subtree) == 1:
             subtree = subtree[0]
+            # Get xml:base of subdocument
+            base_urls = subtree.xpath("ancestor-or-self::*[@xml:base][1]/@xml:base",
+                                      namespaces={'xml': "http://www.w3.org/XML/1998/namespace"})
+            url = base_urls[0] if len(base_urls) == 1 else url
         else:
             raise DBXIException(elem, "Could not find fragid {0!r} in target {1!r}".format(fragid, url), file)
 
