@@ -7,14 +7,14 @@
     </info>
     <para>The latest version of
         <application>
-            <xi:include href="definitions.xml" xpointer="product-name"/>
+            <xi:include href="definitions.xml" fragid="product-name"/>
         </application> from
-        <xi:include href="definitions.xml" xpointer="corp-name"/>
+        <xi:include href="definitions.xml" fragid="corp-name"/>
         is
-        <xi:include href="definitions.xml" xpointer="product-version"/>.
+        <xi:include href="definitions.xml" fragid="product-version"/>.
     </para>
     <para>You can buy
-        <xi:include href="definitions.xml" xpointer="product-name"/>
+        <xi:include href="definitions.xml" fragid="product-name"/>
         in our on-line store.
     </para>
 </article>

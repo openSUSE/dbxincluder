@@ -1,0 +1,17 @@
+<article xmlns="http://docbook.org/ns/docbook" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:base="tests/cases/transclusion.case.xml">
+    <info>
+        <title>Transclusions demo</title>
+    </info>
+    <para>The latest version of
+        <application>
+            <phrase xml:id="product-name" xml:base="tests/cases/definitions.xml">FooWiz</phrase>
+        </application> from
+        <phrase xml:id="corp-name" xml:base="tests/cases/definitions.xml">ACME Inc.</phrase>
+        is
+        <phrase xml:id="product-version" xml:base="tests/cases/definitions.xml">3.14</phrase>.
+    </para>
+    <para>You can buy
+        <phrase xml:id="product-name" xml:base="tests/cases/definitions.xml">FooWiz</phrase>
+        in our on-line store.
+    </para>
+</article>

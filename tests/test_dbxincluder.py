@@ -2,6 +2,7 @@ import os.path
 import sys
 import pytest
 
+import lxml.etree
 import dbxincluder
 
 
@@ -23,6 +24,7 @@ def test_help(capsys):
 
 
 def test_stdin(capsys):
+    """Test whether it handles stdin correctly"""
     # Use relative paths to ensure the output looks always the same
     location = os.path.relpath(os.path.dirname(os.path.realpath(__file__)))
     stdin = sys.stdin  # Mock stdin
@@ -35,7 +37,21 @@ def test_stdin(capsys):
     assert capsys.readouterr()[0] == outputxml
 
 
+def test_target():
+    """Test dbxincluder.get_target"""
+    # xi: namespace not looked at by get_target
+    with pytest.raises(dbxincluder.DBXIException):
+        dbxincluder.get_target(lxml.etree.fromstring("<xinclude href='nonexistant'/>"), os.path.curdir)
+    with pytest.raises(dbxincluder.DBXIException):
+        dbxincluder.get_target(lxml.etree.fromstring("<xinclude href='nonexistant'/>"), 'file://' + os.path.curdir)
+
+    # Try to load this file
+    quine = "<xinclude href={0!r}/>".format(os.path.relpath(__file__))
+    assert dbxincluder.get_target(lxml.etree.fromstring(quine), os.path.curdir+"/")[0] == open(__file__, "rb").read()
+
+
 def test_xml(xmltestcase):
+    """Runs one XML testcase"""
     inputxml = open(xmltestcase, "rb").read()
     outputxml = open(xmltestcase[:-8] + "out.xml", "r").read()
-    assert dbxincluder.process_xml(inputxml, os.path.relpath(os.path.dirname(xmltestcase)), xmltestcase) == outputxml
+    assert dbxincluder.process_xml(inputxml, os.path.relpath(xmltestcase), xmltestcase) == outputxml

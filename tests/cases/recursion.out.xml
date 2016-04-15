@@ -1,0 +1,12 @@
+<article xmlns="http://docbook.org/ns/docbook" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:base="tests/cases/recursion.case.xml">
+  <title>Transclusions demo</title>
+  <sect1 version="5.0" xml:base="tests/cases/subdir/recursion.xml">
+  <title>Recursion worked</title>
+  <para xml:id="recpara" xml:base="tests/cases/subdir/subdir2/endrecursion.xml">
+  Recursion 2 worked
+</para>
+  <para xml:id="recpara" xml:base="tests/cases/subdir/subdir2/endrecursion.xml">
+  Recursion 2 worked
+</para>
+</sect1>
+</article>
