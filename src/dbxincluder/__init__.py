@@ -35,8 +35,8 @@ class DBXIException(Exception):
         super().__init__(self.error)
 
 
-def copy_attributes(elem, subtree, file=None):
-    """Modifies subtree according to 
+def copy_attributes(elem, subtree):
+    """Modifies subtree according to
     https://www.w3.org/XML/2012/08/xinclude-11/Overview.html#attribute-copying
     with the attributes of elem. Does not return anything.
     :param file: URL of the document elem is located in."""
@@ -145,7 +145,7 @@ def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
                                 .format(fragid, url))
 
     # Copy certain attributes from xi:include to the target tree
-    copy_attributes(elem, subtree, file)
+    copy_attributes(elem, subtree)
 
     subtree.tail = saved_tail
     process_tree(subtree, url, url, xinclude_stack + [xinclude_id])
@@ -157,7 +157,6 @@ def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
 def process_tree(tree, base_url=None, file=None, xinclude_stack=None):
     """Processes an ElementTree:
        - Search and process xi:include
-       - Replace xml:id (TODO)
        - Add xml:base (=source) to the root element"""
 
     if base_url and not tree.get("{http://www.w3.org/XML/1998/namespace}base"):
@@ -169,7 +168,7 @@ def process_tree(tree, base_url=None, file=None, xinclude_stack=None):
 
 
 def process_xml(xml, base_url=None, file=None):
-    """Does nothing"""
+    """Same as process_tree, but input and output is text"""
     if not isinstance(xml, bytes):
         xml = bytes(xml, encoding="UTF-8")
 
