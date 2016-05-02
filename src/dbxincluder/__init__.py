@@ -35,6 +35,29 @@ class DBXIException(Exception):
         super().__init__(self.error)
 
 
+def copy_attributes(elem, subtree, file=None):
+    """Modifies subtree according to 
+    https://www.w3.org/XML/2012/08/xinclude-11/Overview.html#attribute-copying
+    with the attributes of elem. Does not return anything.
+    :param file: URL of the document elem is located in."""
+
+    # Iterate all attributes
+    for name, value in elem.items():
+        if name == "set-xml-id":
+            # Override/Remove xml:id on all top-level elements
+            value = value if len(value) else None
+            subtree.set("{http://www.w3.org/XML/1998/namespace}id", value)
+        elif name.startswith("{http://www.w3.org/2001/XInclude/local-attributes}"):
+            # Set attribute on all top-level elements
+            subtree.set(name[len("{http://www.w3.org/2001/XInclude/local-attributes}"):], value)
+        elif name.startswith("{http://www.w3.org/XML/1998/namespace}"):
+            # Ignore xml: namespace
+            continue
+        elif name.startswith("{"):
+            # Set attribute on all top-level elements
+            subtree.set(name, value)
+
+
 def get_target(elem, base_url, file=None):
     """Return (the content of the target document as string, the URL that was used)
     :param elem: XInclude element
@@ -120,6 +143,9 @@ def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
             raise DBXIException(elem, file=file,
                                 message="Could not find fragid {0!r} in target {1!r}"
                                 .format(fragid, url))
+
+    # Copy certain attributes from xi:include to the target tree
+    copy_attributes(elem, subtree, file)
 
     subtree.tail = saved_tail
     process_tree(subtree, url, url, xinclude_stack + [xinclude_id])
