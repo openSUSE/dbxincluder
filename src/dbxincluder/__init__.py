@@ -63,8 +63,9 @@ def get_target(elem, base_url, file=None):
     return content, url
 
 
-def handle_xinclude(elem, base_url, file=None):
-    """Process the xi:include tag elem"""
+def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
+    """Process the xi:include tag elem
+    :param xinclude_stack: List (or None) of str with url and fragid to detect infinite recursion"""
     assert elem.tag == "{http://www.w3.org/2001/XInclude}include", "Not an XInclude"
     assert elem.getparent() is not None, "XInclude without parent"
 
@@ -74,8 +75,7 @@ def handle_xinclude(elem, base_url, file=None):
         raise DBXIException(elem, "fragid invalid, parse != 'xml'", file)
 
     # Get base (nearest xml:base or current directory)
-    base_urls = elem.xpath("ancestor-or-self::*[@xml:base][1]/@xml:base",
-                           namespaces={'xml': "http://www.w3.org/XML/1998/namespace"})
+    base_urls = elem.xpath("ancestor-or-self::*[@xml:base][1]/@xml:base")
 
     base_url = base_urls[0] if len(base_urls) == 1 else base_url
     if base_url is None:
@@ -97,30 +97,38 @@ def handle_xinclude(elem, base_url, file=None):
             elem.getparent().text += str(content, encoding="utf-8") + saved_tail
         return
 
+    # Check for infinite recursion
+    if xinclude_stack is None:
+        xinclude_stack = []
+
+    xinclude_id = "{0!r}>{1!r}".format(url, fragid)
+    if xinclude_id in xinclude_stack:
+        raise DBXIException(elem, "Infinite recursion detected", file)
+
     # Parse as XML
     subtree = lxml.etree.fromstring(content)
 
     # Get subdocument
     if fragid is not None:
-        subtree = subtree.xpath("//*[@xml:id={0!r}]".format(fragid),
-                                namespaces={'xml': "http://www.w3.org/XML/1998/namespace"})
+        subtree = subtree.xpath("//*[@xml:id={0!r}]".format(fragid))
         if len(subtree) == 1:
             subtree = subtree[0]
             # Get xml:base of subdocument
-            base_urls = subtree.xpath("ancestor-or-self::*[@xml:base][1]/@xml:base",
-                                      namespaces={'xml': "http://www.w3.org/XML/1998/namespace"})
+            base_urls = subtree.xpath("ancestor-or-self::*[@xml:base][1]/@xml:base")
             url = base_urls[0] if len(base_urls) == 1 else url
         else:
-            raise DBXIException(elem, "Could not find fragid {0!r} in target {1!r}".format(fragid, url), file)
+            raise DBXIException(elem, file=file,
+                                message="Could not find fragid {0!r} in target {1!r}"
+                                .format(fragid, url))
 
     subtree.tail = saved_tail
-    process_tree(subtree, url)
+    process_tree(subtree, url, url, xinclude_stack + [xinclude_id])
 
     # Replace XInclude by subtree
     elem.getparent().replace(elem, subtree)
 
 
-def process_tree(tree, base_url=None, file=None):
+def process_tree(tree, base_url=None, file=None, xinclude_stack=None):
     """Processes an ElementTree:
        - Search and process xi:include
        - Replace xml:id (TODO)
@@ -131,7 +139,7 @@ def process_tree(tree, base_url=None, file=None):
 
     for elem in tree.getiterator():
         if elem.tag == "{http://www.w3.org/2001/XInclude}include":
-            handle_xinclude(elem, base_url, file)
+            handle_xinclude(elem, base_url, file, xinclude_stack)
 
 
 def process_xml(xml, base_url=None, file=None):
