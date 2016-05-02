@@ -4,6 +4,8 @@ import pytest
 
 import lxml.etree
 import dbxincluder
+import dbxincluder.xinclude
+from dbxincluder.xinclude import DBXIException
 
 
 def test_main(capsys):
@@ -40,14 +42,14 @@ def test_stdin(capsys):
 def test_target():
     """Test dbxincluder.get_target"""
     # xi: namespace not looked at by get_target
-    with pytest.raises(dbxincluder.DBXIException):
-        dbxincluder.get_target(lxml.etree.fromstring("<xinclude href='nonexistant'/>"), os.path.curdir)
-    with pytest.raises(dbxincluder.DBXIException):
-        dbxincluder.get_target(lxml.etree.fromstring("<xinclude href='nonexistant'/>"), 'file://' + os.path.abspath(os.path.curdir) + "/")
+    with pytest.raises(DBXIException):
+        dbxincluder.xinclude.get_target(lxml.etree.fromstring("<xinclude href='nonexistant'/>"), os.path.curdir)
+    with pytest.raises(DBXIException):
+        dbxincluder.xinclude.get_target(lxml.etree.fromstring("<xinclude href='nonexistant'/>"), 'file://' + os.path.abspath(os.path.curdir) + "/")
 
     # Try to load this file
     quine = "<xinclude href={0!r}/>".format(os.path.relpath(__file__))
-    assert dbxincluder.get_target(lxml.etree.fromstring(quine), os.path.curdir+"/")[0] == open(__file__, "rb").read()
+    assert dbxincluder.xinclude.get_target(lxml.etree.fromstring(quine), os.path.curdir+"/")[0] == open(__file__, "rb").read()
 
 
 def test_xml(xmltestcase):
@@ -58,5 +60,5 @@ def test_xml(xmltestcase):
     outputerr = open(filepart + "err.xml", "r").read() if os.path.isfile(filepart + "err.xml") else ""
     try:
         assert dbxincluder.process_xml(inputxml, os.path.relpath(xmltestcase), os.path.relpath(xmltestcase)) == outputxml
-    except dbxincluder.DBXIException as exc:
+    except DBXIException as exc:
         assert str(exc) + "\n" == outputerr
