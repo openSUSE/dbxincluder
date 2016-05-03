@@ -35,27 +35,14 @@ def generate_id(elem):
     return str(base64.urlsafe_b64encode(path), encoding="utf-8")
 
 
-def replace_id(subtree, old, new):
-    """Replace all references to the ID old with new in subtree"""
-    for elem in subtree.iter():
-        if not elem.tag.startswith("{http://docbook.org/ns/docbook}"):
-            continue
+def associate_new_ids(subtree):
+    """Assign elements their new ids as new attribute"""
+    idfixup = subtree.get("{http://docbook.org/ns/transclude}idfixup", "none")
+    if idfixup == "none":
+        return  # Nothing to do here
 
-        idrefs = ["linkend", "linkends", "otherterm", "zone", "startref", "arearefs", "targetptr", "endterm"]
-        idrefs_multi = ["arearefs", "linkends", "zone"]
-        for attr, value in elem.items():
-            if attr not in idrefs:
-                continue
+    suffix = subtree.get("{http://docbook.org/ns/transclude}suffix")
 
-            if attr in idrefs_multi:
-                assert False, "Not implemented"
-
-            if elem.get(attr) == old:
-                elem.set(attr, new)
-
-
-def handle_idfixup(subtree, idfixup, linkscope, suffix):
-    """Handle the docbook idfixup transclusion attribute"""
     if idfixup == "suffix":
         assert len(suffix), "No suffix given"
 
@@ -64,30 +51,73 @@ def handle_idfixup(subtree, idfixup, linkscope, suffix):
         if old is None:
             continue
 
+        new = elem.get("{dbxincluder}newid", old)
         if idfixup == "suffix":
             new = old + suffix
-            elem.set("{http://www.w3.org/XML/1998/namespace}id", new)
-            replace_id(subtree, old, new)
+        elif idfixup == "auto":
+            new = old + "--" + generate_id(elem)
         else:
             # TODO: Get file and line from somewhere
             raise DBXIException(elem, "idfixup type {0!r} not implemented".format(idfixup))
 
+        elem.set("{dbxincluder}newid", new)
 
-def process_docbook(elem):
-    """Process attributes for docbook transclusion"""
-    idfixup = elem.get("{http://docbook.org/ns/transclude}idfixup", "none")
+
+def find_target(elem, subtree, value, linkscope):
+    """Resolves reference to id value beginning from elem"""
+    if linkscope == "local":
+        target = subtree.xpath("./*[@xml:id={0!r}]".format(value))
+    elif linkscope == "near":
+        while elem.getparent() is not None:
+            elem = elem.getparent()
+            target = elem.xpath("./*[@xml:id={0!r}]".format(value))
+            if len(target):
+                return target[0]
+    elif linkscope == "global":
+        target = elem.xpath("//*[@xml:id={0!r}]".format(value))
+    else:
+        # TODO: Get file and line from somewhere
+        raise DBXIException(elem, "linkscope type {0!r} not implemented".format(linkscope))
+
+    return None if len(target) == 0 else target[0]
+
+
+def fixup_references(subtree):
+    """Fix all references if idfixup is set"""
+    idfixup = subtree.get("{http://docbook.org/ns/transclude}idfixup", "none")
     if idfixup == "none":
         return  # Nothing to do here
 
-    linkscope = elem.get("{http://docbook.org/ns/transclude}linkscope", "near")
-    suffix = elem.get("{http://docbook.org/ns/transclude}suffix")
+    linkscope = subtree.get("{http://docbook.org/ns/transclude}linkscope", "near")
+    if linkscope == "user":
+        return  # Nothing to do here
 
-    handle_idfixup(elem, idfixup, linkscope, suffix)
+    for elem in subtree.iter():
+        if not elem.tag.startswith("{http://docbook.org/ns/docbook}"):
+            continue
 
-    # Remove transclusion attributes
-    for name, value in elem.items():
-        if name.startswith("{http://docbook.org/ns/transclude}"):
-            del elem.attrib[name]
+        idrefs = ["linkend", "linkends", "otherterm", "zone", "startref",
+                  "arearefs", "targetptr", "endterm"]
+        idrefs_multi = ["arearefs", "linkends", "zone"]
+        for attr, value in elem.items():
+            if attr not in idrefs:
+                continue
+
+            if attr in idrefs_multi:
+                assert False, "Not implemented"
+
+            # Find referenced element
+            target = find_target(elem, subtree, value, linkscope)
+
+            if target is None:
+                raise DBXIException(elem, "Could not resolve reference {0!r}".format(value))
+
+            # Update reference
+            new = target.get("{dbxincluder}newid")
+            if not new:
+                new = target.get("{http://www.w3.org/XML/1998/namespace}id")
+
+            elem.set(attr, new)
 
 
 def process_xml(xml, base_url=None, file=None):
@@ -98,8 +128,25 @@ def process_xml(xml, base_url=None, file=None):
     tree = lxml.etree.fromstring(xml, base_url=base_url)
 
     xinclude.process_tree(tree, base_url, file)
+    # Three passes:
+    # First, assign all elements a new ID
+    for subtree in tree.iter():
+        associate_new_ids(subtree)
+
+    # Second, fixup all references
+    for subtree in tree.iter():
+        fixup_references(subtree)
+
+    # Third, clean up our {dbxincluder} and the docbook transclude attributes
     for elem in tree.iter():
-        process_docbook(elem)
+        newid = elem.get("{dbxincluder}newid")
+        if newid:
+            elem.set("{http://www.w3.org/XML/1998/namespace}id", newid)
+            del elem.attrib["{dbxincluder}newid"]
+
+        for name, value in elem.items():
+            if name.startswith("{http://docbook.org/ns/transclude}"):
+                del elem.attrib[name]
 
     # Remove unnecessary namespace declarations
     lxml.etree.cleanup_namespaces(tree)
