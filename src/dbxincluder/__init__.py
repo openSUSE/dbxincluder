@@ -18,23 +18,91 @@
 
 """Main module. Handles the docbook specific part."""
 
+import base64
 import os.path
 import sys
 import lxml.etree
 
 from . import xinclude
+from .xinclude import DBXIException
 
 __version__ = "0.0"
 
 
+def generate_id(elem):
+    """Generate a (per-document) unique ID for the XML element elem"""
+    path = bytes(elem.getroottree().getpath(elem), encoding="utf-8")
+    return str(base64.urlsafe_b64encode(path), encoding="utf-8")
+
+
+def replace_id(subtree, old, new):
+    """Replace all references to the ID old with new in subtree"""
+    for elem in subtree.iter():
+        if not elem.tag.startswith("{http://docbook.org/ns/docbook}"):
+            continue
+
+        idrefs = ["linkend", "linkends", "otherterm", "zone", "startref", "arearefs", "targetptr", "endterm"]
+        idrefs_multi = ["arearefs", "linkends", "zone"]
+        for attr, value in elem.items():
+            if attr not in idrefs:
+                continue
+
+            if attr in idrefs_multi:
+                assert False, "Not implemented"
+
+            if elem.get(attr) == old:
+                elem.set(attr, new)
+
+
+def handle_idfixup(subtree, idfixup, linkscope, suffix):
+    """Handle the docbook idfixup transclusion attribute"""
+    if idfixup == "suffix":
+        assert len(suffix), "No suffix given"
+
+    for elem in subtree.iter():
+        old = elem.get("{http://www.w3.org/XML/1998/namespace}id")
+        if old is None:
+            continue
+
+        if idfixup == "suffix":
+            new = old + suffix
+            elem.set("{http://www.w3.org/XML/1998/namespace}id", new)
+            replace_id(subtree, old, new)
+        else:
+            # TODO: Get file and line from somewhere
+            raise DBXIException(elem, "idfixup type {0!r} not implemented".format(idfixup))
+
+
+def process_docbook(elem):
+    """Process attributes for docbook transclusion"""
+    idfixup = elem.get("{http://docbook.org/ns/transclude}idfixup")
+    if idfixup is None:
+        return  # Nothing to do here
+
+    linkscope = elem.get("{http://docbook.org/ns/transclude}linkscope", "near")
+    suffix = elem.get("{http://docbook.org/ns/transclude}suffix")
+
+    handle_idfixup(elem, idfixup, linkscope, suffix)
+
+    # Remove transclusion attributes
+    for name, value in elem.items():
+        if name.startswith("{http://docbook.org/ns/transclude}"):
+            del elem.attrib[name]
+
+
 def process_xml(xml, base_url=None, file=None):
-    """Same as process_tree, but input and output is text"""
+    """Same as xinclude.process_xml, but handle docbook attributes"""
     if not isinstance(xml, bytes):
         xml = bytes(xml, encoding="UTF-8")
 
     tree = lxml.etree.fromstring(xml, base_url=base_url)
 
     xinclude.process_tree(tree, base_url, file)
+    for elem in tree.iter():
+        process_docbook(elem)
+
+    # Remove unnecessary namespace declarations
+    lxml.etree.cleanup_namespaces(tree)
 
     return lxml.etree.tostring(tree.getroottree(), encoding='unicode',
                                pretty_print=True)

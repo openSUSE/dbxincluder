@@ -1,4 +1,4 @@
-<article xmlns="http://docbook.org/ns/docbook" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:base="tests/cases/transclusion.case.xml">
+<article xmlns="http://docbook.org/ns/docbook" version="5.0" xml:base="tests/cases/transclusion.case.xml">
     <info>
         <title>Transclusions demo</title>
     </info>
