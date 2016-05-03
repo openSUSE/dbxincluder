@@ -75,8 +75,8 @@ def handle_idfixup(subtree, idfixup, linkscope, suffix):
 
 def process_docbook(elem):
     """Process attributes for docbook transclusion"""
-    idfixup = elem.get("{http://docbook.org/ns/transclude}idfixup")
-    if idfixup is None:
+    idfixup = elem.get("{http://docbook.org/ns/transclude}idfixup", "none")
+    if idfixup == "none":
         return  # Nothing to do here
 
     linkscope = elem.get("{http://docbook.org/ns/transclude}linkscope", "near")
