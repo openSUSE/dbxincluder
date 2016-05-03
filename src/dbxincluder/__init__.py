@@ -19,7 +19,6 @@
 """Main module. Handles the docbook specific part."""
 
 import base64
-import os.path
 import sys
 import lxml.etree
 
@@ -144,7 +143,7 @@ def process_xml(xml, base_url=None, file=None):
             elem.set("{http://www.w3.org/XML/1998/namespace}id", newid)
             del elem.attrib["{dbxincluder}newid"]
 
-        for name, value in elem.items():
+        for name, _ in elem.items():
             if name.startswith("{http://docbook.org/ns/transclude}"):
                 del elem.attrib[name]
 
