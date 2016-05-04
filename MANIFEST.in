@@ -5,6 +5,9 @@ include .travis.yml
 include *requirements.txt
 include tox.ini
 include *.md
+recursive-include doc *.rst
+recursive-include doc Makefile
+recursive-include doc conf.py
 include LICENSE
 
 graft tests
