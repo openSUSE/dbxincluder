@@ -16,7 +16,7 @@
         <para>Second section!</para>
     </sect2>
 </sect1>
-  <sect1 version="5.1" xml:base="tests/cases/xinclude1.xml">
+  <sect1 version="5.1" xml:id="sec.parent" xml:base="tests/cases/xinclude1.xml">
     <sect2 xml:id="sec.first">
         <para>First section!</para>
     </sect2>

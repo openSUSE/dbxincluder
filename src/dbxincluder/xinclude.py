@@ -44,7 +44,7 @@ def copy_attributes(elem, subtree):
             # Override/Remove xml:id on all top-level elements
             if len(value):
                 subtree.set("{http://www.w3.org/XML/1998/namespace}id", value)
-            elif elem.get("{http://www.w3.org/XML/1998/namespace}id"):
+            elif subtree.get("{http://www.w3.org/XML/1998/namespace}id"):
                 del subtree.attrib["{http://www.w3.org/XML/1998/namespace}id"]
         elif name.startswith("{http://www.w3.org/2001/XInclude/local-attributes}"):
             # Set attribute on all top-level elements

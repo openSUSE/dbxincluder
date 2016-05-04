@@ -2,7 +2,8 @@
   <title>Transclusions demo</title>
   &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;sect1 version="5.0"
-    xmlns="http://docbook.org/ns/docbook"&gt;
+    xmlns="http://docbook.org/ns/docbook"
+    xml:id="sec.parent"&gt;
     &lt;sect2 xml:id="sec.first"&gt;
         &lt;para&gt;First section!&lt;/para&gt;
     &lt;/sect2&gt;
@@ -14,7 +15,8 @@
   <xi:include href="xinclude1.xml" parse="text"/><sect1>
     Here it comes again: &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;sect1 version="5.0"
-    xmlns="http://docbook.org/ns/docbook"&gt;
+    xmlns="http://docbook.org/ns/docbook"
+    xml:id="sec.parent"&gt;
     &lt;sect2 xml:id="sec.first"&gt;
         &lt;para&gt;First section!&lt;/para&gt;
     &lt;/sect2&gt;
