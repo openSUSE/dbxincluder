@@ -159,14 +159,14 @@ def main(argv=None):
     Parses argv (sys.argv if None) and does stuff."""
     argv = argv if argv else sys.argv
 
-    if len(argv) != 2 or "--help" in argv:
+    if len(argv) != 2 or "--help" in argv or "-h" in argv:
         # Print usage
         print("dbxincluder {0}".format(__version__))
         print("""Usage:
-\tdbxincluder --help    \tPrint help
-\tdbxincluder --version \tPrint version
-\tdbxincluder <xml file>\tProcess file and output to STDOUT
-\tdbxincluder -         \tProcess STDIN and output to STDOUT""")
+\tdbxincluder -h | --help\tPrint help
+\tdbxincluder --version  \tPrint version
+\tdbxincluder <xml file> \tProcess file and output to STDOUT
+\tdbxincluder -          \tProcess STDIN and output to STDOUT""")
         return 2
     elif argv[1] == "--version":
         # Print version
