@@ -29,13 +29,15 @@ __version__ = "0.1"
 
 
 def generate_id(elem):
-    """Generate a (per-document) unique ID for the XML element elem"""
+    """Generate a (per-document) unique ID for the XML element elem
+    :return: str"""
     path = bytes(elem.getroottree().getpath(elem), encoding="utf-8")
     return str(base64.urlsafe_b64encode(path), encoding="utf-8")
 
 
 def associate_new_ids(subtree):
     """Assign elements their new ids as new attribute
+
     :param subtree: The XIncluded subtree to process"""
     idfixup = subtree.get("{http://docbook.org/ns/transclude}idfixup", "none")
     if idfixup == "none":
@@ -65,10 +67,12 @@ def associate_new_ids(subtree):
 
 def find_target(elem, subtree, value, linkscope):
     """Resolves reference to id value beginning from elem
+
     :param elem: Source of reference
     :param subtree: XIncluded subtree
     :param value: ID of reference
-    :param linkscope: DB transclusion linkscope (local/near/global)"""
+    :param linkscope: DB transclusion linkscope (local/near/global)
+    :return: Target element or None"""
     if linkscope == "local":
         target = subtree.xpath("./*[@xml:id={0!r}]".format(value))
     elif linkscope == "near":
@@ -88,6 +92,7 @@ def find_target(elem, subtree, value, linkscope):
 
 def fixup_references(subtree):
     """Fix all references if idfixup is set
+
     :param subtree: subtree to process"""
     idfixup = subtree.get("{http://docbook.org/ns/transclude}idfixup", "none")
     if idfixup == "none":

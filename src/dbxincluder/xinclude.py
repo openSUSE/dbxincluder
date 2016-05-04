@@ -27,6 +27,7 @@ class DBXIException(Exception):
     """Exception type for XML errors"""
     def __init__(self, elem, message=None, file=None):
         """Construct an DBXIException
+
         :param elem: Element that caused error
         :param message: Message to show. Can be None.
         :param file: URL of source, can be None."""
@@ -40,6 +41,7 @@ def copy_attributes(elem, subtree):
     """Modifies subtree according to
     https://www.w3.org/XML/2012/08/xinclude-11/Overview.html#attribute-copying
     with the attributes of elem. Does not return anything.
+
     :param elem: XInclude source elemend
     :param subtree: Target subtree/element"""
 
@@ -64,6 +66,7 @@ def copy_attributes(elem, subtree):
 
 def get_target(elem, base_url, file=None):
     """Return (the content of the target document as string, the URL that was used)
+
     :param elem: XInclude element
     :param base_url: xml:base of the element
     """
@@ -92,6 +95,7 @@ def get_target(elem, base_url, file=None):
 
 def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
     """Process the xi:include tag elem
+
     :param elem: The XInclude element to process
     :param base_url: xml:base to use if not specified in the document
     :param file: URL used to report errors
@@ -163,8 +167,9 @@ def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
 
 def process_tree(tree, base_url=None, file=None, xinclude_stack=None):
     """Processes an ElementTree:
-       - Search and process xi:include
-       - Add xml:base (=source) to the root element
+    - Search and process xi:include
+    - Add xml:base (=source) to the root element
+
     :param tree: ElementTree to process
     :param base_url: xml:base to use if not set in the tree
     :param file: URL used to report errors
@@ -179,7 +184,12 @@ def process_tree(tree, base_url=None, file=None, xinclude_stack=None):
 
 
 def process_xml(xml, base_url=None, file=None):
-    """Same as process_tree, but input and output is text"""
+    """Same as process_tree, but input and output is text
+
+    :param xml: str or UTF-8 encoded bytes of the input document
+    :param base_url: xml:base to use if not set in the tree
+    :param file: URL used to report errors
+    :return: UTF-8 encoded bytes of the output document"""
     if not isinstance(xml, bytes):
         xml = bytes(xml, encoding="UTF-8")
 
