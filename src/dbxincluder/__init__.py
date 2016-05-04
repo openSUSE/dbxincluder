@@ -187,5 +187,8 @@ def main(argv=None):
     except xinclude.DBXIException as exc:
         sys.stderr.write(str(exc) + "\n")
         return 1
+    except lxml.etree.XMLSyntaxError as exc:
+        sys.stderr.write(base_url + ": " + str(exc) + "\n")
+        return 1
 
     return 0

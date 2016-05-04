@@ -52,13 +52,12 @@ def test_target():
     assert dbxincluder.xinclude.get_target(lxml.etree.fromstring(quine), os.path.curdir+"/")[0] == open(__file__, "rb").read()
 
 
-def test_xml(xmltestcase):
+def test_xml(xmltestcase, capsys):
     """Runs one XML testcase"""
-    inputxml = open(xmltestcase, "rb").read()
     filepart = xmltestcase[:-8]
     outputxml = open(filepart + "out.xml", "r").read() if os.path.isfile(filepart + "out.xml") else ""
     outputerr = open(filepart + "err.xml", "r").read() if os.path.isfile(filepart + "err.xml") else ""
-    try:
-        assert dbxincluder.process_xml(inputxml, os.path.relpath(xmltestcase), os.path.relpath(xmltestcase)) == outputxml
-    except DBXIException as exc:
-        assert str(exc) + "\n" == outputerr
+    dbxincluder.main(["", os.path.relpath(xmltestcase)])
+    out, err = capsys.readouterr()
+    assert out == outputxml
+    assert err == outputerr
