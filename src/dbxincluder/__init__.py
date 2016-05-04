@@ -35,7 +35,8 @@ def generate_id(elem):
 
 
 def associate_new_ids(subtree):
-    """Assign elements their new ids as new attribute"""
+    """Assign elements their new ids as new attribute
+    :param subtree: The XIncluded subtree to process"""
     idfixup = subtree.get("{http://docbook.org/ns/transclude}idfixup", "none")
     if idfixup == "none":
         return  # Nothing to do here
@@ -63,7 +64,11 @@ def associate_new_ids(subtree):
 
 
 def find_target(elem, subtree, value, linkscope):
-    """Resolves reference to id value beginning from elem"""
+    """Resolves reference to id value beginning from elem
+    :param elem: Source of reference
+    :param subtree: XIncluded subtree
+    :param value: ID of reference
+    :param linkscope: DB transclusion linkscope (local/near/global)"""
     if linkscope == "local":
         target = subtree.xpath("./*[@xml:id={0!r}]".format(value))
     elif linkscope == "near":
@@ -82,7 +87,8 @@ def find_target(elem, subtree, value, linkscope):
 
 
 def fixup_references(subtree):
-    """Fix all references if idfixup is set"""
+    """Fix all references if idfixup is set
+    :param subtree: subtree to process"""
     idfixup = subtree.get("{http://docbook.org/ns/transclude}idfixup", "none")
     if idfixup == "none":
         return  # Nothing to do here

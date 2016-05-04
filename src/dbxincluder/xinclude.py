@@ -24,8 +24,12 @@ import urllib.request
 
 
 class DBXIException(Exception):
-    """ Exception type for XML errors"""
+    """Exception type for XML errors"""
     def __init__(self, elem, message=None, file=None):
+        """Construct an DBXIException
+        :param elem: Element that caused error
+        :param message: Message to show. Can be None.
+        :param file: URL of source, can be None."""
         file = file if file is not None else ""
         message = ": " + message if message else ""
         self.error = "Error at {0}:{1}{2}".format(file, elem.sourceline, message)
@@ -36,7 +40,8 @@ def copy_attributes(elem, subtree):
     """Modifies subtree according to
     https://www.w3.org/XML/2012/08/xinclude-11/Overview.html#attribute-copying
     with the attributes of elem. Does not return anything.
-    :param file: URL of the document elem is located in."""
+    :param elem: XInclude source elemend
+    :param subtree: Target subtree/element"""
 
     # Iterate all attributes
     for name, value in elem.items():
@@ -87,6 +92,9 @@ def get_target(elem, base_url, file=None):
 
 def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
     """Process the xi:include tag elem
+    :param elem: The XInclude element to process
+    :param base_url: xml:base to use if not specified in the document
+    :param file: URL used to report errors
     :param xinclude_stack: List (or None) of str with url and fragid to detect infinite recursion"""
     assert elem.tag == "{http://www.w3.org/2001/XInclude}include", "Not an XInclude"
     assert elem.getparent() is not None, "XInclude without parent"
@@ -156,7 +164,11 @@ def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
 def process_tree(tree, base_url=None, file=None, xinclude_stack=None):
     """Processes an ElementTree:
        - Search and process xi:include
-       - Add xml:base (=source) to the root element"""
+       - Add xml:base (=source) to the root element
+    :param tree: ElementTree to process
+    :param base_url: xml:base to use if not set in the tree
+    :param file: URL used to report errors
+    :param xinclude_stack: Internal"""
 
     if base_url and not tree.get("{http://www.w3.org/XML/1998/namespace}base"):
         tree.set("{http://www.w3.org/XML/1998/namespace}base", base_url)
