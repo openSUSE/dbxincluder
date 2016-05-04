@@ -25,7 +25,7 @@ import lxml.etree
 from . import xinclude
 from .xinclude import DBXIException
 
-__version__ = "0.0"
+__version__ = "0.1"
 
 
 def generate_id(elem):

@@ -46,11 +46,11 @@ def read(*names, **kwargs):
 
 setup(
     name='dbxincluder',
-    version='0.1.0',
+    version='0.1',
     license='GPL 3.0',
     description='Transclusions for DocBook with XInclude 1.1',
-    author='Thomas Schraitle',
-    author_email='toms@opensuse.org',
+    author='Fabian Vogt',
+    author_email='fvogt@suse.com',
     url='https://github.com/openSUSE/dbxincluder',
     packages=find_packages('src'),
     package_dir={'': 'src'},
@@ -76,11 +76,10 @@ setup(
         'Topic :: Software Development :: Documentation',
     ],
     keywords=[
-        # eg: 'keyword1', 'keyword2', 'keyword3',
         "docbook", "xinclude"
     ],
     install_requires=[
-        # eg: 'aspectlib==1.1.1', 'six>=1.7',
+        "lxml"
     ],
     extras_require={
         # eg:
