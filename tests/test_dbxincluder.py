@@ -5,7 +5,7 @@ import pytest
 import lxml.etree
 import dbxincluder
 import dbxincluder.xinclude
-from dbxincluder.xinclude import DBXIException
+from dbxincluder.utils import DBXIException
 
 
 def test_main(capsys):

@@ -22,19 +22,7 @@ import os.path
 import lxml.etree
 import urllib.request
 
-
-class DBXIException(Exception):
-    """Exception type for XML errors"""
-    def __init__(self, elem, message=None, file=None):
-        """Construct an DBXIException
-
-        :param elem: Element that caused error
-        :param message: Message to show. Can be None.
-        :param file: URL of source, can be None."""
-        file = file if file is not None else ""
-        message = ": " + message if message else ""
-        self.error = "Error at {0}:{1}{2}".format(file, elem.sourceline, message)
-        super().__init__(self.error)
+from .utils import DBXIException
 
 
 def copy_attributes(elem, subtree):
@@ -170,10 +158,11 @@ def process_tree(tree, base_url=None, file=None, xinclude_stack=None):
     - Search and process xi:include
     - Add xml:base (=source) to the root element
 
-    :param tree: ElementTree to process
+    :param tree: ElementTree to process (gets modified)
     :param base_url: xml:base to use if not set in the tree
     :param file: URL used to report errors
-    :param xinclude_stack: Internal"""
+    :param xinclude_stack: Internal
+    :return: Nothing"""
 
     if base_url and not tree.get("{http://www.w3.org/XML/1998/namespace}base"):
         tree.set("{http://www.w3.org/XML/1998/namespace}base", base_url)
@@ -181,21 +170,3 @@ def process_tree(tree, base_url=None, file=None, xinclude_stack=None):
     for elem in tree.getiterator():
         if elem.tag == "{http://www.w3.org/2001/XInclude}include":
             handle_xinclude(elem, base_url, file, xinclude_stack)
-
-
-def process_xml(xml, base_url=None, file=None):
-    """Same as process_tree, but input and output is text
-
-    :param xml: str or UTF-8 encoded bytes of the input document
-    :param base_url: xml:base to use if not set in the tree
-    :param file: URL used to report errors
-    :return: UTF-8 encoded bytes of the output document"""
-    if not isinstance(xml, bytes):
-        xml = bytes(xml, encoding="UTF-8")
-
-    tree = lxml.etree.fromstring(xml, base_url=base_url)
-
-    process_tree(tree, base_url, file)
-
-    return lxml.etree.tostring(tree.getroottree(), encoding='unicode',
-                               pretty_print=True)
