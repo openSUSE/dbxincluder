@@ -46,7 +46,7 @@ def read(*names, **kwargs):
 
 setup(
     name='dbxincluder',
-    version='0.1',
+    version='0.1.0',
     license='GPL 3.0',
     description='Transclusions for DocBook with XInclude 1.1',
     author='Fabian Vogt',
@@ -59,10 +59,9 @@ setup(
     zip_safe=False,
     classifiers=[
         # complete classifier list: http://pypi.python.org/pypi?%3Aaction=list_classifiers
-        'Development Status :: 1 - Planning'
+        'Development Status :: 3 - Alpha'
         'Intended Audience :: Developers',
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
-        'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
         'Operating System :: Unix',
         'Operating System :: POSIX',
         'Operating System :: Microsoft :: Windows',
@@ -74,9 +73,10 @@ setup(
         'Topic :: Utilities',
         'Topic :: Documentation',
         'Topic :: Software Development :: Documentation',
+        'Topic :: Text Processing :: Markup :: XML',
     ],
     keywords=[
-        "docbook", "xinclude"
+        "docbook", "xinclude", "transclusion"
     ],
     install_requires=[
         "lxml"
