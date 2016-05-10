@@ -41,4 +41,4 @@ def generate_id(elem):
 
     # If you change this algorithm, you need to regenerate all testcase outputs
     path = bytes(elem.getroottree().getpath(elem), encoding="utf-8")
-    return str(base64.urlsafe_b64encode(path), encoding="utf-8")
+    return str(base64.urlsafe_b64encode(path), encoding="utf-8").replace("=", "-")

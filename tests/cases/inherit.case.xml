@@ -5,10 +5,13 @@
     <title>Title</title>
     <chapter trans:idfixup="suffix" trans:suffix="deep">
         <sect1 trans:idfixup="suffix">
+            <title>Title 2</title>
             <para xml:id="asdf">
                 asdf para
             </para>
-            <xref linkend="asdf" />
+            <para>
+                <xref linkend="asdf" />
+            </para>
         </sect1>
     </chapter>
 </book>

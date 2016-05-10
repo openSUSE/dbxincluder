@@ -11,8 +11,8 @@
   <title>Inserting paper into printer</title>
   <para>This procedure is for printer owners.
     If you don't have a printer, consider <link linkend="buy">buying one</link>.</para>  
-  <step xml:id="s1--LyovKlszXS8qWzNdLypbM10="><para>Make sure that you have paper.</para></step>
-  <step><para>Insert paper into printer. If you don't have paper, consult <xref linkend="s1--LyovKlszXS8qWzNdLypbM10="/></para></step>
+  <step xml:id="s1--LyovKlszXS8qWzNdLypbM10-"><para>Make sure that you have paper.</para></step>
+  <step><para>Insert paper into printer. If you don't have paper, consult <xref linkend="s1--LyovKlszXS8qWzNdLypbM10-"/></para></step>
 </procedure>
   </chapter>
   <chapter>
@@ -23,8 +23,8 @@
   <title>Inserting paper into printer</title>
   <para>This procedure is for printer owners.
     If you don't have a printer, consider <link linkend="buy">buying one</link>.</para>  
-  <step xml:id="s1--LyovKls0XS8qWzRdLypbM10="><para>Make sure that you have paper.</para></step>
-  <step><para>Insert paper into printer. If you don't have paper, consult <xref linkend="s1--LyovKlszXS8qWzNdLypbM10="/></para></step>
+  <step xml:id="s1--LyovKls0XS8qWzRdLypbM10-"><para>Make sure that you have paper.</para></step>
+  <step><para>Insert paper into printer. If you don't have paper, consult <xref linkend="s1--LyovKlszXS8qWzNdLypbM10-"/></para></step>
 </procedure>
   </chapter>
 </book>
