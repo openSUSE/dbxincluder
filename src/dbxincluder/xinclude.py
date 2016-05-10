@@ -19,13 +19,10 @@
 """xinclude module: Processes raw XInclude 1.1 elements"""
 
 import os.path
-import lxml.etree
 import urllib.request
 
-from lxml.etree import QName
-from .utils import DBXIException
-from .utils import namespaces
-from .utils import qnames
+from lxml.etree import fromstring, QName
+from .utils import DBXIException, NS, QN
 
 
 def copy_attributes(elem, subtree):
@@ -42,13 +39,13 @@ def copy_attributes(elem, subtree):
         if qname.namespace is None and qname.localname == "set-xml-id":
             # Override/Remove xml:id on all top-level elements
             if len(value):
-                subtree.set(qnames['xml:id'], value)
-            elif subtree.get(qnames['xml:id']):
-                del subtree.attrib[qnames['xml:id']]
-        elif qname.namespace == namespaces['local']:
+                subtree.set(QN['xml:id'], value)
+            elif subtree.get(QN['xml:id']):
+                del subtree.attrib[QN['xml:id']]
+        elif qname.namespace == NS['local']:
             # Set attribute on all top-level elements
             subtree.set(qname.localname, value)
-        elif qname.namespace == namespaces['xml']:
+        elif qname.namespace == NS['xml']:
             # Ignore xml: namespace
             continue
         elif qname.namespace is not None:
@@ -92,7 +89,7 @@ def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
     :param base_url: xml:base to use if not specified in the document
     :param file: URL used to report errors
     :param xinclude_stack: List (or None) of str with url and fragid to detect infinite recursion"""
-    assert QName(elem) == QName(namespaces['xi'], "include"), "Not an XInclude"
+    assert QName(elem) == QName(NS['xi'], "include"), "Not an XInclude"
     assert elem.getparent() is not None, "XInclude without parent"
 
     # Get fragid
@@ -132,7 +129,7 @@ def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
         raise DBXIException(elem, "Infinite recursion detected", file)
 
     # Parse as XML
-    subtree = lxml.etree.fromstring(content)
+    subtree = fromstring(content)
 
     # Get subdocument
     if fragid is not None:
@@ -168,9 +165,9 @@ def process_tree(tree, base_url=None, file=None, xinclude_stack=None):
     :param xinclude_stack: Internal
     :return: Nothing"""
 
-    if base_url and not tree.get(qnames['xml:base']):
-        tree.set(qnames['xml:base'], base_url)
+    if base_url and not tree.get(QN['xml:base']):
+        tree.set(QN['xml:base'], base_url)
 
     for elem in tree.getiterator():
-        if QName(elem) == QName(namespaces['xi'], "include"):
+        if QName(elem) == QName(NS['xi'], "include"):
             handle_xinclude(elem, base_url, file, xinclude_stack)

@@ -23,19 +23,20 @@ import base64
 from lxml.etree import QName
 
 
-"""Commonly used XML namespaces"""
-namespaces = {'xml': "http://www.w3.org/XML/1998/namespace",
-              'local': "http://www.w3.org/2001/XInclude/local-attributes",
-              'xi': "http://www.w3.org/2001/XInclude",
-              'trans': "http://docbook.org/ns/transclude",
-              'db': "http://docbook.org/ns/docbook",
-              # Custom namespace for temporary attributes
-              'dbxi': "dbxincluder"}
+# Commonly used XML namespaces
+NS = {'xml': "http://www.w3.org/XML/1998/namespace",
+      'local': "http://www.w3.org/2001/XInclude/local-attributes",
+      'xi': "http://www.w3.org/2001/XInclude",
+      'trans': "http://docbook.org/ns/transclude",
+      'db': "http://docbook.org/ns/docbook",
+      # Custom namespace for temporary attributes
+      'dbxi': "dbxincluder"}
 
-"""Commonly used attributes"""
-qnames = {'xml:id': QName(namespaces['xml'], "id"),
-          'xml:base': QName(namespaces['xml'], "base"),
-          'dbxi:newid': QName(namespaces['dbxi'], "newid")}
+# Commonly used attributes
+QN = {'xml:id': QName(NS['xml'], "id"),
+      'xml:base': QName(NS['xml'], "base"),
+      'dbxi:newid': QName(NS['dbxi'], "newid")}
+
 
 class DBXIException(Exception):
     """Exception type for XML errors"""
