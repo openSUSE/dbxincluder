@@ -1,0 +1,11 @@
+<book xmlns="http://docbook.org/ns/docbook" version="5.0" xml:base="tests/cases/inherit.case.xml">
+    <title>Title</title>
+    <chapter>
+        <sect1>
+            <para xml:id="asdfdeepdeep">
+                asdf para
+            </para>
+            <xref linkend="asdfdeepdeep"/>
+        </sect1>
+    </chapter>
+</book>

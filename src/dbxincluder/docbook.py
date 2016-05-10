@@ -33,21 +33,23 @@ def associate_new_ids(subtree):
     if idfixup == "none":
         return  # Nothing to do here
 
-    suffix = subtree.get("{http://docbook.org/ns/transclude}suffix")
+    suffix = subtree.xpath("ancestor-or-self::*[@trans:suffix][1]/@trans:suffix",
+                           namespaces={'trans': "http://docbook.org/ns/transclude"})
 
     if idfixup == "suffix":
         assert len(suffix), "No suffix given"
+        suffix = suffix[0]
 
     for elem in subtree.iter():
-        old = elem.get("{http://www.w3.org/XML/1998/namespace}id")
-        if old is None:
+        cur_id = elem.get("{http://www.w3.org/XML/1998/namespace}id")
+        if cur_id is None:
             continue
 
-        new = elem.get("{dbxincluder}newid", old)
+        new = elem.get("{dbxincluder}newid", cur_id)
         if idfixup == "suffix":
-            new = old + suffix
+            new = new + suffix
         elif idfixup == "auto":
-            new = old + "--" + generate_id(elem)
+            new = new + "--" + generate_id(elem)
         else:
             raise DBXIException(elem, "idfixup type {0!r} not implemented".format(idfixup))
 
@@ -82,17 +84,25 @@ def fixup_references(subtree):
     """Fix all references if idfixup is set
 
     :param subtree: subtree to process"""
-    idfixup = subtree.get("{http://docbook.org/ns/transclude}idfixup", "none")
-    if idfixup == "none":
-        return  # Nothing to do here
-
-    linkscope = subtree.get("{http://docbook.org/ns/transclude}linkscope", "near")
-    if linkscope == "user":
-        return  # Nothing to do here
-
     for elem in subtree.iter():
         if not elem.tag.startswith("{http://docbook.org/ns/docbook}"):
             continue
+
+        idfixup = elem.xpath("ancestor-or-self::*[@trans:idfixup][1]/@trans:idfixup",
+                             namespaces={'trans': "http://docbook.org/ns/transclude"})
+
+        idfixup = idfixup[0] if len(idfixup) else "none"
+
+        if idfixup == "none":
+            continue  # Nothing to do here
+
+        linkscope = elem.xpath("ancestor-or-self::*[@trans:linkscope][1]/@trans:linkscope",
+                               namespaces={'trans': "http://docbook.org/ns/transclude"})
+
+        linkscope = linkscope[0] if len(linkscope) else "near"
+
+        if linkscope == "user":
+            continue  # Nothing to do here
 
         idrefs = ["linkend", "linkends", "otherterm", "zone", "startref",
                   "arearefs", "targetptr", "endterm"]
@@ -137,8 +147,7 @@ def process_tree(tree, base_url, file):
         associate_new_ids(subtree)
 
     # Second, fixup all references
-    for subtree in tree.iter():
-        fixup_references(subtree)
+    fixup_references(tree)
 
     # Third, clean up our {dbxincluder} and the docbook transclude attributes
     for elem in tree.iter():
