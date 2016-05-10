@@ -20,32 +20,35 @@
 
 import lxml.etree
 
+from lxml.etree import QName
 from . import xinclude
 from .utils import DBXIException
 from .utils import generate_id
+from .utils import namespaces
+from .utils import qnames
 
 
 def associate_new_ids(subtree):
-    """Assign elements their new ids as new attribute
+    """Assign elements their new ids as new 'dbxi:newid' attribute.
 
     :param subtree: The XIncluded subtree to process"""
-    idfixup = subtree.get("{http://docbook.org/ns/transclude}idfixup", "none")
+    idfixup = subtree.get(QName(namespaces['trans'], "idfixup"), "none")
     if idfixup == "none":
         return  # Nothing to do here
 
     suffix = subtree.xpath("ancestor-or-self::*[@trans:suffix][1]/@trans:suffix",
-                           namespaces={'trans': "http://docbook.org/ns/transclude"})
+                           namespaces=namespaces)
 
     if idfixup == "suffix":
         assert len(suffix), "No suffix given"
         suffix = suffix[0]
 
     for elem in subtree.iter():
-        cur_id = elem.get("{http://www.w3.org/XML/1998/namespace}id")
+        cur_id = elem.get(qnames['xml:id'])
         if cur_id is None:
             continue
 
-        new = elem.get("{dbxincluder}newid", cur_id)
+        new = elem.get(qnames['dbxi:newid'], cur_id)
         if idfixup == "suffix":
             new = new + suffix
         elif idfixup == "auto":
@@ -53,7 +56,7 @@ def associate_new_ids(subtree):
         else:
             raise DBXIException(elem, "idfixup type {0!r} not implemented".format(idfixup))
 
-        elem.set("{dbxincluder}newid", new)
+        elem.set(qnames['dbxi:newid'], new)
 
 
 def find_target(elem, subtree, value, linkscope):
@@ -85,11 +88,11 @@ def fixup_references(subtree):
 
     :param subtree: subtree to process"""
     for elem in subtree.iter():
-        if not elem.tag.startswith("{http://docbook.org/ns/docbook}"):
+        if not QName(elem).namespace == namespaces['db']:
             continue
 
         idfixup = elem.xpath("ancestor-or-self::*[@trans:idfixup][1]/@trans:idfixup",
-                             namespaces={'trans': "http://docbook.org/ns/transclude"})
+                             namespaces=namespaces)
 
         idfixup = idfixup[0] if len(idfixup) else "none"
 
@@ -97,7 +100,7 @@ def fixup_references(subtree):
             continue  # Nothing to do here
 
         linkscope = elem.xpath("ancestor-or-self::*[@trans:linkscope][1]/@trans:linkscope",
-                               namespaces={'trans': "http://docbook.org/ns/transclude"})
+                               namespaces=namespaces)
 
         linkscope = linkscope[0] if len(linkscope) else "near"
 
@@ -121,9 +124,9 @@ def fixup_references(subtree):
                 raise DBXIException(elem, "Could not resolve reference {0!r}".format(value))
 
             # Update reference
-            new = target.get("{dbxincluder}newid")
+            new = target.get(qnames['dbxi:newid'])
             if not new:
-                new = target.get("{http://www.w3.org/XML/1998/namespace}id")
+                new = target.get(qnames['xml:id'])
 
             elem.set(attr, new)
 
@@ -149,15 +152,15 @@ def process_tree(tree, base_url, file):
     # Second, fixup all references
     fixup_references(tree)
 
-    # Third, clean up our {dbxincluder} and the docbook transclude attributes
+    # Third, clean up our dbxi:newid and the docbook transclude attributes
     for elem in tree.iter():
-        newid = elem.get("{dbxincluder}newid")
+        newid = elem.get(qnames['dbxi:newid'])
         if newid:
-            elem.set("{http://www.w3.org/XML/1998/namespace}id", newid)
-            del elem.attrib["{dbxincluder}newid"]
+            elem.set(qnames['xml:id'], newid)
+            del elem.attrib[qnames['dbxi:newid']]
 
         for name, _ in elem.items():
-            if name.startswith("{http://docbook.org/ns/transclude}"):
+            if QName(name).namespace == namespaces['trans']:
                 del elem.attrib[name]
 
     # Remove unnecessary namespace declarations

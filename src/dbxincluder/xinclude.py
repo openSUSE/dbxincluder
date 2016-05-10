@@ -22,7 +22,10 @@ import os.path
 import lxml.etree
 import urllib.request
 
+from lxml.etree import QName
 from .utils import DBXIException
+from .utils import namespaces
+from .utils import qnames
 
 
 def copy_attributes(elem, subtree):
@@ -35,19 +38,20 @@ def copy_attributes(elem, subtree):
 
     # Iterate all attributes
     for name, value in elem.items():
-        if name == "set-xml-id":
+        qname = QName(name)
+        if qname.namespace is None and qname.localname == "set-xml-id":
             # Override/Remove xml:id on all top-level elements
             if len(value):
-                subtree.set("{http://www.w3.org/XML/1998/namespace}id", value)
-            elif subtree.get("{http://www.w3.org/XML/1998/namespace}id"):
-                del subtree.attrib["{http://www.w3.org/XML/1998/namespace}id"]
-        elif name.startswith("{http://www.w3.org/2001/XInclude/local-attributes}"):
+                subtree.set(qnames['xml:id'], value)
+            elif subtree.get(qnames['xml:id']):
+                del subtree.attrib[qnames['xml:id']]
+        elif qname.namespace == namespaces['local']:
             # Set attribute on all top-level elements
-            subtree.set(name[len("{http://www.w3.org/2001/XInclude/local-attributes}"):], value)
-        elif name.startswith("{http://www.w3.org/XML/1998/namespace}"):
+            subtree.set(qname.localname, value)
+        elif qname.namespace == namespaces['xml']:
             # Ignore xml: namespace
             continue
-        elif name.startswith("{"):
+        elif qname.namespace is not None:
             # Set attribute on all top-level elements
             subtree.set(name, value)
 
@@ -88,7 +92,7 @@ def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
     :param base_url: xml:base to use if not specified in the document
     :param file: URL used to report errors
     :param xinclude_stack: List (or None) of str with url and fragid to detect infinite recursion"""
-    assert elem.tag == "{http://www.w3.org/2001/XInclude}include", "Not an XInclude"
+    assert QName(elem) == QName(namespaces['xi'], "include"), "Not an XInclude"
     assert elem.getparent() is not None, "XInclude without parent"
 
     # Get fragid
@@ -164,9 +168,9 @@ def process_tree(tree, base_url=None, file=None, xinclude_stack=None):
     :param xinclude_stack: Internal
     :return: Nothing"""
 
-    if base_url and not tree.get("{http://www.w3.org/XML/1998/namespace}base"):
-        tree.set("{http://www.w3.org/XML/1998/namespace}base", base_url)
+    if base_url and not tree.get(qnames['xml:base']):
+        tree.set(qnames['xml:base'], base_url)
 
     for elem in tree.getiterator():
-        if elem.tag == "{http://www.w3.org/2001/XInclude}include":
+        if QName(elem) == QName(namespaces['xi'], "include"):
             handle_xinclude(elem, base_url, file, xinclude_stack)
