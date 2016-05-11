@@ -6,6 +6,7 @@
   <xi:include href="nonexistant.xml">
     <xi:fallback>
         BEFORECONTENT
+        <?Processing instruction?>
         <para>This will be included</para>
         AFTERCONTENT
     </xi:fallback>

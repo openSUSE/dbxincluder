@@ -35,6 +35,7 @@ NS = {'xml': "http://www.w3.org/XML/1998/namespace",
 # Commonly used attributes
 QN = {'xml:id': QName(NS['xml'], "id"),
       'xml:base': QName(NS['xml'], "base"),
+      'xi:fallback': QName(NS['xi'], "fallback"),
       'dbxi:newid': QName(NS['dbxi'], "newid")}
 
 

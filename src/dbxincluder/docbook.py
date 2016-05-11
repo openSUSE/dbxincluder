@@ -85,7 +85,7 @@ def fixup_references(subtree):
 
     :param subtree: subtree to process"""
     for elem in subtree.iter():
-        if elem.tag is lxml.etree.Comment or QName(elem).namespace != NS['db']:
+        if not isinstance(elem.tag, str) or QName(elem).namespace != NS['db']:
             continue
 
         idfixup = elem.xpath("ancestor-or-self::*[@trans:idfixup][1]/@trans:idfixup",

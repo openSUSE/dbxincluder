@@ -2,6 +2,7 @@
   BEFORE
   
         BEFORECONTENT
+        <?Processing instruction?>
         <para>This will be included</para>
         AFTERCONTENT
     

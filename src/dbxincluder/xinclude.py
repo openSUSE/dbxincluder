@@ -22,7 +22,7 @@ import os.path
 import sys
 import urllib.request
 
-from lxml.etree import fromstring, Comment, QName
+from lxml.etree import fromstring, QName
 from .utils import DBXIException, NS, QN
 
 
@@ -116,7 +116,7 @@ def handle_xifallback(elem, file=None, xinclude_stack=None):
     :return: True if xi:fallback found"""
 
     # There can be only xi:fallback in a xi:include, so just use the first child
-    if len(elem) == 0 or QName(elem[0]) != QName(NS['xi'], "fallback"):
+    if len(elem) == 0 or not isinstance(elem.tag, str) or QName(elem[0]) != QN['xi:fallback']:
         return False
 
     # Save the tailing text
@@ -216,7 +216,7 @@ def process_subtree(tree, base_url, file, xinclude_stack):
 
     # for elem in tree.getiterator() does not work here, as we modify tree in-place
     for elem in tree:
-        if elem.tag is Comment:
+        if not isinstance(elem.tag, str):
             continue
 
         if QName(elem) == QName(NS['xi'], "include"):
@@ -232,12 +232,11 @@ def flatten_subtree(tree):
     i = 0
     while i < len(tree):
         elem = tree[i]
-
-        if elem.tag is Comment:
+        if not isinstance(elem.tag, str):
             i += 1
             continue
 
-        if QName(elem) == QName(NS['xi'], "fallback"):
+        if QName(elem) == QN['xi:fallback']:
             # Copy tail
             if len(elem):
                 append_to_tail(elem[-1], elem.tail)
