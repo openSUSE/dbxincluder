@@ -36,7 +36,7 @@ def test_stdin(capsys):
     sys.stdin.close()
     sys.stdin = stdin
     assert ret == 0
-    assert capsys.readouterr()[0] == outputxml
+    assert outputxml == capsys.readouterr()[0]
 
 
 def test_target():
@@ -59,5 +59,5 @@ def test_xml(xmltestcase, capsys):
     outputerr = open(filepart + "err.xml", "r").read() if os.path.isfile(filepart + "err.xml") else ""
     dbxincluder.main(["", os.path.relpath(xmltestcase)])
     out, err = capsys.readouterr()
-    assert out == outputxml
-    assert err == outputerr
+    assert outputxml == out
+    assert outputerr == err
