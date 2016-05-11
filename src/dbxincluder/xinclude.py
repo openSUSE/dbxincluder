@@ -19,10 +19,15 @@
 """xinclude module: Processes raw XInclude 1.1 elements"""
 
 import os.path
+import sys
 import urllib.request
 
-from lxml.etree import fromstring, QName
+from lxml.etree import fromstring, Comment, QName
 from .utils import DBXIException, NS, QN
+
+
+class ResourceError(DBXIException):
+    """Same as DBXIException, just for resource errors"""
 
 
 def copy_attributes(elem, subtree):
@@ -54,11 +59,14 @@ def copy_attributes(elem, subtree):
 
 
 def get_target(elem, base_url, file=None):
-    """Return (the content of the target document as string, the URL that was used)
+    """Return tuple of the content of the target document as string and the URL that was used
 
     :param elem: XInclude element
     :param base_url: xml:base of the element
+    :raises DBXIException: href attribute is missing
+    :raises ResourceError: Couldn't fetch target
     """
+
     # Get href
     href = elem.get("href")
     if href is None:
@@ -75,20 +83,40 @@ def get_target(elem, base_url, file=None):
         content = target.read()
         target.close()
     except urllib.error.URLError:
-        raise DBXIException(elem, "Could not get target {0!r}".format(url), file)
+        raise ResourceError(elem, "Could not get target {0!r}".format(url), file)
     except IOError as ioex:
-        raise DBXIException(elem, "Could not get target {0!r}: {1}".format(url, ioex), file)
+        raise ResourceError(elem, "Could not get target {0!r}: {1}".format(url, ioex), file)
 
     return content, url
 
 
+def handle_xifallback(elem, file=None, xinclude_stack=None):
+    """Process the xi:include tag elem.
+    It will be replaced by the content of the xi:fallback subelement.
+
+    :param elem: The XInclude element to process
+    :param file: URL used to report errors
+    :param xinclude_stack: List (or None) of str with url and fragid to detect infinite recursion
+    :return: True if xi:fallback found"""
+
+    # There can be only xi:fallback in a xi:include, so just use the first child
+    if len(elem) == 0 or QName(elem[0]) != QName(NS['xi'], "fallback"):
+        return False
+
+    # process_tree before replacement to not lose xml:base on xi:include or xi:fallback
+    process_tree(elem[0], None, file, xinclude_stack)
+    elem.getparent().replace(elem, elem[0][0])
+    return True
+
+
 def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
-    """Process the xi:include tag elem
+    """Process the xi:include tag elem.
 
     :param elem: The XInclude element to process
     :param base_url: xml:base to use if not specified in the document
     :param file: URL used to report errors
     :param xinclude_stack: List (or None) of str with url and fragid to detect infinite recursion"""
+
     assert QName(elem) == QName(NS['xi'], "include"), "Not an XInclude"
     assert elem.getparent() is not None, "XInclude without parent"
 
@@ -109,7 +137,15 @@ def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
     elem.tail = ""
 
     # Load target
-    content, url = get_target(elem, base_url, file)
+    try:
+        content, url = get_target(elem, base_url, file)
+    except ResourceError as rex:
+        if not handle_xifallback(elem, file, xinclude_stack):
+            raise rex
+
+        # Is this output appropriate?
+        sys.stderr.write(str(rex) + "\n")
+        return
 
     # Include as text
     if elem.get("parse", "xml") != "xml":
@@ -154,6 +190,21 @@ def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
     elem.getparent().replace(elem, subtree)
 
 
+def process_subtree(tree, base_url, file, xinclude_stack):
+    """Like process_tree, but for subtrees."""
+
+    # for elem in tree.getiterator() does not work here, as we modify tree in-place
+    for elem in tree:
+        if elem.tag is Comment:
+            continue
+
+        if QName(elem) == QName(NS['xi'], "include"):
+            handle_xinclude(elem, base_url, file, xinclude_stack)
+            # handle_xinclude calls process_tree itself if required
+        else:
+            process_subtree(elem, base_url, file, xinclude_stack)
+
+
 def process_tree(tree, base_url=None, file=None, xinclude_stack=None):
     """Processes an ElementTree:
     - Search and process xi:include
@@ -162,12 +213,9 @@ def process_tree(tree, base_url=None, file=None, xinclude_stack=None):
     :param tree: ElementTree to process (gets modified)
     :param base_url: xml:base to use if not set in the tree
     :param file: URL used to report errors
-    :param xinclude_stack: Internal
-    :return: Nothing"""
+    :param xinclude_stack: Internal"""
 
     if base_url and not tree.get(QN['xml:base']):
         tree.set(QN['xml:base'], base_url)
 
-    for elem in tree.getiterator():
-        if QName(elem) == QName(NS['xi'], "include"):
-            handle_xinclude(elem, base_url, file, xinclude_stack)
+    process_subtree(tree, base_url, file, xinclude_stack)
