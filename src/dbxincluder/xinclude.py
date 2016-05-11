@@ -30,6 +30,22 @@ class ResourceError(DBXIException):
     """Same as DBXIException, just for resource errors"""
 
 
+def append_to_text(elem, string):
+    """Append str to elem's text.'"""
+    if elem.text:
+        elem.text += string
+    else:
+        elem.text = string
+
+
+def append_to_tail(elem, string):
+    """Append str to elem's tail.'"""
+    if elem.tail:
+        elem.tail += string
+    else:
+        elem.tail = string
+
+
 def copy_attributes(elem, subtree):
     """Modifies subtree according to
     https://www.w3.org/XML/2012/08/xinclude-11/Overview.html#attribute-copying
@@ -103,9 +119,14 @@ def handle_xifallback(elem, file=None, xinclude_stack=None):
     if len(elem) == 0 or QName(elem[0]) != QName(NS['xi'], "fallback"):
         return False
 
+    # Save the tailing text
+    append_to_tail(elem[0], elem.tail)
+
     # process_tree before replacement to not lose xml:base on xi:include or xi:fallback
     process_tree(elem[0], None, file, xinclude_stack)
-    elem.getparent().replace(elem, elem[0][0])
+
+    # Two passes for fallback processing, flatten them after process_tree
+    elem.getparent().replace(elem, elem[0])
     return True
 
 
@@ -132,10 +153,6 @@ def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
     if base_url is None:
         raise DBXIException(elem, "Could not get base URL", file)
 
-    # Save text after element
-    saved_tail = elem.tail
-    elem.tail = ""
-
     # Load target
     try:
         content, url = get_target(elem, base_url, file)
@@ -146,6 +163,10 @@ def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
         # Is this output appropriate?
         sys.stderr.write(str(rex) + "\n")
         return
+
+    # Save text after element
+    saved_tail = elem.tail
+    elem.tail = ""
 
     # Include as text
     if elem.get("parse", "xml") != "xml":
@@ -205,6 +226,41 @@ def process_subtree(tree, base_url, file, xinclude_stack):
             process_subtree(elem, base_url, file, xinclude_stack)
 
 
+def flatten_subtree(tree):
+    """Remove all xi:fallback elements in tree by replacing them with their content."""
+
+    i = 0
+    while i < len(tree):
+        elem = tree[i]
+
+        if elem.tag is Comment:
+            i += 1
+            continue
+
+        if QName(elem) == QName(NS['xi'], "fallback"):
+            # Copy tail
+            if len(elem):
+                append_to_tail(elem[-1], elem.tail)
+            else:
+                append_to_text(elem, elem.tail)
+
+            # Copy text
+            prev = elem.getprevious()
+            if prev is not None:
+                append_to_tail(prev, elem.text)
+            else:
+                append_to_text(tree, elem.text)
+
+            # Copy child elements
+            for subelem in elem:
+                tree.insert(tree.index(elem), subelem)
+
+            tree.remove(elem)
+        else:
+            i += 1
+            flatten_subtree(elem)
+
+
 def process_tree(tree, base_url=None, file=None, xinclude_stack=None):
     """Processes an ElementTree:
     - Search and process xi:include
@@ -219,3 +275,4 @@ def process_tree(tree, base_url=None, file=None, xinclude_stack=None):
         tree.set(QN['xml:base'], base_url)
 
     process_subtree(tree, base_url, file, xinclude_stack)
+    flatten_subtree(tree)

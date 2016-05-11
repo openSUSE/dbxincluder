@@ -1,8 +1,17 @@
 <article xmlns="http://docbook.org/ns/docbook" version="5.0" xml:base="tests/cases/xmlfallback.case.xml">
   <title>Transclusions demo</title>
-  <para>This will be included</para>
-    <para>This is included as well</para>
-            <sect1 version="5.0" xml:id="sec.parent" xml:base="tests/cases/xinclude1.xml">
+  
+        <para>This will be included</para>
+    
+  
+  
+        
+                <para>This is included as well</para>
+            
+        
+    
+  
+    <sect1 version="5.0" xml:id="sec.parent" xml:base="tests/cases/xinclude1.xml">
     <sect2 xml:id="sec.first">
         <para>First section!</para>
     </sect2>
