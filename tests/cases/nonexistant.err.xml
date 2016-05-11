@@ -1,0 +1,1 @@
+Error at tests/cases/nonexistant.case.xml:6: Could not get target "tests/cases/this file doesn't exist.xml"
