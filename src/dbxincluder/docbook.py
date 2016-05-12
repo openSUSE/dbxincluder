@@ -162,21 +162,3 @@ def process_tree(tree, base_url, file):
 
     # Remove unnecessary namespace declarations
     lxml.etree.cleanup_namespaces(tree)
-
-
-def process_xml(xml, base_url=None, file=None):
-    """Same as process_tree, but input and output is text
-
-    :param xml: str or UTF-8 encoded bytes of the input document
-    :param base_url: xml:base to use if not set in the tree
-    :param file: URL used to report errors
-    :return: UTF-8 encoded bytes of the output document"""
-    if not isinstance(xml, bytes):
-        xml = bytes(xml, encoding="UTF-8")
-
-    tree = lxml.etree.fromstring(xml, base_url=base_url)
-
-    process_tree(tree, base_url, file)
-
-    return lxml.etree.tostring(tree.getroottree(), encoding='unicode',
-                               pretty_print=True)
