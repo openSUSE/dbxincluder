@@ -48,20 +48,20 @@ def main(argv=None):
 
     base_url = None if argv[1] == "-" else argv[1]
     path = "<stdin>" if argv[1] == "-" else argv[1]
+
     try:
         file = sys.stdin if argv[1] == "-" else open(argv[1], "r")
-        inputxml = file.read()
-    except IOError as ioex:
-        sys.stderr.write("Could not read {0!r}: {1}!\n".format(argv[1], ioex.strerror))
+        tree = lxml.etree.parse(file)
+    except (lxml.etree.XMLSyntaxError, UnicodeDecodeError, IOError) as exc:
+        sys.stderr.write("Could not parse {0!r}: {1}\n".format(path, str(exc)))
         return 1
 
     try:
-        sys.stdout.write(docbook.process_xml(inputxml, base_url, path))
+        docbook.process_tree(tree.getroot(), base_url, path)
+        sys.stdout.write(lxml.etree.tostring(tree, encoding='unicode',
+                         pretty_print=True))
     except utils.DBXIException as exc:
         sys.stderr.write(str(exc) + "\n")
-        return 1
-    except lxml.etree.XMLSyntaxError as exc:
-        sys.stderr.write(base_url + ": " + str(exc) + "\n")
         return 1
 
     return 0
