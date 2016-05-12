@@ -31,7 +31,7 @@ class ResourceError(DBXIException):
 
 
 def append_to_text(elem, string):
-    """Append str to elem's text.'"""
+    """Append str to elem's text."""
     if elem.text:
         elem.text += string
     else:
@@ -39,7 +39,7 @@ def append_to_text(elem, string):
 
 
 def append_to_tail(elem, string):
-    """Append str to elem's tail.'"""
+    """Append str to elem's tail."""
     if elem.tail:
         elem.tail += string
     else:
@@ -59,7 +59,7 @@ def copy_attributes(elem, subtree):
         qname = QName(name)
         if qname.namespace is None and qname.localname == "set-xml-id":
             # Override/Remove xml:id on all top-level elements
-            if len(value):
+            if value:
                 subtree.set(QN['xml:id'], value)
             elif subtree.get(QN['xml:id']):
                 del subtree.attrib[QN['xml:id']]
