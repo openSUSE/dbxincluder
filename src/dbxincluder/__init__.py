@@ -59,7 +59,7 @@ def main(argv=None):
     try:
         docbook.process_tree(tree.getroot(), base_url, path)
         sys.stdout.write(lxml.etree.tostring(tree, encoding='unicode',
-                         pretty_print=True))
+                                             pretty_print=True))
     except utils.DBXIException as exc:
         sys.stderr.write(str(exc) + "\n")
         return 1
