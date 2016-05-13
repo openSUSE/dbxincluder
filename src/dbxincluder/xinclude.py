@@ -164,7 +164,7 @@ def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
     assert elem.getparent() is not None, "XInclude without parent"
 
     if elem.get("xpointer") is not None:
-        assert False, "xpointer not implemented. Use fragid instead"
+        assert False, "xpointer not implemented. Use fragid instead"  # pragma: no cover
 
     # Validate attributes
     validate_xinclude(elem, file)

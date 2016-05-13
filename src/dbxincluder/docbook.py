@@ -37,7 +37,8 @@ def associate_new_ids(subtree):
                            namespaces=NS)
 
     if idfixup == "suffix":
-        assert len(suffix), "No suffix given"
+        if len(suffix) == 0:
+            raise DBXIException(subtree, "no suffix found")
         suffix = suffix[0]
 
     for elem in subtree.iter():
@@ -74,6 +75,8 @@ def find_target(elem, subtree, value, linkscope):
                 return target[0]
     elif linkscope == "global":
         target = elem.xpath("//*[@xml:id={0!r}]".format(value))
+    else:
+        assert False, "linkscope not handled"  # pragma: no cover
 
     return None if len(target) == 0 else target[0]
 
@@ -82,6 +85,7 @@ def fixup_references(subtree):
     """Fix all references if idfixup is set
 
     :param subtree: subtree to process"""
+
     for elem in subtree.iter():
         if not isinstance(elem.tag, str) or QName(elem).namespace != NS['db']:
             continue
@@ -94,12 +98,15 @@ def fixup_references(subtree):
         if linkscope not in ["near", "local", "global", "user"]:
             raise DBXIException(elem, "invalid linkscope type {0!r}".format(linkscope))
 
-        idfixup = elem.xpath("ancestor-or-self::*[@trans:idfixup][1]/@trans:idfixup",
+        idfixup_elem = elem.xpath("ancestor-or-self::*[@trans:idfixup][1]",
                              namespaces=NS)
 
-        idfixup = idfixup[0] if len(idfixup) else "none"
+        idfixup = "none"
+        if len(idfixup_elem):
+            idfixup_elem = idfixup_elem[0]
+            idfixup = idfixup_elem.get(QName(NS['trans'], "idfixup"))
 
-        if idfixup == "none" or "linkscope" == "user":
+        if idfixup == "none" or linkscope == "user":
             continue  # Nothing to do here
 
         idrefs = ["linkend", "otherterm", "startref", "targetptr", "endterm"]
@@ -110,10 +117,10 @@ def fixup_references(subtree):
                 continue
 
             if attr in idrefs_multi:
-                assert False, "Not implemented"
+                assert False, "Not implemented"  # pragma: no cover
 
             # Find referenced element
-            target = find_target(elem, subtree, value, linkscope)
+            target = find_target(elem, idfixup_elem, value, linkscope)
 
             if target is None:
                 raise DBXIException(elem, "Could not resolve reference {0!r}".format(value))
