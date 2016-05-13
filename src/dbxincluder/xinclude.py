@@ -98,9 +98,10 @@ def get_target(elem, base_url, file=None):
             target = urllib.request.urlopen("file://" + os.path.abspath(url))
         content = target.read()
         target.close()
-    except (urllib.error.URLError, IOError) as exc:
-        msg = str(exc.args[0])
-        raise ResourceError(elem, "Could not get target {0!r}: {1}".format(url, msg), file)
+    except urllib.error.URLError:
+        raise ResourceError(elem, "Could not get target {0!r}".format(url), file)
+    except IOError as ioex:
+        raise ResourceError(elem, "Could not get target {0!r}: {1}".format(url, ioex), file)
 
     return content, url
 
