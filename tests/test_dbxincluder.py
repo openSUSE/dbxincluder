@@ -21,7 +21,12 @@ def test_version(capsys):
 
 
 def test_help(capsys):
-    assert dbxincluder.main(["", "--help"]) == 2
+    assert dbxincluder.main(["", "--help"]) == 0
+    capsys.readouterr()
+
+
+def test_invalid(capsys):
+    assert dbxincluder.main(["", "--asdf"]) == 1
     capsys.readouterr()
 
 

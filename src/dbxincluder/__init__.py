@@ -16,8 +16,21 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
-"""Main module"""
+"""
+dbxincluder: XInclude and DocBook transclusion processor
 
+Usage:
+  dbxincluder [--] <input>
+  dbxincluder -h | --help
+  dbxincluder --version
+
+Options:
+  -h --help     Show this screen.
+  --version     Show the version.
+
+"""
+
+import docopt
 import sys
 import lxml.etree
 
@@ -32,25 +45,18 @@ def main(argv=None):
     Parses argv (sys.argv if None) and does stuff."""
     argv = argv if argv else sys.argv
 
-    if len(argv) != 2 or "--help" in argv or "-h" in argv:
-        # Print usage
-        print("dbxincluder {0}".format(__version__))
-        print("""Usage:
-\tdbxincluder -h | --help\tPrint help
-\tdbxincluder --version  \tPrint version
-\tdbxincluder <xml file> \tProcess file and output to STDOUT
-\tdbxincluder -          \tProcess STDIN and output to STDOUT""")
-        return 2
-    elif argv[1] == "--version":
-        # Print version
-        print("dbxincluder {0}".format(__version__))
-        return 0
+    try:
+        opts = docopt.docopt(__doc__, argv[1:], help=True, version="dbxincluder " + __version__)
+    except SystemExit as exc:
+        sys.stderr.write(str(exc) + "\n")
+        return 0 if exc.code is None else 1
 
-    base_url = None if argv[1] == "-" else argv[1]
-    path = "<stdin>" if argv[1] == "-" else argv[1]
+    use_stdin = opts["<input>"] == "-"
+    base_url = None if use_stdin else opts["<input>"]
+    path = "<stdin>" if use_stdin else opts["<input>"]
 
     try:
-        file = sys.stdin if argv[1] == "-" else open(argv[1], "r")
+        file = sys.stdin if use_stdin else open(base_url, "r")
         tree = lxml.etree.parse(file)
     except (lxml.etree.XMLSyntaxError, UnicodeDecodeError, IOError) as exc:
         sys.stderr.write("Could not parse {0!r}: {1}\n".format(path, str(exc)))

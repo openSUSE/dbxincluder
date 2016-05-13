@@ -1,4 +1,5 @@
 # Requirements File for pip
 
+docopt
 lxml
 urllib3
