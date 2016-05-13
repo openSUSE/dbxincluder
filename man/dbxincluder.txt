@@ -1,0 +1,24 @@
+NAME
+  dbxincluder - DocBook transcluder and XInclude preprocessor
+SYNOPSIS
+  dbxincluder [--] <input>
+  dbxincluder -h | --help
+  dbxincluder --version
+DESCRIPTION
+  dbxincluder is an implementation of the XInclude 1.1 specification
+  (https://www.w3.org/TR/xinclude-11)
+  with support for DocBook transclusion (http://docbook.org/docs/transclusion).
+
+  If the input file is specified as "-", standard input is used.
+  The result is always printed to standard output.
+OPTIONS
+  -h, --help  Display help and usage information
+  --version   Show the program's version
+EXAMPLE
+  Try this command to format this text itself:
+
+      $ txt2man -h 2>&1 | txt2man -T
+BUGS
+  - Does not support XPointers and all attributes that provide references
+AUTHOR
+  Fabian Vogt <fvogt@suse.com>
