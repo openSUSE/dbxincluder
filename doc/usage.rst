@@ -5,8 +5,8 @@ How to use dbxincluder
 Installation
 ============
 
-dbxincluder depends on setuptools for automatic installation, docopt for option processing,
-lxml for XML processing and urllib3 to load XInclude targets.
+dbxincluder depends on setuptools for automatic installation, docopt for option processing and
+lxml for XML processing.
 
 Simply run 
 

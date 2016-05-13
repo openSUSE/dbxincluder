@@ -79,7 +79,7 @@ setup(
         "docbook", "xinclude", "transclusion"
     ],
     install_requires=[
-        "lxml"
+        "lxml", "docopt"
     ],
     extras_require={
         # eg:

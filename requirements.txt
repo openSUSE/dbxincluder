@@ -2,4 +2,3 @@
 
 docopt
 lxml
-urllib3
