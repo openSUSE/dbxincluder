@@ -64,5 +64,5 @@ def test_xml(xmltestcase, capsys):
     outputerr = open(filepart + "err.xml", "r").read() if os.path.isfile(filepart + "err.xml") else ""
     dbxincluder.main(["", os.path.relpath(xmltestcase)])
     out, err = capsys.readouterr()
-    assert outputxml == out
     assert outputerr == err
+    assert outputxml == out

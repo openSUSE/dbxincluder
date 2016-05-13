@@ -98,10 +98,8 @@ def get_target(elem, base_url, file=None):
             target = urllib.request.urlopen("file://" + os.path.abspath(url))
         content = target.read()
         target.close()
-    except urllib.error.URLError:
-        raise ResourceError(elem, "Could not get target {0!r}".format(url), file)
-    except IOError as ioex:
-        raise ResourceError(elem, "Could not get target {0!r}: {1}".format(url, ioex), file)
+    except (urllib.error.URLError, IOError) as exc:
+        raise ResourceError(elem, "Could not get target {0!r}: {1}".format(url, str(exc.args[0])), file)
 
     return content, url
 
@@ -130,6 +128,28 @@ def handle_xifallback(elem, file=None, xinclude_stack=None):
     return True
 
 
+def validate_xinclude(elem, file):
+    """Raise DBXIException if the XInclude element elem is not valid."""
+
+    valid_attributes = ["href", "fragid", "parse", "set-xml-id"]
+
+    for attr in elem.keys():
+        qname = QName(attr)
+        if qname.namespace is None and qname.localname not in valid_attributes:
+            raise DBXIException(elem, "Invalid attribute {0!r}".format(str(qname)), file)
+
+    parse = elem.get("parse", "xml")
+    if parse not in ["xml", "text"]:
+        raise DBXIException(elem, "Invalid value for parse: {0!r}".format(parse))
+
+    fragid = elem.get("fragid")
+    if parse != "xml" and fragid is not None:
+        raise DBXIException(elem, "fragid invalid, parse != 'xml'", file)
+
+    if len(elem) != 0 and (len(elem) > 1 or QName(elem[0]) != QN['xi:fallback']):
+        raise DBXIException(elem, "Only one xi:fallback can be a child of xi:include", file)
+
+
 def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
     """Process the xi:include tag elem.
 
@@ -138,13 +158,14 @@ def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
     :param file: URL used to report errors
     :param xinclude_stack: List (or None) of str with url and fragid to detect infinite recursion"""
 
-    assert QName(elem) == QName(NS['xi'], "include"), "Not an XInclude"
+    assert QName(elem) == QN["xi:include"], "Not an XInclude"
     assert elem.getparent() is not None, "XInclude without parent"
 
-    # Get fragid
-    fragid = elem.get("fragid")
-    if elem.get("parse", "xml") != "xml" and fragid is not None:
-        raise DBXIException(elem, "fragid invalid, parse != 'xml'", file)
+    if elem.get("xpointer") is not None:
+        assert False, "xpointer not implemented. Use fragid instead"
+
+    # Validate attributes
+    validate_xinclude(elem, file)
 
     # Get base (nearest xml:base or current directory)
     base_urls = elem.xpath("ancestor-or-self::*[@xml:base][1]/@xml:base")
@@ -181,6 +202,7 @@ def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
     if xinclude_stack is None:
         xinclude_stack = []
 
+    fragid = elem.get("fragid")
     xinclude_id = "{0!r}>{1!r}".format(url, fragid)
     if xinclude_id in xinclude_stack:
         raise DBXIException(elem, "Infinite recursion detected", file)
@@ -219,7 +241,7 @@ def process_subtree(tree, base_url, file, xinclude_stack):
         if not isinstance(elem.tag, str):
             continue
 
-        if QName(elem) == QName(NS['xi'], "include"):
+        if QName(elem) == QN["xi:include"]:
             handle_xinclude(elem, base_url, file, xinclude_stack)
             # handle_xinclude calls process_tree itself if required
         else:

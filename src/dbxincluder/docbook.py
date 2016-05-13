@@ -74,8 +74,6 @@ def find_target(elem, subtree, value, linkscope):
                 return target[0]
     elif linkscope == "global":
         target = elem.xpath("//*[@xml:id={0!r}]".format(value))
-    else:
-        raise DBXIException(elem, "linkscope type {0!r} not implemented".format(linkscope))
 
     return None if len(target) == 0 else target[0]
 
@@ -88,27 +86,27 @@ def fixup_references(subtree):
         if not isinstance(elem.tag, str) or QName(elem).namespace != NS['db']:
             continue
 
-        idfixup = elem.xpath("ancestor-or-self::*[@trans:idfixup][1]/@trans:idfixup",
-                             namespaces=NS)
-
-        idfixup = idfixup[0] if len(idfixup) else "none"
-
-        if idfixup == "none":
-            continue  # Nothing to do here
-
         linkscope = elem.xpath("ancestor-or-self::*[@trans:linkscope][1]/@trans:linkscope",
                                namespaces=NS)
 
         linkscope = linkscope[0] if len(linkscope) else "near"
 
-        if linkscope == "user":
+        if linkscope not in ["near", "local", "global", "user"]:
+            raise DBXIException(elem, "invalid linkscope type {0!r}".format(linkscope))
+
+        idfixup = elem.xpath("ancestor-or-self::*[@trans:idfixup][1]/@trans:idfixup",
+                             namespaces=NS)
+
+        idfixup = idfixup[0] if len(idfixup) else "none"
+
+        if idfixup == "none" or "linkscope" == "user":
             continue  # Nothing to do here
 
-        idrefs = ["linkend", "linkends", "otherterm", "zone", "startref",
-                  "arearefs", "targetptr", "endterm"]
+        idrefs = ["linkend", "otherterm", "startref", "targetptr", "endterm"]
         idrefs_multi = ["arearefs", "linkends", "zone"]
+
         for attr, value in elem.items():
-            if attr not in idrefs:
+            if attr not in idrefs and attr not in idrefs_multi:
                 continue
 
             if attr in idrefs_multi:

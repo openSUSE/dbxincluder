@@ -1,1 +1,1 @@
-Error at tests/cases/nonexistant.case.xml:6: Could not get target "tests/cases/this file doesn't exist.xml"
+Error at tests/cases/nonexistant.case.xml:6: Could not get target "tests/cases/this file doesn't exist.xml": [Errno 2] No such file or directory: "/home/fabian/doku/dbxincluder/tests/cases/this file doesn't exist.xml"
