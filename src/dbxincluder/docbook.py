@@ -99,7 +99,7 @@ def fixup_references(subtree):
             raise DBXIException(elem, "invalid linkscope type {0!r}".format(linkscope))
 
         idfixup_elem = elem.xpath("ancestor-or-self::*[@trans:idfixup][1]",
-                             namespaces=NS)
+                                  namespaces=NS)
 
         idfixup = "none"
         if len(idfixup_elem):
