@@ -89,7 +89,11 @@ def get_target(elem, base_url, file=None):
         raise DBXIException(elem, "Missing href attribute", file)
 
     # Build full URL
-    url = "/".join(base_url.split("/")[:-1]) + "/" + href
+    urlparts = base_url.split("/")
+    if len(urlparts) > 1:
+        url = "/".join(urlparts[:-1]) + "/" + href
+    else:  # pragma: no cover
+        url = href
 
     try:
         if "://" in base_url:
