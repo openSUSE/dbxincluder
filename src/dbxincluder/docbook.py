@@ -16,7 +16,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
-"""Handle the docbook specific part of transclusion"""
+"""Handle the DocBook specific part of transclusion"""
 
 import lxml.etree
 

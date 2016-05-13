@@ -89,7 +89,7 @@ Result:
   </another>
   </root>
 
-DocBook transclusion
+DocBook Transclusion
 --------------------
 
 Example taken from http://docbook.org/docs/transclusion/#tutorial
