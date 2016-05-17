@@ -1,0 +1,3 @@
+Error at tests/cases/xmlfallbackmulti.case.xml:9: Could not get target 'tests/cases/nonexistant.xml'
+Error at tests/cases/xmlfallbackmulti.case.xml:6: Could not get target 'tests/cases/nonexistant.xml'
+Error at tests/cases/xmlfallbackmulti.case.xml:19: Could not get target 'tests/cases/nonexistant.xml'
