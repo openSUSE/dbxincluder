@@ -126,10 +126,10 @@ def handle_xifallback(elem, file=None, xinclude_stack=None):
     # Save the tailing text
     append_to_tail(elem[0], elem.tail)
 
-    # process_tree before replacement to not lose xml:base on xi:include or xi:fallback
-    process_tree(elem[0], None, file, xinclude_stack)
+    # process_xinclude before replacement to not lose xml:base on xi:include or xi:fallback
+    process_xinclude(elem[0], None, file, xinclude_stack)
 
-    # Two passes for fallback processing, flatten them after process_tree
+    # Two passes for fallback processing, flatten them after process_xinclude in process_tree
     elem.getparent().replace(elem, elem[0])
     return True
 
@@ -233,14 +233,14 @@ def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
     copy_attributes(elem, subtree)
 
     subtree.tail = saved_tail
-    process_tree(subtree, url, url, xinclude_stack + [xinclude_id])
+    process_xinclude(subtree, url, url, xinclude_stack + [xinclude_id])
 
     # Replace XInclude by subtree
     elem.getparent().replace(elem, subtree)
 
 
 def process_subtree(tree, base_url, file, xinclude_stack):
-    """Like process_tree, but for subtrees."""
+    """Like process_xinclude, but for subtrees."""
 
     # for elem in tree.getiterator() does not work here, as we modify tree in-place
     for elem in tree:
@@ -288,10 +288,13 @@ def flatten_subtree(tree):
             flatten_subtree(elem)
 
 
-def process_tree(tree, base_url=None, file=None, xinclude_stack=None):
+def process_xinclude(tree, base_url=None, file=None, xinclude_stack=None):
     """Processes an ElementTree:
     - Search and process xi:include
     - Add xml:base (=source) to the root element
+
+    This does not resolve xi:fallback correctly.
+    Use process_tree for that.
 
     :param tree: ElementTree to process (gets modified)
     :param base_url: xml:base to use if not set in the tree
@@ -302,4 +305,17 @@ def process_tree(tree, base_url=None, file=None, xinclude_stack=None):
         tree.set(QN['xml:base'], base_url)
 
     process_subtree(tree, base_url, file, xinclude_stack)
+
+
+def process_tree(tree, base_url=None, file=None, xinclude_stack=None):
+    """Processes an ElementTree:
+    - Search and process xi:include
+    - Add xml:base (=source) to the root element
+
+    :param tree: ElementTree to process (gets modified)
+    :param base_url: xml:base to use if not set in the tree
+    :param file: URL used to report errors
+    :param xinclude_stack: Internal"""
+
+    process_xinclude(tree, base_url, file, xinclude_stack)
     flatten_subtree(tree)
