@@ -258,7 +258,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'dbxincluder', 'dbxincluder Documentation',
+    ('manpage', 'dbxincluder', 'dbxincluder - DocBook transcluder and XInclude preprocessor',
      [author], 1)
 ]
 

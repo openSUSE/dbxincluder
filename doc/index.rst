@@ -13,6 +13,7 @@ Contents:
 
    overview
    usage
+   manpage
    apidoc
 
 Indices and tables
