@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<book xmlns="http://docbook.org/ns/docbook"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xmlns:trans="http://docbook.org/ns/transclude"
+      version="5.0">
+  <title>Definitive Printer Guide</title>
+  <chapter xml:id="buy">
+    <title>Buying printer</title>
+    <para>Grab money, go to shop, ...</para>
+  </chapter>
+  <chapter>
+    <title>Quick installation guide</title>
+    <para>Carefully follow all procedures bellow.</para>
+    <xi:include href="procedure.001.xml" parse="not at all"/>
+  </chapter>
+</book>
