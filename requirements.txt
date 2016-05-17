@@ -1,4 +1,4 @@
 # Requirements File for pip
-#
+
+docopt
 lxml
-py

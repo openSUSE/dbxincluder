@@ -5,6 +5,7 @@ from __future__ import absolute_import, print_function
 import io
 import os
 import re
+import sys
 from glob import glob
 from os.path import basename
 from os.path import dirname
@@ -14,6 +15,27 @@ from os.path import splitext
 
 from setuptools import find_packages
 from setuptools import setup
+from setuptools.command.test import test as TestCommand
+
+
+class PyTest(TestCommand):
+    user_options = [('pytest-args=', 'a', "Arguments to pass to py.test")]
+
+    def initialize_options(self):
+        TestCommand.initialize_options(self)
+        self.pytest_args = []
+
+    def finalize_options(self):
+        TestCommand.finalize_options(self)
+        self.test_args = []
+        self.test_suite = True
+
+    def run_tests(self):
+        # import here, cause outside the eggs aren't loaded
+        import pytest
+        errno = pytest.main(self.pytest_args)
+        sys.exit(errno)
+
 
 def read(*names, **kwargs):
     return io.open(
@@ -27,10 +49,9 @@ setup(
     version='0.1.0',
     license='GPL 3.0',
     description='Transclusions for DocBook with XInclude 1.1',
-    long_description='%s\n%s' % (read('README.rst'), re.sub(':[a-z]+:`~?(.*?)`', r'``\1``', read('CHANGELOG.rst'))),
-    author='Thomas Schraitle',
-    author_email='toms@opensuse.org',
-    url='https://github.com/tomschr/dbxincluder',
+    author='Fabian Vogt',
+    author_email='fvogt@suse.com',
+    url='https://github.com/openSUSE/dbxincluder',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
@@ -38,10 +59,9 @@ setup(
     zip_safe=False,
     classifiers=[
         # complete classifier list: http://pypi.python.org/pypi?%3Aaction=list_classifiers
-        'Development Status :: 1 - Planning'
+        'Development Status :: 3 - Alpha'
         'Intended Audience :: Developers',
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
-        'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
         'Operating System :: Unix',
         'Operating System :: POSIX',
         'Operating System :: Microsoft :: Windows',
@@ -53,13 +73,13 @@ setup(
         'Topic :: Utilities',
         'Topic :: Documentation',
         'Topic :: Software Development :: Documentation',
+        'Topic :: Text Processing :: Markup :: XML',
     ],
     keywords=[
-        # eg: 'keyword1', 'keyword2', 'keyword3',
-        "docbook", "xinclude"
+        "docbook", "xinclude", "transclusion"
     ],
     install_requires=[
-        # eg: 'aspectlib==1.1.1', 'six>=1.7',
+        "lxml", "docopt"
     ],
     extras_require={
         # eg:
@@ -67,8 +87,12 @@ setup(
         #   ':python_version=="2.6"': ['argparse'],
     },
     entry_points={
-        'console_scripts': [
-            'dbxincluder = dbxincluder.__main__:main',
-        ]
-    },
+        'console_scripts': ['dbxincluder=dbxincluder:main'],
+        },
+
+    # Required packages for testing
+    tests_require=['pytest'],
+
+    # Actually run tests
+    cmdclass = {'test': PyTest},
 )

@@ -1,0 +1,4 @@
+-rrequirements.txt
+tox
+pytest
+coveralls

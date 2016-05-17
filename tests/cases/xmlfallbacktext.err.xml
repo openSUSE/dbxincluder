@@ -1,0 +1,5 @@
+Error at tests/cases/xmlfallbacktext.case.xml:6: Could not get target 'tests/cases/nonexistant.xml'
+Error at tests/cases/xmlfallbacktext.case.xml:15: Could not get target 'tests/cases/nonexistant.xml'
+Error at tests/cases/xmlfallbacktext.case.xml:21: Could not get target 'tests/cases/nonexistant.xml'
+Error at tests/cases/xmlfallbacktext.case.xml:26: Could not get target 'tests/cases/nonexistant.xml'
+Error at tests/cases/xmlfallbacktext.case.xml:27: Could not get target 'tests/cases/nonexistant.xml'

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<article xmlns="http://docbook.org/ns/docbook" version="5.0">
-  <title>Placeholder for definitions</title>
-  <para>
-    <phrase xml:id="product-version">3.14</phrase>
-    <phrase xml:id="product-name">FooWiz</phrase>
-    <phrase xml:id="corp-name">ACME Inc.</phrase>
-  </para>
-</article>

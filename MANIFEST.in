@@ -1,24 +1,17 @@
-graft docs
-graft examples
-graft src
-graft ci
+include .bumpversion.cfg
+include .coverage*
+include .landscape.yml
+include .travis.yml
+include *requirements.txt
+include tox.ini
+include *.md
+recursive-include doc *.rst
+recursive-include doc Makefile
+recursive-include doc conf.py
+include LICENSE
+
 graft tests
 
-include .bumpversion.cfg
-include .coveragerc
-include .cookiecutterrc
-include .isort.cfg
-include .pylintrc
+recursive-include src
 
-include AUTHORS.rst
-include CHANGELOG.rst
-include CONTRIBUTING.rst
-include LICENSE
-include README.rst
-include TODO
-include dev_requirements.txt
-include requirements.txt
-
-include tox.ini .travis.yml appveyor.yml
-
-global-exclude *.py[cod] __pycache__ *.so *.dylib
+global-exclude *.py[cod] __pycache__ *.so *.dylib *~ *.bak
