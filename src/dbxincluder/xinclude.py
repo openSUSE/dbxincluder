@@ -104,7 +104,7 @@ def get_target(elem, base_url, file=None):
         target.close()
     except urllib.error.URLError:
         raise ResourceError(elem, "Could not get target {0!r}".format(url), file)
-    except IOError as ioex:
+    except IOError as ioex:  # pragma: no cover
         raise ResourceError(elem, "Could not get target {0!r}: {1}".format(url, ioex), file)
 
     return content, url
@@ -178,7 +178,7 @@ def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
 
     base_url = base_urls[0] if len(base_urls) == 1 else base_url
     if base_url is None:
-        raise DBXIException(elem, "Could not get base URL", file)
+        raise DBXIException(elem, "Could not get base URL", file)  # pragma: no cover
 
     # Load target
     try:
