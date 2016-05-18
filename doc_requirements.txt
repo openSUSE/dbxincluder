@@ -1,0 +1,2 @@
+sphinxjp.themes.basicstrap
+-rdevel_requirements.txt
