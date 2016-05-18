@@ -1,1 +1,1 @@
-Error at :14: Could not resolve reference 'byu'
+Error at tests/cases/invref.case.xml:14: Could not resolve reference 'byu'

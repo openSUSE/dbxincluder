@@ -40,17 +40,56 @@ QN = {'xml:id': QName(NS['xml'], "id"),
       'dbxi:newid': QName(NS['dbxi'], "newid")}
 
 
+def get_inherited_attribute(elem, attribute, default=None):
+    """Return the value of the inherited or directly set attribute or default.
+
+    :param elem: The element to query
+    :param attribute: The name of the attribute
+    :return: Tuple of (str, None or default, element with value)"""
+
+    values = elem.xpath("ancestor-or-self::*[@{0}][1]".format(attribute),
+                        namespaces=NS)
+    if len(values) == 0:
+        return (default, None)
+
+    return (values[0].xpath("@"+attribute, namespaces=NS)[0], values[0])
+
+
+def create_xinclude_stack(elem):
+    """Return a formatted string which prints the xml:base attributes in inverted order.
+    Example:
+    Included by source.xml
+    Included by parent.xml
+
+    :param elem: Source element
+    :return str: Formatted string. Empty or starts with a newline"""
+    xml_bases = elem.xpath("ancestor-or-self::*[@xml:base]/@xml:base", namespaces=NS)
+    if len(xml_bases) < 2:
+        return ""
+
+    # We may get the original line here by adding a custom attribute in xinclude.process_xinclude
+    return "\nIncluded by ".join([""] + xml_bases[:-1][::-1])
+
+
 class DBXIException(Exception):
     """Exception type for XML errors"""
     def __init__(self, elem, message=None, file=None):
-        """Construct an DBXIException
+        """Construct an DBXIException.
+        If file is none, it tries to get the file name by xml:base.
+        Prints a "stack trace" of xml:base of elem.
 
         :param elem: Element that caused error
         :param message: Message to show. Can be None.
         :param file: URL of source, can be None."""
-        file = file if file is not None else ""
+
+        # Try xml:base if no file provided
+        if file is None or len(file) == 0:
+            file = get_inherited_attribute(elem, "xml:base", "")[0]
+
+        stack = create_xinclude_stack(elem)
+
         message = ": " + message if message else ""
-        self.error = "Error at {0}:{1}{2}".format(file, elem.sourceline, message)
+        self.error = "Error at {0}:{1}{2}{3}".format(file, elem.sourceline, message, stack)
         super().__init__(self.error)
 
 

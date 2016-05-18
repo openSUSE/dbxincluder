@@ -22,7 +22,7 @@ import lxml.etree
 
 from lxml.etree import QName
 from . import xinclude
-from .utils import DBXIException, generate_id, NS, QN
+from .utils import DBXIException, NS, QN, generate_id, get_inherited_attribute
 
 
 def associate_new_ids(subtree):
@@ -33,13 +33,11 @@ def associate_new_ids(subtree):
     if idfixup == "none":
         return  # Nothing to do here
 
-    suffix = subtree.xpath("ancestor-or-self::*[@trans:suffix][1]/@trans:suffix",
-                           namespaces=NS)
-
+    suffix = None
     if idfixup == "suffix":
-        if len(suffix) == 0:
+        suffix, _ = get_inherited_attribute(subtree, "trans:suffix")
+        if suffix is None:
             raise DBXIException(subtree, "no suffix found")
-        suffix = suffix[0]
 
     for elem in subtree.iter():
         cur_id = elem.get(QN['xml:id'])
@@ -90,21 +88,12 @@ def fixup_references(subtree):
         if not isinstance(elem.tag, str) or QName(elem).namespace != NS['db']:
             continue
 
-        linkscope = elem.xpath("ancestor-or-self::*[@trans:linkscope][1]/@trans:linkscope",
-                               namespaces=NS)
-
-        linkscope = linkscope[0] if len(linkscope) else "near"
+        linkscope, _ = get_inherited_attribute(elem, "trans:linkscope", "near")
 
         if linkscope not in ["near", "local", "global", "user"]:
             raise DBXIException(elem, "invalid linkscope type {0!r}".format(linkscope))
 
-        idfixup_elem = elem.xpath("ancestor-or-self::*[@trans:idfixup][1]",
-                                  namespaces=NS)
-
-        idfixup = "none"
-        if len(idfixup_elem):
-            idfixup_elem = idfixup_elem[0]
-            idfixup = idfixup_elem.get(QName(NS['trans'], "idfixup"))
+        (idfixup, idfixup_elem) = get_inherited_attribute(elem, "trans:idfixup", "none")
 
         if idfixup == "none" or linkscope == "user":
             continue  # Nothing to do here

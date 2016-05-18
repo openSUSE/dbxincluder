@@ -23,7 +23,7 @@ import sys
 import urllib.request
 
 from lxml.etree import fromstring, QName
-from .utils import DBXIException, NS, QN
+from .utils import DBXIException, NS, QN, get_inherited_attribute
 
 
 class ResourceError(DBXIException):
@@ -174,9 +174,7 @@ def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
     validate_xinclude(elem, file)
 
     # Get base (nearest xml:base or current directory)
-    base_urls = elem.xpath("ancestor-or-self::*[@xml:base][1]/@xml:base")
-
-    base_url = base_urls[0] if len(base_urls) == 1 else base_url
+    base_url = get_inherited_attribute(elem, "xml:base", base_url)[0]
     if base_url is None:
         raise DBXIException(elem, "Could not get base URL", file)  # pragma: no cover
 
@@ -222,8 +220,7 @@ def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
         if len(subtree) == 1:
             subtree = subtree[0]
             # Get xml:base of subdocument
-            base_urls = subtree.xpath("ancestor-or-self::*[@xml:base][1]/@xml:base")
-            url = base_urls[0] if len(base_urls) == 1 else url
+            url = get_inherited_attribute(subtree, "xml:base", url)[0]
         else:
             raise DBXIException(elem, file=file,
                                 message="Could not find fragid {0!r} in target {1!r}"

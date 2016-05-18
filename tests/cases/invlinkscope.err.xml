@@ -1,1 +1,2 @@
-Error at :2: invalid linkscope type 'the whole world'
+Error at tests/cases/procedure.001.xml:2: invalid linkscope type 'the whole world'
+Included by tests/cases/invlinkscope.case.xml
