@@ -1,20 +1,44 @@
-.. dbxincluder documentation master file, created by
-   sphinx-quickstart on Wed May  4 10:26:24 2016.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+=====================
+dbxincluder |version|
+=====================
 
-Welcome to dbxincluder's documentation!
-=======================================
+dbxincluder is an implementation of the XInclude 1.1 specification (https://www.w3.org/TR/xinclude-11)
+with support for DocBook transclusion (http://docbook.org/docs/transclusion).
 
-Contents:
+.. sidebar:: Links
+
+   * `GitHub Project <https://github.com/openSUSE/dbxincluder>`__
+   * `Official Documentation <https://opensuse.github.io/dbxincluder>`__
 
 .. toctree::
    :maxdepth: 2
 
-   overview
    usage
+
+.. toctree::
+   :maxdepth: 1
+
    manpage
    apidoc
+
+
+Limitations
+===========
+
+It does not support the XInclude 1.1 ``xpointer`` attribute, as the XPointer functionality is currently not exposed by lxml.
+
+
+Contributing and Reporting Bugs
+===============================
+
+The main repository for dbxincluder can be found on GitHub: https://github.com/openSUSE/dbxincluder
+You are free to open bug reports and send pull requests.
+
+
+Authors
+=======
+
+This software is based on work by Thomas Schraitle, mostly rewritten by Fabian Vogt.
 
 Indices and tables
 ==================

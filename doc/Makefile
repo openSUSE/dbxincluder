@@ -23,6 +23,7 @@ I18NSPHINXOPTS  = $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
 	@echo "  html       to make standalone HTML files"
+	@echo "  deploy     to deploy the built HTML to gh-pages"
 	@echo "  dirhtml    to make HTML files named index.html in directories"
 	@echo "  singlehtml to make a single large HTML file"
 	@echo "  pickle     to make pickle files"
@@ -228,3 +229,14 @@ dummy:
 	$(SPHINXBUILD) -b dummy $(ALLSPHINXOPTS) $(BUILDDIR)/dummy
 	@echo
 	@echo "Build finished. Dummy builder generates no files."
+
+.PHONY: deploy
+deploy: html
+	# Sphinx doesn't support whitespace in BUILDDIR either, so...
+	[ -d $(BUILDDIR)/../gh-pages ] || git clone -b gh-pages $(shell git remote get-url --push $(shell git -C $(BUILDDIR) remote)) $(BUILDDIR)/../gh-pages
+	git -C $(BUILDDIR)/../gh-pages pull
+	rsync -avz --exclude=.git $(BUILDDIR)/html/ $(BUILDDIR)/../gh-pages/
+	git -C $(BUILDDIR)/../gh-pages add --all :/
+	git -C $(BUILDDIR)/../gh-pages commit --dry-run -a -m "Sync up with $(shell git -C $(BUILDDIR) describe --long --all)"
+	git -C $(BUILDDIR)/../gh-pages commit -a -m "Sync up with $(shell git -C $(BUILDDIR) describe --long --all)"
+	git -C $(BUILDDIR)/../gh-pages push
