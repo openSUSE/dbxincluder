@@ -5,11 +5,15 @@ dbxincluder |version|
 dbxincluder is an implementation of the XInclude 1.1 specification (https://www.w3.org/TR/xinclude-11)
 with support for DocBook transclusion (http://docbook.org/docs/transclusion).
 
-.. sidebar:: Links
+Links
+=====
 
-   * `GitHub Project <https://github.com/openSUSE/dbxincluder>`__
-   * `Official Documentation <https://opensuse.github.io/dbxincluder>`__
+* `GitHub Project <https://github.com/openSUSE/dbxincluder>`__
+* `Online Documentation <https://opensuse.github.io/dbxincluder>`__
 
+Contents
+========
+   
 .. toctree::
    :maxdepth: 2
 

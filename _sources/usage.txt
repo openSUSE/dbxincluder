@@ -10,7 +10,7 @@ lxml for XML processing.
 
 Simply run 
 
-::
+.. code-block:: bash
 
   ./setup.py
 
@@ -19,7 +19,7 @@ to install dbxincluder. A virtual python3 environment ("pyvenv") is recommended.
 Usage
 =====
 
-::
+.. code-block:: bash
 
   > dbxincluder --help
   dbxincluder: XInclude and DocBook transclusion processor
@@ -37,7 +37,7 @@ dbxincluder either reads from standard input (stdin) or a file
 and always outputs to stdout. Error messages get printed to stderr.
 The following invocations do the same:
 
-::
+.. code-block:: bash
 
   python3 -m dbxincluder input.xml
   dbxincluder input.xml
@@ -46,7 +46,7 @@ The following invocations do the same:
 Normally you want to write the output to a file.
 Use redirection for that:
 
-::
+.. code-block:: bash
 
   python3 -m dbxincluder input.xml > output.xml
   dbxincluder input.xml > output.xml
@@ -60,7 +60,7 @@ XInclude only
 
 source.xml:
 
-::
+.. code-block:: xml
 
   <?xml version="1.0" encoding="UTF-8"?>
   <root xmlns:xi="http://www.w3.org/2001/XInclude">
@@ -72,13 +72,13 @@ source.xml:
 
 part.xml:
 
-::
+.. code-block:: xml
 
   <elem>ent</elem>
 
 Result:
 
-::
+.. code-block:: xml
 
   > dbxincluder source.xml 
 
@@ -96,7 +96,7 @@ Example taken from http://docbook.org/docs/transclusion/#tutorial
 
 source.xml:
 
-::
+.. code-block:: xml
 
   <?xml version="1.0" encoding="UTF-8"?>
   <book xmlns="http://docbook.org/ns/docbook"
@@ -123,7 +123,7 @@ source.xml:
 
 procedure.001.xml:
 
-::
+.. code-block:: xml
 
   <?xml version="1.0" encoding="UTF-8"?>
   <procedure xmlns="http://docbook.org/ns/docbook" xml:id="paper-insert">
@@ -136,7 +136,7 @@ procedure.001.xml:
 
 Result:
 
-::
+.. code-block:: xml
 
   > dbxincluder source.xml
 
