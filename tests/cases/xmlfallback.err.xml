@@ -1,3 +1,4 @@
 Error at tests/cases/xmlfallback.case.xml:6: Could not get target 'tests/cases/nonexistant.xml'
 Error at tests/cases/xmlfallback.case.xml:13: Could not get target 'asdf://xinclude1.xml'
+Included by tests/cases/xmlfallback.case.xml
 Error at tests/cases/xmlfallback.case.xml:11: Could not get target 'tests/cases/nonexistant.xml'
