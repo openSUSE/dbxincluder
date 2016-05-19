@@ -84,6 +84,22 @@ def find_target(elem, subtree, value, linkscope):
     return None if len(target) == 0 else target[0]
 
 
+def new_ref(elem, idfixup_elem, value, linkscope):
+    """Returns the fixed reference as string or None.
+    Uses same parameters as find_target."""
+    target = find_target(elem, idfixup_elem, value, linkscope)
+    if target is None:
+        return None
+
+    new = target.get(QN['dbxi:newid'])
+    if not new:
+        new = target.get(QN['xml:id'])
+        if not new:
+            assert False, "Apparently find_target returned something weird."  # pragma: no cover
+
+    return new
+
+
 def fixup_references(subtree):
     """Fix all references if idfixup is set
 
@@ -110,21 +126,17 @@ def fixup_references(subtree):
             if attr not in idrefs and attr not in idrefs_multi:
                 continue
 
+            targets = [value]
+
             if attr in idrefs_multi:
-                assert False, "Not implemented"  # pragma: no cover
+                targets = value.split()
 
-            # Find referenced element
-            target = find_target(elem, idfixup_elem, value, linkscope)
+            new_targets = [new_ref(elem, idfixup_elem, t, linkscope) for t in targets]
+            if None in new_targets:
+                ref = targets[new_targets.index(None)]
+                raise DBXIException(elem, "Could not resolve reference {0!r}".format(ref))
 
-            if target is None:
-                raise DBXIException(elem, "Could not resolve reference {0!r}".format(value))
-
-            # Update reference
-            new = target.get(QN['dbxi:newid'])
-            if not new:
-                new = target.get(QN['xml:id'])
-
-            elem.set(attr, new)
+            elem.set(attr, " ".join(new_targets))
 
 
 def process_tree(tree, base_url, file):
