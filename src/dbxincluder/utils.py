@@ -94,9 +94,7 @@ class DBXIException(Exception):
 
         # Try xml:base if no file provided
         if file is None or len(file) == 0:
-            file = get_inherited_attribute(elem, "xml:base", "")[0]
-            if file is None or len(file) == 0:
-                file = "<unknown>"  # pragma: no cover
+            file = get_inherited_attribute(elem, "xml:base", "<unknown>")[0]
 
         stack = create_xinclude_stack(elem)
 
