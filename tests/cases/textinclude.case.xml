@@ -3,9 +3,9 @@
     xmlns="http://docbook.org/ns/docbook"
     xmlns:xi="http://www.w3.org/2001/XInclude">
   <title>Transclusions demo</title>
-  <xi:include href="xinclude1.xml" parse="text"/>
+  <xi:include href="xinclude1.xml" parse="text/plain"/>
   <sect1>
-    Here it comes again: <xi:include href="xinclude1.xml" parse="text"/>
+    Here it comes again: <xi:include href="xinclude1.xml" parse="text/plain"/>
     That was it.
   </sect1>
 </article>

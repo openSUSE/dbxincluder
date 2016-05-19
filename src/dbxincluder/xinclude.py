@@ -145,13 +145,9 @@ def validate_xinclude(elem, file):
             raise DBXIException(elem, "Invalid attribute {0!r}".format(str(qname)), file)
 
     parse = elem.get("parse", "xml")
-    if parse not in ["xml", "text"]:
+    if parse not in ["xml", "text/plain"]:
         raise DBXIException(elem, "Invalid value for parse: {0!r}. "
-                            "Expected 'xml' or 'text'.".format(parse))
-
-    fragid = elem.get("fragid")
-    if parse != "xml" and fragid is not None:
-        raise DBXIException(elem, "fragid invalid, parse != 'xml'", file)
+                            "Expected 'xml' or 'text/plain'.".format(parse))
 
     if len(elem) != 0 and (len(elem) > 1 or QName(elem[0]) != QN['xi:fallback']):
         raise DBXIException(elem, "Only one xi:fallback can be a child of xi:include", file)
