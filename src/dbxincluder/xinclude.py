@@ -231,10 +231,11 @@ def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
     copy_attributes(elem, subtree)
 
     subtree.tail = saved_tail
-    process_xinclude(subtree, url, url, elem.sourceline, xinclude_stack + [xinclude_id])
 
     # Replace XInclude by subtree
     elem.getparent().replace(elem, subtree)
+
+    process_xinclude(subtree, url, url, elem.sourceline, xinclude_stack + [xinclude_id])
 
 
 def process_subtree(tree, base_url, file, xinclude_stack):

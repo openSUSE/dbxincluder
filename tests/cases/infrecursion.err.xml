@@ -1,1 +1,2 @@
 Error at tests/cases/infrecursion.case.xml:6: Infinite recursion detected
+Included by tests/cases/infrecursion.case.xml:6
