@@ -30,6 +30,10 @@ def associate_new_ids(subtree):
 
     :param subtree: The XIncluded subtree to process"""
     idfixup = subtree.get(QName(NS['trans'], "idfixup"), "none")
+
+    if idfixup not in ["none", "suffix", "auto"]:
+        raise DBXIException(subtree, "Invalid value for idfixup: {0!r}".format(idfixup))
+
     if idfixup == "none":
         return  # Nothing to do here
 
@@ -50,7 +54,7 @@ def associate_new_ids(subtree):
         elif idfixup == "auto":
             new = new + "--" + generate_id(elem)
         else:
-            raise DBXIException(elem, "idfixup type {0!r} not implemented".format(idfixup))
+            assert False, "This can't happen"  # pragma: no cover
 
         elem.set(QN['dbxi:newid'], new)
 
