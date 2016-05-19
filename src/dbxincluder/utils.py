@@ -37,7 +37,8 @@ QN = {'xml:id': QName(NS['xml'], "id"),
       'xml:base': QName(NS['xml'], "base"),
       'xi:include': QName(NS['xi'], "include"),
       'xi:fallback': QName(NS['xi'], "fallback"),
-      'dbxi:newid': QName(NS['dbxi'], "newid")}
+      'dbxi:newid': QName(NS['dbxi'], "newid"),
+      'dbxi:parentline': QName(NS['dbxi'], "line")}
 
 
 def get_inherited_attribute(elem, attribute, default=None):
@@ -63,12 +64,21 @@ def create_xinclude_stack(elem):
 
     :param elem: Source element
     :return str: Formatted string. Empty or starts with a newline"""
-    xml_bases = elem.xpath("ancestor-or-self::*[@xml:base]/@xml:base", namespaces=NS)
-    if len(xml_bases) < 2:
+    parent_elems = elem.xpath("ancestor-or-self::*[@xml:base]", namespaces=NS)
+
+    if len(parent_elems) < 2:
         return ""
 
-    # We may get the original line here by adding a custom attribute in xinclude.process_xinclude
-    return "\nIncluded by ".join([""] + xml_bases[:-1][::-1])
+    xml_bases = [elem.get(QN['xml:base'], "<unknown>") for elem in parent_elems][:-1]
+    lines = [elem.get(QN['dbxi:parentline']) for elem in parent_elems][1:]
+
+    ret = ""
+    for i in reversed(range(len(xml_bases))):
+        ret += "\nIncluded by " + xml_bases[i]
+        if lines[i] is not None:
+            ret += ":" + lines[i]
+
+    return ret
 
 
 class DBXIException(Exception):
@@ -85,6 +95,8 @@ class DBXIException(Exception):
         # Try xml:base if no file provided
         if file is None or len(file) == 0:
             file = get_inherited_attribute(elem, "xml:base", "")[0]
+            if file is None or len(file) == 0:
+                file = "<unknown>"  # pragma: no cover
 
         stack = create_xinclude_stack(elem)
 

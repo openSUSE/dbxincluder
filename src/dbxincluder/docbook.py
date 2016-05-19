@@ -168,7 +168,8 @@ def process_tree(tree, base_url, file):
             del elem.attrib[QN['dbxi:newid']]
 
         for name, _ in elem.items():
-            if QName(name).namespace == NS['trans']:
+            namespace = QName(name).namespace
+            if namespace in [NS['trans'], NS['dbxi']]:
                 del elem.attrib[name]
 
     # Remove unnecessary namespace declarations

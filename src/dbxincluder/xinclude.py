@@ -231,7 +231,7 @@ def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
     copy_attributes(elem, subtree)
 
     subtree.tail = saved_tail
-    process_xinclude(subtree, url, url, xinclude_stack + [xinclude_id])
+    process_xinclude(subtree, url, url, elem.sourceline, xinclude_stack + [xinclude_id])
 
     # Replace XInclude by subtree
     elem.getparent().replace(elem, subtree)
@@ -286,10 +286,11 @@ def flatten_subtree(tree):
             flatten_subtree(elem)
 
 
-def process_xinclude(tree, base_url=None, file=None, xinclude_stack=None):
+def process_xinclude(tree, base_url=None, file=None, parent_line=None, xinclude_stack=None):
     """Processes an ElementTree:
     - Search and process xi:include
     - Add xml:base (=source) to the root element
+    - Add dbxi:parentline to the root element to show where it was included at
 
     This does not resolve xi:fallback correctly.
     Use process_tree for that.
@@ -297,10 +298,14 @@ def process_xinclude(tree, base_url=None, file=None, xinclude_stack=None):
     :param tree: ElementTree to process (gets modified)
     :param base_url: xml:base to use if not set in the tree
     :param file: URL used to report errors
+    :param parent_line: line in the document where the source xi:include is
     :param xinclude_stack: Internal"""
 
     if base_url and not tree.get(QN['xml:base']):
         tree.set(QN['xml:base'], base_url)
+
+    if parent_line is not None:
+        tree.set(QN['dbxi:parentline'], str(parent_line))
 
     process_subtree(tree, base_url, file, xinclude_stack)
 
@@ -309,11 +314,12 @@ def process_tree(tree, base_url=None, file=None, xinclude_stack=None):
     """Processes an ElementTree:
     - Search and process xi:include
     - Add xml:base (=source) to the root element
+    - Add dbxi:line to show where the source xi:include is
 
     :param tree: ElementTree to process (gets modified)
     :param base_url: xml:base to use if not set in the tree
     :param file: URL used to report errors
     :param xinclude_stack: Internal"""
 
-    process_xinclude(tree, base_url, file, xinclude_stack)
+    process_xinclude(tree, base_url, file, None, xinclude_stack)
     flatten_subtree(tree)
