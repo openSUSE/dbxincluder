@@ -1,2 +1,2 @@
-Error at tests/cases/procedure.001.xml:2: Invalid value for idfixup: 'try'
+Error at tests/cases/procedure.001.xml:2: Invalid value for idfixup: 'try'. Expected 'none', 'suffix' or 'auto'.
 Included by tests/cases/invfixup.case.xml

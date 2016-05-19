@@ -32,7 +32,8 @@ def associate_new_ids(subtree):
     idfixup = subtree.get(QName(NS['trans'], "idfixup"), "none")
 
     if idfixup not in ["none", "suffix", "auto"]:
-        raise DBXIException(subtree, "Invalid value for idfixup: {0!r}".format(idfixup))
+        raise DBXIException(subtree, "Invalid value for idfixup: {0!r}. "
+                            "Expected 'none', 'suffix' or 'auto'.".format(idfixup))
 
     if idfixup == "none":
         return  # Nothing to do here

@@ -146,7 +146,8 @@ def validate_xinclude(elem, file):
 
     parse = elem.get("parse", "xml")
     if parse not in ["xml", "text"]:
-        raise DBXIException(elem, "Invalid value for parse: {0!r}".format(parse))
+        raise DBXIException(elem, "Invalid value for parse: {0!r}. "
+                            "Expected 'xml' or 'text'.".format(parse))
 
     fragid = elem.get("fragid")
     if parse != "xml" and fragid is not None:
