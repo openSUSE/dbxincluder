@@ -19,6 +19,7 @@
 """xinclude module: Processes raw XInclude 1.1 elements"""
 
 import os.path
+import re
 import sys
 import urllib.request
 
@@ -86,14 +87,16 @@ def get_target(elem, base_url, file=None):
     # Get href
     href = elem.get("href")
     if href is None:
-        raise DBXIException(elem, "Missing href attribute", file)
-
-    # Build full URL
-    urlparts = base_url.split("/")
-    if len(urlparts) > 1:
-        url = "/".join(urlparts[:-1]) + "/" + href
-    else:  # pragma: no cover
-        url = href
+        url = href = file
+        if href is None or elem.get("fragid") is None:
+            raise DBXIException(elem, "Missing href attribute and no fragid provided", file)
+    else:
+        # Build full URL
+        urlparts = base_url.split("/")
+        if len(urlparts) > 1:
+            url = "/".join(urlparts[:-1]) + "/" + href
+        else:  # pragma: no cover
+            url = href
 
     try:
         if "://" in base_url:
@@ -103,9 +106,11 @@ def get_target(elem, base_url, file=None):
         content = target.read()
         target.close()
     except urllib.error.URLError:
-        raise ResourceError(elem, "Could not get target {0!r}".format(url), file)
+        raise ResourceError(elem, "Could not get target {0!r}".format(url),
+                            file, severity="Warning")
     except IOError as ioex:  # pragma: no cover
-        raise ResourceError(elem, "Could not get target {0!r}: {1}".format(url, ioex), file)
+        raise ResourceError(elem, "Could not get target {0!r}: {1}".format(url, ioex),
+                            file, severity="Warning")
 
     return content, url
 
@@ -153,6 +158,64 @@ def validate_xinclude(elem, file):
         raise DBXIException(elem, "Only one xi:fallback can be a child of xi:include", file)
 
 
+def parse_fragid_rfc5147(fragid):
+    """https://tools.ietf.org/html/rfc5147
+
+    :return: None or tuple('line'/'char', start, end/None)"""
+
+    # Validated, but ignored
+    integrity = r";(?:length=(\d+)|md5=[0-9a-fA-F]{32})(?:,(\w+)?)?"
+    regex = re.compile(r"^(char|line)=(?:(?:(\d+)(?:,(\d+)?)?)|(?:,(\d+)))(?:" + integrity + r")?$")
+
+    match = regex.match(fragid)
+    if not match:
+        return None
+
+    rtype = match.group(1)
+    start = match.group(2)
+    end = match.group(4) if start is None else match.group(3)
+
+    start = int(start) if start is not None else 0
+    end = int(end) if end is not None else None
+
+    return (rtype, start, end)
+
+
+def text_fragid(content, fragid=None):
+    """Implementation of https://tools.ietf.org/html/rfc5147
+
+    If fragid is invalid, it returns the complete content
+    as according to the nonsensical spec.
+
+    :param content: Input as str
+    :param fragid: fragid according to RFC5147
+    :return tuple: (Result as str, Success as bool)"""
+
+    if fragid is None:
+        return content, True
+
+    parsed = parse_fragid_rfc5147(fragid)
+    if parsed is None:
+        return content, False
+
+    rtype, start, end = parsed
+
+    if parsed[0] == 'line':
+        split_content = content.splitlines()
+        end = end if end is not None else len(split_content)
+        end = min(end, len(split_content))
+        start = min(start, end)
+
+        return "\n".join(split_content[start:end]), True
+    else:
+        end = end if end is not None else len(content)
+        end = min(end, len(content))
+        start = min(start, end)
+
+        # Line endings need to be treated as single char, what does python do here?
+        return content[start:end], True
+
+
 def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
     """Process the xi:include tag elem.
 
@@ -179,31 +242,42 @@ def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
     try:
         content, url = get_target(elem, base_url, file)
     except ResourceError as rex:
-        if not handle_xifallback(elem, file, xinclude_stack):
-            raise rex
-
         # Is this output appropriate?
-        sys.stderr.write(str(rex) + "\n")
+        print(str(rex), file=sys.stderr)
+
+        if not handle_xifallback(elem, file, xinclude_stack):
+            raise DBXIException(elem, "Target not available and no fallback provided", file)
+
         return
 
     # Save text after element
-    saved_tail = elem.tail
+    saved_tail = elem.tail if elem.tail else ""
     elem.tail = ""
+
+    fragid = elem.get("fragid", None)
 
     # Include as text
     if elem.get("parse", "xml") != "xml":
+        # Convert line endings
+        content = "\n".join(str(content, encoding="utf-8").splitlines())
+        content, success = text_fragid(content, fragid)
+        if not success:
+            print(str(DBXIException(elem, "Invalid fragid for text/plain: {0!r}".format(fragid),
+                  severity="Warning")), file=sys.stderr)
+
         prev = elem.getprevious()
         if prev is not None:
-            prev.tail += str(content, encoding="utf-8") + saved_tail
+            append_to_tail(prev, content + saved_tail)
         else:
-            elem.getparent().text += str(content, encoding="utf-8") + saved_tail
+            append_to_text(elem.getparent(), content + saved_tail)
+
+        elem.getparent().remove(elem)
         return
 
     # Check for infinite recursion
     if xinclude_stack is None:
         xinclude_stack = []
 
-    fragid = elem.get("fragid")
     xinclude_id = "{0!r}>{1!r}".format(url, fragid)
     if xinclude_id in xinclude_stack:
         raise DBXIException(elem, "Infinite recursion detected", file)

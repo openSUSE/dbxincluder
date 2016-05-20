@@ -1,1 +1,1 @@
-Error at tests/cases/invparse.case.xml:14: Invalid value for parse: 'not at all'. Expected 'xml' or 'text'.
+Error at tests/cases/invparse.case.xml:14: Invalid value for parse: 'not at all'. Expected 'xml' or 'text/plain'.

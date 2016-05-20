@@ -62,6 +62,23 @@ def test_stdin(capsys):
     assert outputxml == capsys.readouterr()[0]
 
 
+def test_rfc5147_parser():
+    """Test the parser used for text/plain fragids"""
+    assert dbxincluder.xinclude.parse_fragid_rfc5147("") is None
+    assert dbxincluder.xinclude.parse_fragid_rfc5147("char=asdf") is None
+    assert dbxincluder.xinclude.parse_fragid_rfc5147("asdf=0") is None
+    assert dbxincluder.xinclude.parse_fragid_rfc5147("char=0") == ('char', 0, None)
+    assert dbxincluder.xinclude.parse_fragid_rfc5147("line=0,3") == ('line', 0, 3)
+    assert dbxincluder.xinclude.parse_fragid_rfc5147("char=,320") == ('char', 0, 320)
+    assert dbxincluder.xinclude.parse_fragid_rfc5147("line=1,") == ('line', 1, None)
+
+    # Integrity not validated, but parsed
+    assert dbxincluder.xinclude.parse_fragid_rfc5147("char=0;length=asdf") is None
+    assert dbxincluder.xinclude.parse_fragid_rfc5147("char=0;md5=0123456789abcdefDEADBEEFG00DBABE5") is None
+    assert dbxincluder.xinclude.parse_fragid_rfc5147("char=0;length=10") == ('char', 0, None)
+    assert dbxincluder.xinclude.parse_fragid_rfc5147("char=0;md5=0123456789abcdefDEADBEEFBADBABE5") == ('char', 0, None)
+
+
 def test_target():
     """Test dbxincluder.get_target"""
     # xi: namespace not looked at by get_target
