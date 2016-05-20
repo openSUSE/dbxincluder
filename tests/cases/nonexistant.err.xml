@@ -1,1 +1,2 @@
-Error at tests/cases/nonexistant.case.xml:6: Could not get target "tests/cases/this file doesn't exist.xml"
+Warning at tests/cases/nonexistant.case.xml:6: Could not get target "tests/cases/this file doesn't exist.xml"
+Error at tests/cases/nonexistant.case.xml:6: Target not available and no fallback provided

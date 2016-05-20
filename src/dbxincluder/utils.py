@@ -83,7 +83,7 @@ def create_xinclude_stack(elem):
 
 class DBXIException(Exception):
     """Exception type for XML errors"""
-    def __init__(self, elem, message=None, file=None):
+    def __init__(self, elem, message=None, file=None, severity="Error"):
         """Construct an DBXIException.
         If file is none, it tries to get the file name by xml:base.
         Prints a "stack trace" of xml:base of elem.
@@ -99,7 +99,7 @@ class DBXIException(Exception):
         stack = create_xinclude_stack(elem)
 
         message = ": " + message if message else ""
-        self.error = "Error at {0}:{1}{2}{3}".format(file, elem.sourceline, message, stack)
+        self.error = "{0} at {1}:{2}{3}{4}".format(severity, file, elem.sourceline, message, stack)
         super().__init__(self.error)
 
 

@@ -1,0 +1,9 @@
+<article xmlns="http://docbook.org/ns/docbook" version="5.0" xml:base="tests/cases/selfinclude.case.xml">
+  <title>Transclusions demo</title>
+  <sect1 xml:id="sec">
+      A section
+  </sect1>
+  <sect1 xml:id="sec.again" xml:base="tests/cases/selfinclude.case.xml">
+      A section
+  </sect1>
+</article>

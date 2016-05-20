@@ -29,6 +29,10 @@ def associate_new_ids(subtree):
     """Assign elements their new ids as new 'dbxi:newid' attribute.
 
     :param subtree: The XIncluded subtree to process"""
+
+    if not isinstance(subtree.tag, str):
+        return
+
     idfixup = subtree.get(QName(NS['trans'], "idfixup"), "none")
 
     if idfixup not in ["none", "suffix", "auto"]:
