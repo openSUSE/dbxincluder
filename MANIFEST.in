@@ -1,17 +1,13 @@
-include .bumpversion.cfg
-include .coverage*
-include .landscape.yml
-include .travis.yml
+include .coverage* .landscape.yml .travis.yml tox.ini
 include *requirements.txt
-include tox.ini
-include *.md
+include .bumpversion.cfg
+include *.md LICENSE
 recursive-include doc *.rst
 recursive-include doc Makefile
 recursive-include doc conf.py
-include LICENSE
+recursive-include src *.py
+recursive-include packaging *
 
 graft tests
-
-recursive-include src
 
 global-exclude *.py[cod] __pycache__ *.so *.dylib *~ *.bak

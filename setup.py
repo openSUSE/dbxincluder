@@ -46,7 +46,7 @@ def read(*names, **kwargs):
 
 setup(
     name='dbxincluder',
-    version='0.1.0',
+    version='0.9.0',
     license='GPL 3.0',
     description='Transclusions for DocBook with XInclude 1.1',
     author='Fabian Vogt',
