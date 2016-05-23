@@ -28,6 +28,7 @@ Source:         %{name}-%{version}.tar.xz
 BuildRequires:  python3-Sphinx
 BuildRequires:  python3-docopt
 BuildRequires:  python3-lxml
+BuildRequires:  python3-pytest
 Requires:       python3-docopt
 Requires:       python3-lxml
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
@@ -44,8 +45,13 @@ with support for DocBook transclusion (http://docbook.org/docs/transclusion).
 python3 setup.py build
 make %{?_smp_mflags} -C doc man
 
+%check
+python3 setup.py test
+
 %install
 python3 setup.py install --prefix=%{_prefix} --root=%{buildroot} --install-data=%{_datadir}/%{name}
+# The -D behaviour we want is not present in Leap 42.1
+mkdir -p %{buildroot}%{_mandir}/man1/
 install -D -m644 -t %{buildroot}%{_mandir}/man1/ doc/_build/man/%{binname}.1
 
 %files
