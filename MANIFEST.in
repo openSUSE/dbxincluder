@@ -12,6 +12,6 @@ include LICENSE
 
 graft tests
 
-recursive-include src
+recursive-include src *.py
 
 global-exclude *.py[cod] __pycache__ *.so *.dylib *~ *.bak
