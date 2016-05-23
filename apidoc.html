@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>dbxincluder API documentation &mdash; dbxincluder 0.1.0 documentation</title>
+    <title>dbxincluder API documentation &mdash; dbxincluder 0.9.0 documentation</title>
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -32,7 +32,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    './',
-            VERSION:     '0.1.0',
+            VERSION:     '0.9.0',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -46,7 +46,7 @@
 <script type="text/javascript" src="_static/js/basicstrap.js"></script>
 <script type="text/javascript">
 </script>
-    <link rel="top" title="dbxincluder 0.1.0 documentation" href="index.html" />
+    <link rel="top" title="dbxincluder 0.9.0 documentation" href="index.html" />
     <link rel="prev" title="Manual Page for dbxincluder" href="manpage.html" /> 
   </head>
   <body role="document">
@@ -59,7 +59,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="index.html">dbxincluder 0.1.0 documentation</a>
+          <a class="navbar-brand" href="index.html">dbxincluder 0.9.0 documentation</a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -137,7 +137,7 @@ As <code class="docutils literal"><span class="pre">xi:fallback</span></code> ca
 <span class="target" id="module-dbxincluder.xinclude"></span><p>xinclude module: Processes raw XInclude 1.1 elements</p>
 <dl class="exception">
 <dt id="dbxincluder.xinclude.ResourceError">
-<em class="property">exception </em><code class="descclassname">dbxincluder.xinclude.</code><code class="descname">ResourceError</code><span class="sig-paren">(</span><em>elem</em>, <em>message=None</em>, <em>file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#dbxincluder.xinclude.ResourceError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descclassname">dbxincluder.xinclude.</code><code class="descname">ResourceError</code><span class="sig-paren">(</span><em>elem</em>, <em>message=None</em>, <em>file=None</em>, <em>severity='Error'</em><span class="sig-paren">)</span><a class="headerlink" href="#dbxincluder.xinclude.ResourceError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Same as DBXIException, just for resource errors</p>
 </dd></dl>
 
@@ -247,6 +247,20 @@ It will be replaced by the content of the xi:fallback subelement.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="dbxincluder.xinclude.parse_fragid_rfc5147">
+<code class="descclassname">dbxincluder.xinclude.</code><code class="descname">parse_fragid_rfc5147</code><span class="sig-paren">(</span><em>fragid</em><span class="sig-paren">)</span><a class="headerlink" href="#dbxincluder.xinclude.parse_fragid_rfc5147" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://tools.ietf.org/html/rfc5147">https://tools.ietf.org/html/rfc5147</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None or tuple(&#8216;line&#8217;/&#8217;char&#8217;, start, end/None)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="dbxincluder.xinclude.process_subtree">
 <code class="descclassname">dbxincluder.xinclude.</code><code class="descname">process_subtree</code><span class="sig-paren">(</span><em>tree</em>, <em>base_url</em>, <em>file</em>, <em>xinclude_stack</em><span class="sig-paren">)</span><a class="headerlink" href="#dbxincluder.xinclude.process_subtree" title="Permalink to this definition">¶</a></dt>
 <dd><p>Like process_xinclude, but for subtrees.</p>
@@ -257,7 +271,8 @@ It will be replaced by the content of the xi:fallback subelement.</p>
 <code class="descclassname">dbxincluder.xinclude.</code><code class="descname">process_tree</code><span class="sig-paren">(</span><em>tree</em>, <em>base_url=None</em>, <em>file=None</em>, <em>xinclude_stack=None</em><span class="sig-paren">)</span><a class="headerlink" href="#dbxincluder.xinclude.process_tree" title="Permalink to this definition">¶</a></dt>
 <dd><p>Processes an ElementTree:
 - Search and process xi:include
-- Add xml:base (=source) to the root element</p>
+- Add xml:base (=source) to the root element
+- Add dbxi:line to show where the source xi:include is</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -276,10 +291,11 @@ It will be replaced by the content of the xi:fallback subelement.</p>
 
 <dl class="function">
 <dt id="dbxincluder.xinclude.process_xinclude">
-<code class="descclassname">dbxincluder.xinclude.</code><code class="descname">process_xinclude</code><span class="sig-paren">(</span><em>tree</em>, <em>base_url=None</em>, <em>file=None</em>, <em>xinclude_stack=None</em><span class="sig-paren">)</span><a class="headerlink" href="#dbxincluder.xinclude.process_xinclude" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">dbxincluder.xinclude.</code><code class="descname">process_xinclude</code><span class="sig-paren">(</span><em>tree</em>, <em>base_url=None</em>, <em>file=None</em>, <em>parent_line=None</em>, <em>xinclude_stack=None</em><span class="sig-paren">)</span><a class="headerlink" href="#dbxincluder.xinclude.process_xinclude" title="Permalink to this definition">¶</a></dt>
 <dd><p>Processes an ElementTree:
 - Search and process xi:include
-- Add xml:base (=source) to the root element</p>
+- Add xml:base (=source) to the root element
+- Add dbxi:parentline to the root element to show where it was included at</p>
 <p>This does not resolve xi:fallback correctly.
 Use process_tree for that.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -290,8 +306,32 @@ Use process_tree for that.</p>
 <li><strong>tree</strong> &#8211; ElementTree to process (gets modified)</li>
 <li><strong>base_url</strong> &#8211; xml:base to use if not set in the tree</li>
 <li><strong>file</strong> &#8211; URL used to report errors</li>
+<li><strong>parent_line</strong> &#8211; line in the document where the source xi:include is</li>
 <li><strong>xinclude_stack</strong> &#8211; Internal</li>
 </ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbxincluder.xinclude.text_fragid">
+<code class="descclassname">dbxincluder.xinclude.</code><code class="descname">text_fragid</code><span class="sig-paren">(</span><em>content</em>, <em>fragid=None</em><span class="sig-paren">)</span><a class="headerlink" href="#dbxincluder.xinclude.text_fragid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implementation of <a class="reference external" href="https://tools.ietf.org/html/rfc5147">https://tools.ietf.org/html/rfc5147</a></p>
+<p>If fragid is invalid, it returns the complete content
+as according to the nonsensical spec.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>content</strong> &#8211; Input as str</li>
+<li><strong>fragid</strong> &#8211; fragid according to RFC5147</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return tuple:</th><td class="field-body"><p class="first last">(Result as str, Success as bool)</p>
 </td>
 </tr>
 </tbody>
@@ -367,6 +407,13 @@ It also removes DocBook transclusiton attributes (<code class="docutils literal"
 </dd></dl>
 
 <dl class="function">
+<dt id="dbxincluder.docbook.new_ref">
+<code class="descclassname">dbxincluder.docbook.</code><code class="descname">new_ref</code><span class="sig-paren">(</span><em>elem</em>, <em>idfixup_elem</em>, <em>value</em>, <em>linkscope</em><span class="sig-paren">)</span><a class="headerlink" href="#dbxincluder.docbook.new_ref" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the fixed reference as string or None.
+Uses same parameters as find_target.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="dbxincluder.docbook.process_tree">
 <code class="descclassname">dbxincluder.docbook.</code><code class="descname">process_tree</code><span class="sig-paren">(</span><em>tree</em>, <em>base_url</em>, <em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#dbxincluder.docbook.process_tree" title="Permalink to this definition">¶</a></dt>
 <dd><p>Processes an ElementTree.
@@ -407,7 +454,7 @@ and processes all docbook attributes on the output.</p>
 <div id="navbar-related" class=" related navbar navbar-default" role="navigation" aria-label="related navigation">
   <div class="navbar-inner">
     <ul class="nav navbar-nav ">
-        <li><a href="index.html">dbxincluder 0.1.0 documentation</a></li>
+        <li><a href="index.html">dbxincluder 0.9.0 documentation</a></li>
     </ul>
 <ul class="nav navbar-nav pull-right hidden-xs hidden-sm">
       
