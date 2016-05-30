@@ -23,7 +23,7 @@ import re
 import sys
 import urllib.request
 
-from lxml.etree import fromstring, QName
+from lxml.etree import fromstring, QName, XMLSyntaxError
 from .utils import DBXIException, NS, QN, get_inherited_attribute
 
 
@@ -283,7 +283,10 @@ def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
         raise DBXIException(elem, "Infinite recursion detected", file)
 
     # Parse as XML
-    subtree = fromstring(content)
+    try:
+        subtree = fromstring(content)
+    except (XMLSyntaxError, UnicodeDecodeError) as exc:
+        raise DBXIException(elem, "Could not parse {0!r}: {1}".format(url, str(exc)), file)
 
     # Get subdocument
     if fragid is not None:
