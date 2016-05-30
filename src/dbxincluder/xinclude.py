@@ -200,7 +200,7 @@ def text_fragid(content, fragid=None):
 
     rtype, start, end = parsed
 
-    if parsed[0] == 'line':
+    if rtype == 'line':
         split_content = content.splitlines()
         end = end if end is not None else len(split_content)
         end = min(end, len(split_content))
