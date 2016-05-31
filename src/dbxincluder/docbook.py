@@ -143,18 +143,19 @@ def fixup_references(subtree):
             elem.set(attr, " ".join(new_targets))
 
 
-def process_tree(tree, base_url, file):
+def process_tree(tree, base_url, xmlcatalog, file):
     """Processes an ElementTree.
     Handles all xi:include with xinclude.process_tree
     and processes all docbook attributes on the output.
 
     :param tree: ElementTree to process (gets modified)
     :param base_url: xml:base to use if not set in the tree
+    :param xmlcatalog: XML catalog to use (None means default)
     :param file: URL used to report errors
     :return: Nothing"""
 
     # Do XInclude processing first
-    xinclude.process_tree(tree, base_url, file)
+    xinclude.process_tree(tree, base_url, xmlcatalog, file)
 
     # Three passes:
     # First, assign all elements a new ID

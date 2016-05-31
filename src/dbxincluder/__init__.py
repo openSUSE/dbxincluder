@@ -20,11 +20,12 @@
 dbxincluder: XInclude and DocBook transclusion processor
 
 Usage:
-  dbxincluder [--] <input>
+  dbxincluder [-c <xmlcatalog>] [--] <input>
   dbxincluder -h | --help
   dbxincluder --version
 
 Options:
+  -c <catalog>  XML catalog to use [default: /etc/xml/catalog]
   -h --help     Show this screen.
   --version     Show the version.
 
@@ -52,6 +53,7 @@ def main(argv=None):
         return 0 if exc.code is None else 1
 
     use_stdin = opts["<input>"] == "-"
+    xmlcatalog = opts["<xmlcatalog>"] if "<xmlcatalog>" in opts else None
     base_url = None if use_stdin else opts["<input>"]
     path = "<stdin>" if use_stdin else opts["<input>"]
 
@@ -63,7 +65,7 @@ def main(argv=None):
         return 1
 
     try:
-        docbook.process_tree(tree.getroot(), base_url, path)
+        docbook.process_tree(tree.getroot(), base_url, xmlcatalog, path)
         sys.stdout.write(lxml.etree.tostring(tree, encoding='unicode',
                                              pretty_print=True))
     except utils.DBXIException as exc:

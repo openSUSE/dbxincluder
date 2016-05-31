@@ -83,13 +83,17 @@ def test_target():
     """Test dbxincluder.get_target"""
     # xi: namespace not looked at by get_target
     with pytest.raises(DBXIException):
-        dbxincluder.xinclude.get_target(lxml.etree.fromstring("<xinclude href='nonexistant'/>"), os.path.curdir)
+        dbxincluder.xinclude.get_target(lxml.etree.fromstring("<xinclude href='nonexistant'/>"), os.path.curdir, "")
     with pytest.raises(DBXIException):
-        dbxincluder.xinclude.get_target(lxml.etree.fromstring("<xinclude href='nonexistant'/>"), 'file://' + os.path.abspath(os.path.curdir) + "/")
+        dbxincluder.xinclude.get_target(lxml.etree.fromstring("<xinclude href='nonexistant'/>"), 'file://' + os.path.abspath(os.path.curdir) + "/", "")
 
     # Try to load this file
     quine = "<xinclude href={0!r}/>".format(os.path.relpath(__file__))
-    assert dbxincluder.xinclude.get_target(lxml.etree.fromstring(quine), os.path.curdir+"/")[0] == open(__file__, "rb").read()
+    assert dbxincluder.xinclude.get_target(lxml.etree.fromstring(quine), os.path.curdir+"/", "")[0] == open(__file__, "rb").read()
+
+    # Test xml catalog usage
+    location = os.path.relpath(os.path.dirname(os.path.realpath(__file__)))
+    assert dbxincluder.xinclude.get_target(lxml.etree.fromstring("<xinclude href='urn:x-dbxi:file.xml'/>"), os.path.curdir, location + "/cases/xmlcatalog.xml")[0] == open(location + "/cases/text.txt", "rb").read()
 
 
 def test_xml(xmltestcase, capsys):
