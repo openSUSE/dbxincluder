@@ -76,7 +76,7 @@ def copy_attributes(elem, subtree):
             subtree.set(name, value)
 
 
-def get_target(elem, base_url, xmlcatalog, file=None):
+def get_target(elem, base_url, xmlcatalog=None, file=None):
     """Return tuple of the content of the target document as string and the URL that was used
 
     :param elem: XInclude element
