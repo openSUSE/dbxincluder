@@ -49,13 +49,13 @@ def test_invalid(capsys):
 
 
 def test_stdin(capsys):
-    """Test whether it handles stdin correctly"""
+    """Test whether it handles stdin and stdout correctly"""
     # Use relative paths to ensure the output looks always the same
     location = os.path.relpath(os.path.dirname(os.path.realpath(__file__)))
     stdin = sys.stdin  # Mock stdin
     sys.stdin = open(location + "/cases/basicxml.case.xml")
     outputxml = open(location + "/cases/basicxml.out.xml").read()
-    ret = dbxincluder.main(["", "-"])
+    ret = dbxincluder.main(["", "-o", "-", "-"])
     sys.stdin.close()
     sys.stdin = stdin
     assert ret == 0
