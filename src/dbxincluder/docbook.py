@@ -143,7 +143,7 @@ def fixup_references(subtree):
             elem.set(attr, " ".join(new_targets))
 
 
-def process_tree(tree, base_url, xmlcatalog, file):
+def process_tree(tree, base_url, xmlcatalog=None, file=None):
     """Processes an ElementTree.
     Handles all xi:include with xinclude.process_tree
     and processes all docbook attributes on the output.
