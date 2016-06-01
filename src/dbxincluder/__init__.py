@@ -20,11 +20,13 @@
 dbxincluder: XInclude and DocBook transclusion processor
 
 Usage:
-  dbxincluder [--] <input>
+  dbxincluder [options] [--] <input>
   dbxincluder -h | --help
   dbxincluder --version
 
 Options:
+  -o <output>   Output file [default: -]
+  -c <catalog>  XML catalog to use [default: /etc/xml/catalog]
   -h --help     Show this screen.
   --version     Show the version.
 
@@ -37,7 +39,7 @@ import lxml.etree
 from . import docbook
 from . import utils
 
-__version__ = "0.9.0"
+__version__ = "0.10.0"
 
 
 def main(argv=None):
@@ -55,6 +57,14 @@ def main(argv=None):
     base_url = None if use_stdin else opts["<input>"]
     path = "<stdin>" if use_stdin else opts["<input>"]
 
+    # Open output file
+    try:
+        outfile = sys.stdout if opts["-o"] == "-" else open(opts["-o"], "w")
+    except IOError as exc:  # pragma: nocover
+        sys.stderr.write("Could not open {0!r}: {1}\n".format(opts["-o"], str(exc)))
+        return 1
+
+    # Parse input
     try:
         file = sys.stdin if use_stdin else open(base_url, "r")
         tree = lxml.etree.parse(file)
@@ -62,10 +72,11 @@ def main(argv=None):
         sys.stderr.write("Could not parse {0!r}: {1}\n".format(path, str(exc)))
         return 1
 
+    # Process XML and write output
     try:
-        docbook.process_tree(tree.getroot(), base_url, path)
-        sys.stdout.write(lxml.etree.tostring(tree, encoding='unicode',
-                                             pretty_print=True))
+        docbook.process_tree(tree.getroot(), base_url, opts["-c"], path)
+        outfile.write(lxml.etree.tostring(tree, encoding='unicode',
+                                          pretty_print=True))
     except utils.DBXIException as exc:
         sys.stderr.write(str(exc) + "\n")
         return 1

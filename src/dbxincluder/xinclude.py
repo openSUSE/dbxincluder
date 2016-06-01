@@ -25,6 +25,7 @@ import urllib.request
 
 from lxml.etree import fromstring, QName, XMLSyntaxError
 from .utils import DBXIException, NS, QN, get_inherited_attribute
+from .xmlcat import lookup_url
 
 
 class ResourceError(DBXIException):
@@ -75,11 +76,12 @@ def copy_attributes(elem, subtree):
             subtree.set(name, value)
 
 
-def get_target(elem, base_url, file=None):
+def get_target(elem, base_url, xmlcatalog=None, file=None):
     """Return tuple of the content of the target document as string and the URL that was used
 
     :param elem: XInclude element
     :param base_url: xml:base of the element
+    :param xmlcatalog: XML catalog to use (None means default)
     :raises DBXIException: href attribute is missing
     :raises ResourceError: Couldn't fetch target
     """
@@ -91,16 +93,17 @@ def get_target(elem, base_url, file=None):
         if href is None or elem.get("fragid") is None:
             raise DBXIException(elem, "Missing href attribute and no fragid provided", file)
     else:
-        # Build full URL
-        urlparts = base_url.split("/")
-        if len(urlparts) > 1:
-            url = "/".join(urlparts[:-1]) + "/" + href
-        else:  # pragma: no cover
-            url = href
+        url = lookup_url(href, xmlcatalog)
+
+        if url == href:
+            # Build full URL
+            urlparts = base_url.split("/")
+            if len(urlparts) > 1:
+                url = "/".join(urlparts[:-1]) + "/" + url
 
     try:
-        if "://" in base_url:
-            target = urllib.request.urlopen(base_url)
+        if "://" in url:
+            target = urllib.request.urlopen(url)
         else:  # Add file:// for URLs without scheme
             target = urllib.request.urlopen("file://" + os.path.abspath(url))
         content = target.read()
@@ -115,11 +118,12 @@ def get_target(elem, base_url, file=None):
     return content, url
 
 
-def handle_xifallback(elem, file=None, xinclude_stack=None):
+def handle_xifallback(elem, xmlcatalog=None, file=None, xinclude_stack=None):
     """Process the xi:include tag elem.
     It will be replaced by the content of the xi:fallback subelement.
 
     :param elem: The XInclude element to process
+    :param xmlcatalog: XML catalog to use (None means default)
     :param file: URL used to report errors
     :param xinclude_stack: List (or None) of str with url and fragid to detect infinite recursion
     :return: True if xi:fallback found"""
@@ -132,7 +136,7 @@ def handle_xifallback(elem, file=None, xinclude_stack=None):
     append_to_tail(elem[0], elem.tail)
 
     # process_xinclude before replacement to not lose xml:base on xi:include or xi:fallback
-    process_xinclude(elem[0], None, file, xinclude_stack)
+    process_xinclude(elem[0], None, xmlcatalog, file, xinclude_stack)
 
     # Two passes for fallback processing, flatten them after process_xinclude in process_tree
     elem.getparent().replace(elem, elem[0])
@@ -216,11 +220,12 @@ def text_fragid(content, fragid=None):
         return content[start:end], True
 
 
-def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
+def handle_xinclude(elem, base_url, xmlcatalog=None, file=None, xinclude_stack=None):
     """Process the xi:include tag elem.
 
     :param elem: The XInclude element to process
     :param base_url: xml:base to use if not specified in the document
+    :param xmlcatalog: XML catalog to use (None means default)
     :param file: URL used to report errors
     :param xinclude_stack: List (or None) of str with url and fragid to detect infinite recursion"""
 
@@ -240,12 +245,12 @@ def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
 
     # Load target
     try:
-        content, url = get_target(elem, base_url, file)
+        content, url = get_target(elem, base_url, xmlcatalog, file)
     except ResourceError as rex:
         # Is this output appropriate?
         print(str(rex), file=sys.stderr)
 
-        if not handle_xifallback(elem, file, xinclude_stack):
+        if not handle_xifallback(elem, xmlcatalog, file, xinclude_stack):
             raise DBXIException(elem, "Target not available and no fallback provided", file)
 
         return
@@ -263,7 +268,7 @@ def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
         content, success = text_fragid(content, fragid)
         if not success:
             print(str(DBXIException(elem, "Invalid fragid for text/plain: {0!r}".format(fragid),
-                  severity="Warning")), file=sys.stderr)
+                                    severity="Warning")), file=sys.stderr)
 
         prev = elem.getprevious()
         if prev is not None:
@@ -308,10 +313,10 @@ def handle_xinclude(elem, base_url, file=None, xinclude_stack=None):
     # Replace XInclude by subtree
     elem.getparent().replace(elem, subtree)
 
-    process_xinclude(subtree, url, url, elem.sourceline, xinclude_stack + [xinclude_id])
+    process_xinclude(subtree, url, xmlcatalog, url, elem.sourceline, xinclude_stack + [xinclude_id])
 
 
-def process_subtree(tree, base_url, file, xinclude_stack):
+def process_subtree(tree, base_url, xmlcatalog, file, xinclude_stack):
     """Like process_xinclude, but for subtrees."""
 
     # for elem in tree.getiterator() does not work here, as we modify tree in-place
@@ -320,10 +325,10 @@ def process_subtree(tree, base_url, file, xinclude_stack):
             continue
 
         if QName(elem) == QN["xi:include"]:
-            handle_xinclude(elem, base_url, file, xinclude_stack)
+            handle_xinclude(elem, base_url, xmlcatalog, file, xinclude_stack)
             # handle_xinclude calls process_tree itself if required
         else:
-            process_subtree(elem, base_url, file, xinclude_stack)
+            process_subtree(elem, base_url, xmlcatalog, file, xinclude_stack)
 
 
 def flatten_subtree(tree):
@@ -360,7 +365,8 @@ def flatten_subtree(tree):
             flatten_subtree(elem)
 
 
-def process_xinclude(tree, base_url=None, file=None, parent_line=None, xinclude_stack=None):
+def process_xinclude(tree, base_url=None, xmlcatalog=None, file=None,
+                     parent_line=None, xinclude_stack=None):
     """Processes an ElementTree:
     - Search and process xi:include
     - Add xml:base (=source) to the root element
@@ -371,6 +377,7 @@ def process_xinclude(tree, base_url=None, file=None, parent_line=None, xinclude_
 
     :param tree: ElementTree to process (gets modified)
     :param base_url: xml:base to use if not set in the tree
+    :param xmlcatalog: XML catalog to use (None means default)
     :param file: URL used to report errors
     :param parent_line: line in the document where the source xi:include is
     :param xinclude_stack: Internal"""
@@ -381,10 +388,10 @@ def process_xinclude(tree, base_url=None, file=None, parent_line=None, xinclude_
     if parent_line is not None:
         tree.set(QN['dbxi:parentline'], str(parent_line))
 
-    process_subtree(tree, base_url, file, xinclude_stack)
+    process_subtree(tree, base_url, xmlcatalog, file, xinclude_stack)
 
 
-def process_tree(tree, base_url=None, file=None, xinclude_stack=None):
+def process_tree(tree, base_url=None, xmlcatalog=None, file=None, xinclude_stack=None):
     """Processes an ElementTree:
     - Search and process xi:include
     - Add xml:base (=source) to the root element
@@ -392,8 +399,9 @@ def process_tree(tree, base_url=None, file=None, xinclude_stack=None):
 
     :param tree: ElementTree to process (gets modified)
     :param base_url: xml:base to use if not set in the tree
+    :param xmlcatalog: XML catalog to use (None means default)
     :param file: URL used to report errors
     :param xinclude_stack: Internal"""
 
-    process_xinclude(tree, base_url, file, None, xinclude_stack)
+    process_xinclude(tree, base_url, xmlcatalog, file, None, xinclude_stack)
     flatten_subtree(tree)
