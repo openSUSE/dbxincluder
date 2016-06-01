@@ -6,9 +6,10 @@ SYNOPSIS
 
 ::
 
-  dbxincluder [--] <input>
+  dbxincluder [options] [--] <input>
   dbxincluder -h | --help
   dbxincluder --version
+
 
 DESCRIPTION
 -----------
@@ -18,13 +19,15 @@ dbxincluder is an implementation of the XInclude 1.1 specification
 with support for DocBook transclusion (http://docbook.org/docs/transclusion).
 
 If the input file is specified as "-", standard input is used.
-The result is always printed to standard output.
+The result is printed to standard output or the output file, if given.
 
 OPTIONS
 -------
 
--h, --help  Display help and usage information
---version   Show the program's version
+-o <output>   Output file [default: -]
+-c <catalog>  XML catalog to use [default: /etc/xml/catalog]
+-h, --help    Print the version and help on usage.
+--version     Show the version.
 
 EXAMPLE
 -------
