@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>dbxincluder API documentation &mdash; dbxincluder 0.9.0 documentation</title>
+    <title>dbxincluder API documentation &mdash; dbxincluder 0.10.0 documentation</title>
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -32,7 +32,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    './',
-            VERSION:     '0.9.0',
+            VERSION:     '0.10.0',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -46,7 +46,7 @@
 <script type="text/javascript" src="_static/js/basicstrap.js"></script>
 <script type="text/javascript">
 </script>
-    <link rel="top" title="dbxincluder 0.9.0 documentation" href="index.html" />
+    <link rel="top" title="dbxincluder 0.10.0 documentation" href="index.html" />
     <link rel="prev" title="Manual Page for dbxincluder" href="manpage.html" /> 
   </head>
   <body role="document">
@@ -59,7 +59,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="index.html">dbxincluder 0.9.0 documentation</a>
+          <a class="navbar-brand" href="index.html">dbxincluder 0.10.0 documentation</a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -181,7 +181,7 @@ with the attributes of elem. Does not return anything.</p>
 
 <dl class="function">
 <dt id="dbxincluder.xinclude.get_target">
-<code class="descclassname">dbxincluder.xinclude.</code><code class="descname">get_target</code><span class="sig-paren">(</span><em>elem</em>, <em>base_url</em>, <em>file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#dbxincluder.xinclude.get_target" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">dbxincluder.xinclude.</code><code class="descname">get_target</code><span class="sig-paren">(</span><em>elem</em>, <em>base_url</em>, <em>xmlcatalog=None</em>, <em>file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#dbxincluder.xinclude.get_target" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return tuple of the content of the target document as string and the URL that was used</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -190,6 +190,7 @@ with the attributes of elem. Does not return anything.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>elem</strong> &#8211; XInclude element</li>
 <li><strong>base_url</strong> &#8211; xml:base of the element</li>
+<li><strong>xmlcatalog</strong> &#8211; XML catalog to use (None means default)</li>
 </ul>
 </td>
 </tr>
@@ -205,7 +206,7 @@ with the attributes of elem. Does not return anything.</p>
 
 <dl class="function">
 <dt id="dbxincluder.xinclude.handle_xifallback">
-<code class="descclassname">dbxincluder.xinclude.</code><code class="descname">handle_xifallback</code><span class="sig-paren">(</span><em>elem</em>, <em>file=None</em>, <em>xinclude_stack=None</em><span class="sig-paren">)</span><a class="headerlink" href="#dbxincluder.xinclude.handle_xifallback" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">dbxincluder.xinclude.</code><code class="descname">handle_xifallback</code><span class="sig-paren">(</span><em>elem</em>, <em>xmlcatalog=None</em>, <em>file=None</em>, <em>xinclude_stack=None</em><span class="sig-paren">)</span><a class="headerlink" href="#dbxincluder.xinclude.handle_xifallback" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process the xi:include tag elem.
 It will be replaced by the content of the xi:fallback subelement.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -214,6 +215,7 @@ It will be replaced by the content of the xi:fallback subelement.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>elem</strong> &#8211; The XInclude element to process</li>
+<li><strong>xmlcatalog</strong> &#8211; XML catalog to use (None means default)</li>
 <li><strong>file</strong> &#8211; URL used to report errors</li>
 <li><strong>xinclude_stack</strong> &#8211; List (or None) of str with url and fragid to detect infinite recursion</li>
 </ul>
@@ -228,7 +230,7 @@ It will be replaced by the content of the xi:fallback subelement.</p>
 
 <dl class="function">
 <dt id="dbxincluder.xinclude.handle_xinclude">
-<code class="descclassname">dbxincluder.xinclude.</code><code class="descname">handle_xinclude</code><span class="sig-paren">(</span><em>elem</em>, <em>base_url</em>, <em>file=None</em>, <em>xinclude_stack=None</em><span class="sig-paren">)</span><a class="headerlink" href="#dbxincluder.xinclude.handle_xinclude" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">dbxincluder.xinclude.</code><code class="descname">handle_xinclude</code><span class="sig-paren">(</span><em>elem</em>, <em>base_url</em>, <em>xmlcatalog=None</em>, <em>file=None</em>, <em>xinclude_stack=None</em><span class="sig-paren">)</span><a class="headerlink" href="#dbxincluder.xinclude.handle_xinclude" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process the xi:include tag elem.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -237,6 +239,7 @@ It will be replaced by the content of the xi:fallback subelement.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>elem</strong> &#8211; The XInclude element to process</li>
 <li><strong>base_url</strong> &#8211; xml:base to use if not specified in the document</li>
+<li><strong>xmlcatalog</strong> &#8211; XML catalog to use (None means default)</li>
 <li><strong>file</strong> &#8211; URL used to report errors</li>
 <li><strong>xinclude_stack</strong> &#8211; List (or None) of str with url and fragid to detect infinite recursion</li>
 </ul>
@@ -262,13 +265,13 @@ It will be replaced by the content of the xi:fallback subelement.</p>
 
 <dl class="function">
 <dt id="dbxincluder.xinclude.process_subtree">
-<code class="descclassname">dbxincluder.xinclude.</code><code class="descname">process_subtree</code><span class="sig-paren">(</span><em>tree</em>, <em>base_url</em>, <em>file</em>, <em>xinclude_stack</em><span class="sig-paren">)</span><a class="headerlink" href="#dbxincluder.xinclude.process_subtree" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">dbxincluder.xinclude.</code><code class="descname">process_subtree</code><span class="sig-paren">(</span><em>tree</em>, <em>base_url</em>, <em>xmlcatalog</em>, <em>file</em>, <em>xinclude_stack</em><span class="sig-paren">)</span><a class="headerlink" href="#dbxincluder.xinclude.process_subtree" title="Permalink to this definition">¶</a></dt>
 <dd><p>Like process_xinclude, but for subtrees.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="dbxincluder.xinclude.process_tree">
-<code class="descclassname">dbxincluder.xinclude.</code><code class="descname">process_tree</code><span class="sig-paren">(</span><em>tree</em>, <em>base_url=None</em>, <em>file=None</em>, <em>xinclude_stack=None</em><span class="sig-paren">)</span><a class="headerlink" href="#dbxincluder.xinclude.process_tree" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">dbxincluder.xinclude.</code><code class="descname">process_tree</code><span class="sig-paren">(</span><em>tree</em>, <em>base_url=None</em>, <em>xmlcatalog=None</em>, <em>file=None</em>, <em>xinclude_stack=None</em><span class="sig-paren">)</span><a class="headerlink" href="#dbxincluder.xinclude.process_tree" title="Permalink to this definition">¶</a></dt>
 <dd><p>Processes an ElementTree:
 - Search and process xi:include
 - Add xml:base (=source) to the root element
@@ -280,6 +283,7 @@ It will be replaced by the content of the xi:fallback subelement.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>tree</strong> &#8211; ElementTree to process (gets modified)</li>
 <li><strong>base_url</strong> &#8211; xml:base to use if not set in the tree</li>
+<li><strong>xmlcatalog</strong> &#8211; XML catalog to use (None means default)</li>
 <li><strong>file</strong> &#8211; URL used to report errors</li>
 <li><strong>xinclude_stack</strong> &#8211; Internal</li>
 </ul>
@@ -291,7 +295,7 @@ It will be replaced by the content of the xi:fallback subelement.</p>
 
 <dl class="function">
 <dt id="dbxincluder.xinclude.process_xinclude">
-<code class="descclassname">dbxincluder.xinclude.</code><code class="descname">process_xinclude</code><span class="sig-paren">(</span><em>tree</em>, <em>base_url=None</em>, <em>file=None</em>, <em>parent_line=None</em>, <em>xinclude_stack=None</em><span class="sig-paren">)</span><a class="headerlink" href="#dbxincluder.xinclude.process_xinclude" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">dbxincluder.xinclude.</code><code class="descname">process_xinclude</code><span class="sig-paren">(</span><em>tree</em>, <em>base_url=None</em>, <em>xmlcatalog=None</em>, <em>file=None</em>, <em>parent_line=None</em>, <em>xinclude_stack=None</em><span class="sig-paren">)</span><a class="headerlink" href="#dbxincluder.xinclude.process_xinclude" title="Permalink to this definition">¶</a></dt>
 <dd><p>Processes an ElementTree:
 - Search and process xi:include
 - Add xml:base (=source) to the root element
@@ -305,6 +309,7 @@ Use process_tree for that.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>tree</strong> &#8211; ElementTree to process (gets modified)</li>
 <li><strong>base_url</strong> &#8211; xml:base to use if not set in the tree</li>
+<li><strong>xmlcatalog</strong> &#8211; XML catalog to use (None means default)</li>
 <li><strong>file</strong> &#8211; URL used to report errors</li>
 <li><strong>parent_line</strong> &#8211; line in the document where the source xi:include is</li>
 <li><strong>xinclude_stack</strong> &#8211; Internal</li>
@@ -415,7 +420,7 @@ Uses same parameters as find_target.</p>
 
 <dl class="function">
 <dt id="dbxincluder.docbook.process_tree">
-<code class="descclassname">dbxincluder.docbook.</code><code class="descname">process_tree</code><span class="sig-paren">(</span><em>tree</em>, <em>base_url</em>, <em>file</em><span class="sig-paren">)</span><a class="headerlink" href="#dbxincluder.docbook.process_tree" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">dbxincluder.docbook.</code><code class="descname">process_tree</code><span class="sig-paren">(</span><em>tree</em>, <em>base_url</em>, <em>xmlcatalog=None</em>, <em>file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#dbxincluder.docbook.process_tree" title="Permalink to this definition">¶</a></dt>
 <dd><p>Processes an ElementTree.
 Handles all xi:include with xinclude.process_tree
 and processes all docbook attributes on the output.</p>
@@ -426,6 +431,7 @@ and processes all docbook attributes on the output.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>tree</strong> &#8211; ElementTree to process (gets modified)</li>
 <li><strong>base_url</strong> &#8211; xml:base to use if not set in the tree</li>
+<li><strong>xmlcatalog</strong> &#8211; XML catalog to use (None means default)</li>
 <li><strong>file</strong> &#8211; URL used to report errors</li>
 </ul>
 </td>
@@ -454,7 +460,7 @@ and processes all docbook attributes on the output.</p>
 <div id="navbar-related" class=" related navbar navbar-default" role="navigation" aria-label="related navigation">
   <div class="navbar-inner">
     <ul class="nav navbar-nav ">
-        <li><a href="index.html">dbxincluder 0.9.0 documentation</a></li>
+        <li><a href="index.html">dbxincluder 0.10.0 documentation</a></li>
     </ul>
 <ul class="nav navbar-nav pull-right hidden-xs hidden-sm">
       
@@ -469,7 +475,7 @@ and processes all docbook attributes on the output.</p>
       <!-- footer -->
       <footer role="contentinfo">
           &copy; Copyright 2016, Fabian Vogt.
-        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.4.1.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.4.2.
       </footer>
       <!-- /footer -->
 

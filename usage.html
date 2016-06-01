@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>How to use dbxincluder &mdash; dbxincluder 0.9.0 documentation</title>
+    <title>How to use dbxincluder &mdash; dbxincluder 0.10.0 documentation</title>
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -32,7 +32,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    './',
-            VERSION:     '0.9.0',
+            VERSION:     '0.10.0',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -46,9 +46,9 @@
 <script type="text/javascript" src="_static/js/basicstrap.js"></script>
 <script type="text/javascript">
 </script>
-    <link rel="top" title="dbxincluder 0.9.0 documentation" href="index.html" />
+    <link rel="top" title="dbxincluder 0.10.0 documentation" href="index.html" />
     <link rel="next" title="Manual Page for dbxincluder" href="manpage.html" />
-    <link rel="prev" title="dbxincluder 0.9" href="index.html" /> 
+    <link rel="prev" title="dbxincluder 0.10" href="index.html" /> 
   </head>
   <body role="document">
     <div id="navbar-top" class="navbar navbar-fixed-top navbar-default" role="navigation" aria-label="top navigation">
@@ -60,7 +60,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="index.html">dbxincluder 0.9.0 documentation</a>
+          <a class="navbar-brand" href="index.html">dbxincluder 0.10.0 documentation</a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -85,7 +85,7 @@
 
             
               <li><a class="uplink" href="index.html">Contents</a></li>
-              <li><a href="index.html"><i class="icon icon-double-angle-left"></i>&nbsp;dbxincluder 0.9</a></li>
+              <li><a href="index.html"><i class="icon icon-double-angle-left"></i>&nbsp;dbxincluder 0.10</a></li>
               <li><a href="manpage.html">Manual Page for dbxincluder&nbsp;<i class="icon icon-double-angle-right"></i></a></li>
             <li class="visible-xs"><a href="_sources/usage.txt" rel="nofollow">Show Source</a></li>
 
@@ -142,28 +142,34 @@ lxml for XML processing.</p>
 dbxincluder: XInclude and DocBook transclusion processor
 
 Usage:
-  dbxincluder <span class="o">[</span>--<span class="o">]</span> &lt;input&gt;
+  dbxincluder <span class="o">[</span>options<span class="o">]</span> <span class="o">[</span>--<span class="o">]</span> &lt;input&gt;
   dbxincluder -h <span class="p">|</span> --help
   dbxincluder --version
 
 Options:
+  -o &lt;output&gt;   Output file <span class="o">[</span>default: -<span class="o">]</span>
+  -c &lt;catalog&gt;  XML catalog to use <span class="o">[</span>default: /etc/xml/catalog<span class="o">]</span>
   -h --help     Show this screen.
   --version     Show the version.
 </pre></div>
 </div>
 <p>dbxincluder either reads from standard input (stdin) or a file
-and always outputs to stdout. Error messages get printed to stderr.
+and outputs to stdout or the given output file.
+Error messages get printed to stderr.
 The following invocations do the same:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>python3 -m dbxincluder input.xml
 dbxincluder input.xml
-dbxincluder &lt; input.xml
+dbxincluder - &lt; input.xml
+dbxincluder -o - - &lt; input.xml
 </pre></div>
 </div>
 <p>Normally you want to write the output to a file.
-Use redirection for that:</p>
+Use redirection or the <code class="docutils literal"><span class="pre">-o</span></code> parameter for that:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>python3 -m dbxincluder input.xml &gt; output.xml
 dbxincluder input.xml &gt; output.xml
-dbxincluder &lt; input.xml &gt; output.xml
+dbxincluder - &lt; input.xml &gt; output.xml
+dbxincluder -o output.xml - &lt; input.xml
+dbxincluder -o output.xml input.xml
 </pre></div>
 </div>
 </div>
@@ -289,11 +295,11 @@ dbxincluder &lt; input.xml &gt; output.xml
 <div id="navbar-related" class=" related navbar navbar-default" role="navigation" aria-label="related navigation">
   <div class="navbar-inner">
     <ul class="nav navbar-nav ">
-        <li><a href="index.html">dbxincluder 0.9.0 documentation</a></li>
+        <li><a href="index.html">dbxincluder 0.10.0 documentation</a></li>
     </ul>
 <ul class="nav navbar-nav pull-right hidden-xs hidden-sm">
       
-        <li><a href="index.html"><i class="icon icon-double-angle-left"></i>&nbsp;dbxincluder 0.9</a></li>
+        <li><a href="index.html"><i class="icon icon-double-angle-left"></i>&nbsp;dbxincluder 0.10</a></li>
         <li><a class="uplink" href="index.html">Contents</a></li>
         <li><a href="manpage.html">Manual Page for dbxincluder&nbsp;<i class="icon icon-double-angle-right"></i></a></li>
         <li><a href="#">top</a></li>
@@ -305,7 +311,7 @@ dbxincluder &lt; input.xml &gt; output.xml
       <!-- footer -->
       <footer role="contentinfo">
           &copy; Copyright 2016, Fabian Vogt.
-        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.4.1.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.4.2.
       </footer>
       <!-- /footer -->
 

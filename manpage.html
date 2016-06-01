@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     
-    <title>Manual Page for dbxincluder &mdash; dbxincluder 0.9.0 documentation</title>
+    <title>Manual Page for dbxincluder &mdash; dbxincluder 0.10.0 documentation</title>
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -32,7 +32,7 @@
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:    './',
-            VERSION:     '0.9.0',
+            VERSION:     '0.10.0',
             COLLAPSE_INDEX: false,
             FILE_SUFFIX: '.html',
             HAS_SOURCE:  true
@@ -46,7 +46,7 @@
 <script type="text/javascript" src="_static/js/basicstrap.js"></script>
 <script type="text/javascript">
 </script>
-    <link rel="top" title="dbxincluder 0.9.0 documentation" href="index.html" />
+    <link rel="top" title="dbxincluder 0.10.0 documentation" href="index.html" />
     <link rel="next" title="dbxincluder API documentation" href="apidoc.html" />
     <link rel="prev" title="How to use dbxincluder" href="usage.html" /> 
   </head>
@@ -60,7 +60,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="index.html">dbxincluder 0.9.0 documentation</a>
+          <a class="navbar-brand" href="index.html">dbxincluder 0.10.0 documentation</a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -126,7 +126,7 @@
 <h1>Manual Page for dbxincluder<a class="headerlink" href="#manual-page-for-dbxincluder" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="synopsis">
 <h2>SYNOPSIS<a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">dbxincluder</span> <span class="p">[</span><span class="o">--</span><span class="p">]</span> <span class="o">&lt;</span><span class="nb">input</span><span class="o">&gt;</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">dbxincluder</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="p">]</span> <span class="o">&lt;</span><span class="nb">input</span><span class="o">&gt;</span>
 <span class="n">dbxincluder</span> <span class="o">-</span><span class="n">h</span> <span class="o">|</span> <span class="o">--</span><span class="n">help</span>
 <span class="n">dbxincluder</span> <span class="o">--</span><span class="n">version</span>
 </pre></div>
@@ -138,7 +138,7 @@
 (<a class="reference external" href="https://www.w3.org/TR/xinclude-11">https://www.w3.org/TR/xinclude-11</a>)
 with support for DocBook transclusion (<a class="reference external" href="http://docbook.org/docs/transclusion">http://docbook.org/docs/transclusion</a>).</p>
 <p>If the input file is specified as &#8220;-&#8221;, standard input is used.
-The result is always printed to standard output.</p>
+The result is printed to standard output or the output file, if given.</p>
 </div>
 <div class="section" id="options">
 <h2>OPTIONS<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h2>
@@ -147,11 +147,17 @@ The result is always printed to standard output.</p>
 <col class="description" />
 <tbody valign="top">
 <tr><td class="option-group">
+<kbd><span class="option">-o <var>&lt;output&gt;</var></span></kbd></td>
+<td>Output file [default: -]</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-c <var>&lt;catalog&gt;</var></span></kbd></td>
+<td>XML catalog to use [default: /etc/xml/catalog]</td></tr>
+<tr><td class="option-group">
 <kbd><span class="option">-h</span>, <span class="option">--help</span></kbd></td>
-<td>Display help and usage information</td></tr>
+<td>Print the version and help on usage.</td></tr>
 <tr><td class="option-group">
 <kbd><span class="option">--version</span></kbd></td>
-<td>Show the program&#8217;s version</td></tr>
+<td>Show the version.</td></tr>
 </tbody>
 </table>
 </div>
@@ -181,7 +187,7 @@ The result is always printed to standard output.</p>
 <div id="navbar-related" class=" related navbar navbar-default" role="navigation" aria-label="related navigation">
   <div class="navbar-inner">
     <ul class="nav navbar-nav ">
-        <li><a href="index.html">dbxincluder 0.9.0 documentation</a></li>
+        <li><a href="index.html">dbxincluder 0.10.0 documentation</a></li>
     </ul>
 <ul class="nav navbar-nav pull-right hidden-xs hidden-sm">
       
@@ -197,7 +203,7 @@ The result is always printed to standard output.</p>
       <!-- footer -->
       <footer role="contentinfo">
           &copy; Copyright 2016, Fabian Vogt.
-        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.4.1.
+        Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.4.2.
       </footer>
       <!-- /footer -->
 

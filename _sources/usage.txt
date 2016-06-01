@@ -25,32 +25,38 @@ Usage
   dbxincluder: XInclude and DocBook transclusion processor
 
   Usage:
-    dbxincluder [--] <input>
+    dbxincluder [options] [--] <input>
     dbxincluder -h | --help
     dbxincluder --version
 
   Options:
+    -o <output>   Output file [default: -]
+    -c <catalog>  XML catalog to use [default: /etc/xml/catalog]
     -h --help     Show this screen.
     --version     Show the version.
 
 dbxincluder either reads from standard input (stdin) or a file
-and always outputs to stdout. Error messages get printed to stderr.
+and outputs to stdout or the given output file.
+Error messages get printed to stderr.
 The following invocations do the same:
 
 .. code-block:: bash
 
   python3 -m dbxincluder input.xml
   dbxincluder input.xml
-  dbxincluder < input.xml
+  dbxincluder - < input.xml
+  dbxincluder -o - - < input.xml
 
 Normally you want to write the output to a file.
-Use redirection for that:
+Use redirection or the ``-o`` parameter for that:
 
 .. code-block:: bash
 
   python3 -m dbxincluder input.xml > output.xml
   dbxincluder input.xml > output.xml
-  dbxincluder < input.xml > output.xml
+  dbxincluder - < input.xml > output.xml
+  dbxincluder -o output.xml - < input.xml
+  dbxincluder -o output.xml input.xml
 
 Example
 =======
