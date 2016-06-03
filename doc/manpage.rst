@@ -24,17 +24,19 @@ The result is printed to standard output or the output file, if given.
 OPTIONS
 -------
 
--o <output>   Output file [default: -]
--c <catalog>  XML catalog to use [default: /etc/xml/catalog]
+-o <output>   Output file [default: ``-``]
+-c <catalog>  XML catalog to use [default: :file:`/etc/xml/catalog`]
 -h, --help    Print the version and help on usage.
 --version     Show the version.
 
 EXAMPLE
 -------
 
-dbxincluder input.xml > output.xml
+::
 
-BUGS
-----
+ dbxincluder input.xml > output.xml
+
+Limitations
+-----------
 
 - Does not support XPointers and all attributes that provide references
