@@ -17,6 +17,7 @@
 # along with dbxincluder. If not, see <http://www.gnu.org/licenses/>.
 
 import os.path
+from operator import is_, eq
 import sys
 import pytest
 
@@ -62,21 +63,30 @@ def test_stdin(capsys):
     assert outputxml == capsys.readouterr()[0]
 
 
-def test_rfc5147_parser():
-    """Test the parser used for text/plain fragids"""
-    assert dbxincluder.xinclude.parse_fragid_rfc5147("") is None
-    assert dbxincluder.xinclude.parse_fragid_rfc5147("char=asdf") is None
-    assert dbxincluder.xinclude.parse_fragid_rfc5147("asdf=0") is None
-    assert dbxincluder.xinclude.parse_fragid_rfc5147("char=0") == ('char', 0, None)
-    assert dbxincluder.xinclude.parse_fragid_rfc5147("line=0,3") == ('line', 0, 3)
-    assert dbxincluder.xinclude.parse_fragid_rfc5147("char=,320") == ('char', 0, 320)
-    assert dbxincluder.xinclude.parse_fragid_rfc5147("line=1,") == ('line', 1, None)
-
+@pytest.mark.parametrize("func,configstr,expected", [
+    (is_, "", None),
+    (is_, "asdf=0", None),
+    (is_, "char=asdf", None),
+    (eq,  "char=0", ('char', 0, None)),
+    (eq,  "char=,320", ('char', 0, 320)),
+    (eq,  "line=0,3", ('line', 0, 3)),
+    (eq,  "line=1,", ('line', 1, None)),
     # Integrity not validated, but parsed
-    assert dbxincluder.xinclude.parse_fragid_rfc5147("char=0;length=asdf") is None
-    assert dbxincluder.xinclude.parse_fragid_rfc5147("char=0;md5=0123456789abcdefDEADBEEFG00DBABE5") is None
-    assert dbxincluder.xinclude.parse_fragid_rfc5147("char=0;length=10") == ('char', 0, None)
-    assert dbxincluder.xinclude.parse_fragid_rfc5147("char=0;md5=0123456789abcdefDEADBEEFBADBABE5") == ('char', 0, None)
+    (is_, "char=0;length=asdf", None),
+    (is_, "char=0;md5=0123456789abcdefDEADBEEFG00DBABE5", None),
+    (eq,  "char=0;length=10", ('char', 0, None)),
+    (eq,  "char=0;md5=0123456789abcdefDEADBEEFBADBABE5", ('char', 0, None)),
+    ],
+    ## If we want short names, enable the ids argument:
+    # ids=('empty', 'somethingelse',
+    #     'char0', 'char1', 'char2',
+    #     'line0', 'line1',
+    #     'xchar0', 'xchar1', 'xchar2', 'xchar3',
+    #     ),
+)
+def test_rfc5147_parser(func, configstr, expected):
+    """Test the parser used for text/plain fragids"""
+    assert func(dbxincluder.xinclude.parse_fragid_rfc5147(configstr), expected)
 
 
 def test_target():
