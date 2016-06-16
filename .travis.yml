@@ -14,11 +14,12 @@ matrix:
       python: 3.5
 
 install:
-  - pip install tox
+  - pip install tox coveralls
   - virtualenv --version
   - easy_install --version
   - pip --version
   - tox --version
+  - pip install -r
 script:
   - tox -v
 after_failure:
