@@ -25,6 +25,29 @@ from . import xinclude
 from .utils import DBXIException, NS, QN, generate_id, get_inherited_attribute
 
 
+def check_linkscope(elem, linkscope):
+    """Checks if linkscope value in element belongs to the allowed set
+
+    :param elem: instance of Element class
+    :param linkscope: value of linkscope attribute
+    :raises: DBXIException
+    """
+    if linkscope not in ("near", "local", "global", "user"):
+        raise DBXIException(elem, "invalid linkscope type {0!r}".format(linkscope))
+
+
+def check_idfixup(elem, idfixup):
+    """Checks if idfixup value in element belongs to the allowed set
+
+    :param elem: instance of Element class
+    :param linkscope: value of linkscope attribute
+    :raises: DBXIException
+    """
+    if idfixup not in ("none", "suffix", "auto"):
+        raise DBXIException(elem,
+                            "Invalid value for idfixup: {0!r}. "
+                            "Expected 'none', 'suffix' or 'auto'.".format(idfixup))
+
 def associate_new_ids(subtree):
     """Assign elements their new ids as new 'dbxi:newid' attribute.
 
@@ -35,9 +58,7 @@ def associate_new_ids(subtree):
 
     idfixup = subtree.get(QName(NS['trans'], "idfixup"), "none")
 
-    if idfixup not in ["none", "suffix", "auto"]:
-        raise DBXIException(subtree, "Invalid value for idfixup: {0!r}. "
-                            "Expected 'none', 'suffix' or 'auto'.".format(idfixup))
+    check_idfixup(subtree, idfixup)
 
     if idfixup == "none":
         return  # Nothing to do here
@@ -109,14 +130,10 @@ def fixup_references(subtree):
 
     :param subtree: subtree to process"""
 
-    for elem in subtree.iter():
-        if not isinstance(elem.tag, str) or QName(elem).namespace != NS['db']:
-            continue
-
+    for elem in subtree.iter("{{{}}}*".format(NS['db'])):
         linkscope, _ = get_inherited_attribute(elem, "trans:linkscope", "near")
 
-        if linkscope not in ["near", "local", "global", "user"]:
-            raise DBXIException(elem, "invalid linkscope type {0!r}".format(linkscope))
+        check_linkscope(elem, linkscope)
 
         (idfixup, idfixup_elem) = get_inherited_attribute(elem, "trans:idfixup", "none")
 
@@ -172,7 +189,7 @@ def process_tree(tree, base_url, xmlcatalog=None, file=None):
             elem.set(QN['xml:id'], newid)
             del elem.attrib[QN['dbxi:newid']]
 
-        for name, _ in elem.items():
+        for name in elem.keys():
             namespace = QName(name).namespace
             if namespace in [NS['trans'], NS['dbxi']]:
                 del elem.attrib[name]
