@@ -19,7 +19,6 @@ install:
   - easy_install --version
   - pip --version
   - tox --version
-  - pip install -r
 script:
   - tox -v
 after_failure:
