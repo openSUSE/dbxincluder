@@ -72,13 +72,12 @@ def create_xinclude_stack(elem):
     xml_bases = [elem.get(QN['xml:base'], "<unknown>") for elem in parent_elems][:-1]
     lines = [elem.get(QN['dbxi:parentline']) for elem in parent_elems][1:]
 
-    ret = ""
-    for i in reversed(range(len(xml_bases))):
-        ret += "\nIncluded by " + xml_bases[i]
-        if lines[i] is not None:
-            ret += ":" + lines[i]
+    result = [""]
+    for filename, line in reversed(list(zip(xml_bases, lines))):
+        parent = ":" + line if line is not None else ""
+        result.append("Included by %s%s" % (filename, parent))
 
-    return ret
+    return "\n".join(result)
 
 
 class DBXIException(Exception):

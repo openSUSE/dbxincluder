@@ -96,10 +96,9 @@ def find_target(elem, subtree, value, linkscope):
     if linkscope == "local":
         target = subtree.xpath("./*[@xml:id={0!r}]".format(value))
     elif linkscope == "near":
-        while elem.getparent() is not None:
-            elem = elem.getparent()
-            target = elem.xpath("./*[@xml:id={0!r}]".format(value))
-            if len(target):
+        for el in elem.iterancestors():
+            target = el.xpath("./*[@xml:id={0!r}]".format(value))
+            if target:
                 return target[0]
     elif linkscope == "global":
         target = elem.xpath("//*[@xml:id={0!r}]".format(value))
