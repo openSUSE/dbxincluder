@@ -289,7 +289,7 @@ def handle_xinclude(elem, base_url, xmlcatalog=None, file=None, xinclude_stack=N
 
     # Parse as XML
     try:
-        subtree = fromstring(content)
+        subtree = fromstring(content, base_url=url)
     except (XMLSyntaxError, UnicodeDecodeError) as exc:
         raise DBXIException(elem, "Could not parse {0!r}: {1}".format(url, str(exc)), file)
 
