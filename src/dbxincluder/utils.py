@@ -73,9 +73,9 @@ def create_xinclude_stack(elem):
     lines = [elem.get(QN['dbxi:parentline']) for elem in parent_elems][1:]
 
     result = [""]
-    for filename, line in reversed(list(zip(xml_bases, lines))):
+    for filename, line in zip(xml_bases, lines):
         parent = ":" + line if line is not None else ""
-        result.append("Included by %s%s" % (filename, parent))
+        result.insert(1, "Included by %s%s" % (filename, parent))
 
     return "\n".join(result)
 
