@@ -1,7 +1,7 @@
 include .coverage* .landscape.yml .travis.yml tox.ini
 include *requirements.txt
 include .bumpversion.cfg
-include *.md LICENSE
+include *.md LICENSE ChangeLog
 recursive-include doc *.rst
 recursive-include doc Makefile
 recursive-include doc conf.py
