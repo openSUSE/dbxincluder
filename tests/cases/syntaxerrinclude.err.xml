@@ -1,1 +1,1 @@
-Error at tests/cases/syntaxerrinclude.case.xml:6: Could not parse 'tests/cases/syntaxerr.case.xml': Start tag expected, '<' not found, line 1, column 1
+Error at tests/cases/syntaxerrinclude.case.xml:6: Could not parse 'tests/cases/syntaxerr.case.xml': Start tag expected, '<' not found, line 1, column 1 (syntaxerr.case.xml, line 1)
