@@ -5,16 +5,16 @@ How to use dbxincluder
 Installation
 ============
 
-dbxincluder depends on setuptools for automatic installation, docopt for option processing and
-lxml for XML processing.
+``dbxincluder`` depends on ``setuptools`` for automatic installation, ``docopt`` for option processing and
+``lxml`` for XML processing.
 
-Simply run 
+Simply run:
 
 .. code-block:: bash
 
   ./setup.py
 
-to install dbxincluder. A virtual python3 environment ("pyvenv") is recommended.
+to install ``dbxincluder``. A virtual Python3 environment (":command:`pyvenv`") is recommended.
 
 Usage
 =====
@@ -35,7 +35,7 @@ Usage
     -h --help     Show this screen.
     --version     Show the version.
 
-dbxincluder either reads from standard input (stdin) or a file
+``dbxincluder`` either reads from standard input (stdin) or a file
 and outputs to stdout or the given output file.
 Error messages get printed to stderr.
 The following invocations do the same:
@@ -48,7 +48,7 @@ The following invocations do the same:
   dbxincluder -o - - < input.xml
 
 Normally you want to write the output to a file.
-Use redirection or the ``-o`` parameter for that:
+Use redirection or the :option:`-o` option for that:
 
 .. code-block:: bash
 
@@ -58,29 +58,30 @@ Use redirection or the ``-o`` parameter for that:
   dbxincluder -o output.xml - < input.xml
   dbxincluder -o output.xml input.xml
 
+
 Example
 =======
 
 XInclude only
 -------------
 
-source.xml:
+:file:`source.xml`:
 
 .. code-block:: xml
 
   <?xml version="1.0" encoding="UTF-8"?>
   <root xmlns:xi="http://www.w3.org/2001/XInclude">
-  <elem>ent</elem>
-  <another>
-    <xi:include href="part.xml" />
-  </another>
+    <elem>ent1</elem>
+    <another>
+      <xi:include href="part.xml" />
+    </another>
   </root>
 
-part.xml:
+:file:`part.xml`:
 
 .. code-block:: xml
 
-  <elem>ent</elem>
+  <elem>ent2</elem>
 
 Result:
 
@@ -89,10 +90,10 @@ Result:
   > dbxincluder source.xml 
 
   <root xml:base="source.xml">
-  <elem>ent</elem>
-  <another>
-    <elem xml:base="part.xml">ent</elem>
-  </another>
+    <elem>ent1</elem>
+    <another>
+      <elem xml:base="part.xml">ent2</elem>
+    </another>
   </root>
 
 DocBook Transclusion
@@ -100,7 +101,7 @@ DocBook Transclusion
 
 Example taken from http://docbook.org/docs/transclusion/#tutorial
 
-source.xml:
+:file:`source.xml`:
 
 .. code-block:: xml
 
@@ -127,7 +128,7 @@ source.xml:
     </chapter>
   </book>
 
-procedure.001.xml:
+:file:`procedure.001.xml`:
 
 .. code-block:: xml
 
