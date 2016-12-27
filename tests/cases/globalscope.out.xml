@@ -1,0 +1,30 @@
+<book xmlns="http://docbook.org/ns/docbook" version="5.0" xml:base="tests/cases/globalscope.case.xml">
+  <title>Definitive Printer Guide</title>
+  <chapter xml:id="buy">
+    <title>Buying printer</title>
+    <para>Grab money, go to shop, ...</para>
+  </chapter>
+  <chapter>
+    <title>Quick installation guide</title>
+    <para>Carefully follow all procedures below.</para>
+    <procedure xml:id="paper-insert--LyovKlszXS8qWzNd" xml:base="tests/cases/procedure.001.xml">
+  <title>Inserting paper into printer</title>
+  <para>This procedure is for printer owners.
+    If you don't have a printer, consider <link linkend="buy">buying one</link>.</para>  
+  <step xml:id="s1--LyovKlszXS8qWzNdLypbM10-"><para>Make sure that you have paper.</para></step>
+  <step><para>Insert paper into printer. If you don't have paper, consult <xref linkend="s1--LyovKlszXS8qWzNdLypbM10-"/></para></step>
+</procedure>
+  </chapter>
+  <chapter>
+    <title>Maintenance</title>
+    <para>Be friendly to your printer when you speak to it.</para>
+    <para>If green led is blinking, please add paper using the following procedure.</para>
+    <procedure xml:id="paper-insert--LyovKls0XS8qWzRd" xml:base="tests/cases/procedure.001.xml">
+  <title>Inserting paper into printer</title>
+  <para>This procedure is for printer owners.
+    If you don't have a printer, consider <link linkend="buy">buying one</link>.</para>  
+  <step xml:id="s1--LyovKls0XS8qWzRdLypbM10-"><para>Make sure that you have paper.</para></step>
+  <step><para>Insert paper into printer. If you don't have paper, consult <xref linkend="s1--LyovKlszXS8qWzNdLypbM10-"/></para></step>
+</procedure>
+  </chapter>
+</book>

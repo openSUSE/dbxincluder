@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<article version="5.0"
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xi="http://www.w3.org/2001/XInclude">
+  <title>Transclusions demo</title>
+  <xi:include href="nonexistant.xml">
+    <xi:fallback>
+        <para>This will be included</para>
+        <xi:include href="nonexistant.xml">
+            <xi:fallback>
+                <para>Don't forget this!</para>
+                <para>Don't forget this!</para>
+            </xi:fallback>
+        </xi:include>
+        <para>Second para to confuse the for loop.</para>
+        <para>Why not a third one?</para>
+    </xi:fallback>
+  </xi:include>
+  <xi:include href="nonexistant.xml">
+    <xi:fallback xml:base="asdf://asdf">
+        <para>This should appear as the fourth one.</para>
+    </xi:fallback>
+  </xi:include>
+</article>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<book xmlns="http://docbook.org/ns/docbook"
+      xmlns:trans="http://docbook.org/ns/transclude"
+      version="5.0">
+    <title>Title</title>
+    <chapter trans:idfixup="suffix" trans:suffix="deep">
+        <sect1 trans:idfixup="suffix">
+            <title>Title 2</title>
+            <para xml:id="asdf">
+                asdf para
+            </para>
+            <para>
+                <xref linkend="asdf" />
+            </para>
+        </sect1>
+    </chapter>
+</book>

@@ -1,0 +1,6 @@
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="basicxml" xml:base="basicxml.case.xml">
+    <title>Basic XML</title>
+    <para xml:id="an.id">
+        This should not be a problem for any parser.
+    </para>
+</chapter>

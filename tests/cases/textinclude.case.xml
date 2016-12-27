@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<article version="5.0"
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:stuff="http://doesnt/exist">
+  <title>Transclusions demo</title>
+  <xi:include href="xinclude1.xml" parse="text/plain"/>
+  <sect1>
+    Here it comes again: <xi:include href="xinclude1.xml" parse="text/plain"/>
+    That was it.
+  </sect1>
+  <sect1>
+    <?TEST pi?>
+    Now some snippets:
+    <stuff:elem />
+    Line 0-end:
+<xi:include href="text.txt" parse="text/plain" fragid="line=0," />
+    Line 0-end:
+<xi:include href="text.txt" parse="text/plain" fragid="asdfasdf" />
+    Line 2:
+<xi:include href="text.txt" parse="text/plain" fragid="line=2,3" />
+    Line 0-2:
+<xi:include href="text.txt" parse="text/plain" fragid="line=,3" />
+    Char 42-end:
+<xi:include href="text.txt" parse="text/plain" fragid="char=42" />
+    Char 42-end:
+<xi:include href="textdos.txt" parse="text/plain" fragid="char=42" />
+</sect1>
+</article>

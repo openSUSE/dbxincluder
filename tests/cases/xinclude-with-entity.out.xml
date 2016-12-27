@@ -1,0 +1,11 @@
+<article xmlns="http://docbook.org/ns/docbook" version="5.0" xml:base="tests/cases/xinclude-with-entity.case.xml">
+  <title>Transclusions demo</title>
+  <sect1 version="5.0" xml:id="sec.parent" xml:base="tests/cases/xinclude2.xml">
+    <sect2 xml:id="sec.first">
+        <para>First section! Found bar!</para>
+    </sect2>
+    <sect2 xml:id="sec.ond">
+        <para>Second section!</para>
+    </sect2>
+</sect1>
+</article>

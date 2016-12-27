@@ -2,12 +2,20 @@
 __pycache__/
 *.py[cod]
 
+# Kate, vi
+*.kate-swp
+*.~
+*.swp
+*~
+
 # C extensions
 *.so
 
 # Distribution / packaging
 .Python
 env/
+env-2[01][0-9][0-9][0-9][0-9][0-9][0-9]/
+.env/
 build/
 develop-eggs/
 dist/
@@ -22,12 +30,13 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+tmp/
+.tmp/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
-*.spec
 
 # Installer logs
 pip-log.txt
@@ -52,6 +61,13 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
+docs/.build/
 
 # PyBuilder
 target/
+
+# PyCharm
+.idea/
+
+# KDevelop
+*.kdev4

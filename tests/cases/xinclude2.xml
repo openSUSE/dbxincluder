@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sect1 [
+  <!ENTITY bar "Found bar!">
+]>
+<sect1 version="5.0"
+    xmlns="http://docbook.org/ns/docbook"
+    xml:id="sec.parent">
+    <sect2 xml:id="sec.first">
+        <para>First section! &bar;</para>
+    </sect2>
+    <sect2 xml:id="sec.ond">
+        <para>Second section!</para>
+    </sect2>
+</sect1>

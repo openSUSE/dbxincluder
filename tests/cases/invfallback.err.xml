@@ -1,0 +1,1 @@
+Error at tests/cases/invfallback.case.xml:6: Only one xi:fallback can be a child of xi:include

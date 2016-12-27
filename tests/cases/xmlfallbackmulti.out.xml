@@ -1,0 +1,18 @@
+<article xmlns="http://docbook.org/ns/docbook" version="5.0" xml:base="tests/cases/xmlfallbackmulti.case.xml">
+  <title>Transclusions demo</title>
+  
+        <para>This will be included</para>
+        
+                <para>Don't forget this!</para>
+                <para>Don't forget this!</para>
+            
+        
+        <para>Second para to confuse the for loop.</para>
+        <para>Why not a third one?</para>
+    
+  
+  
+        <para>This should appear as the fourth one.</para>
+    
+  
+</article>

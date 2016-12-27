@@ -1,0 +1,59 @@
+<article xmlns="http://docbook.org/ns/docbook" xmlns:stuff="http://doesnt/exist" version="5.0" xml:base="tests/cases/textinclude.case.xml">
+  <title>Transclusions demo</title>
+  &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;sect1 version="5.0"
+    xmlns="http://docbook.org/ns/docbook"
+    xml:id="sec.parent"&gt;
+    &lt;sect2 xml:id="sec.first"&gt;
+        &lt;para&gt;First section!&lt;/para&gt;
+    &lt;/sect2&gt;
+    &lt;sect2 xml:id="sec.ond"&gt;
+        &lt;para&gt;Second section!&lt;/para&gt;
+    &lt;/sect2&gt;
+&lt;/sect1&gt;
+  <sect1>
+    Here it comes again: &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;sect1 version="5.0"
+    xmlns="http://docbook.org/ns/docbook"
+    xml:id="sec.parent"&gt;
+    &lt;sect2 xml:id="sec.first"&gt;
+        &lt;para&gt;First section!&lt;/para&gt;
+    &lt;/sect2&gt;
+    &lt;sect2 xml:id="sec.ond"&gt;
+        &lt;para&gt;Second section!&lt;/para&gt;
+    &lt;/sect2&gt;
+&lt;/sect1&gt;
+    That was it.
+  </sect1>
+  <sect1>
+    <?TEST pi?>
+    Now some snippets:
+    <stuff:elem/>
+    Line 0-end:
+line 0
+line 1
+line 2
+line 3
+line 4
+line 5
+char 42
+    Line 0-end:
+line 0
+line 1
+line 2
+line 3
+line 4
+line 5
+char 42
+    Line 2:
+line 2
+    Line 0-2:
+line 0
+line 1
+line 2
+    Char 42-end:
+char 42
+    Char 42-end:
+char 42
+</sect1>
+</article>

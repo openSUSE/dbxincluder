@@ -1,0 +1,13 @@
+include .coverage* .landscape.yml .travis.yml tox.ini
+include *requirements.txt
+include .bumpversion.cfg
+include *.md LICENSE
+recursive-include doc *.rst
+recursive-include doc Makefile
+recursive-include doc conf.py
+recursive-include src *.py
+recursive-include packaging *
+
+graft tests
+
+global-exclude *.py[cod] __pycache__ *.so *.dylib *~ *.bak

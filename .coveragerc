@@ -1,0 +1,5 @@
+[paths]
+source = src
+
+[run]
+source = src

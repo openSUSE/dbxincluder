@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+  <group id="dbxi">
+    <system systemId="urn:x-dbxi:file.xml" uri="text.txt"/>
+  </group>
+</catalog>
