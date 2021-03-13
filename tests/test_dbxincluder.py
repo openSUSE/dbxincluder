@@ -18,6 +18,7 @@
 
 import os.path
 from operator import is_, eq
+import shutil
 import sys
 import pytest
 
@@ -33,6 +34,16 @@ def test_main(capsys):
         path = os.path.dirname(os.path.realpath(__file__)) + "/../src/dbxincluder/__main__.py"
         exec(compile(open(path).read(), path, "exec"), {}, {"__name__": "__main__"})
 
+
+def test_find_xmlcatalog():
+    """Makes sure the xmlcatalog tool is available on the system """
+    assert shutil.which("xmlcatalog"), (
+        "Couldn't find xmlcatalog. "
+        "You probably need to install the package of your distribution:\n"
+        " openSUSE: libxml2-tools\n"
+        " Ubuntu: libxml2-utils\n"
+        " Fedora: libxml2"
+        )
 
 def test_version(capsys):
     assert dbxincluder.main(["", "--version"]) == 0
