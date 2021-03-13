@@ -1,5 +1,5 @@
-[paths]
-source = src
+#
 
 [run]
 source = src
+parallel = true

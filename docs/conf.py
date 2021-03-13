@@ -37,7 +37,7 @@ extensions = [
 ]
 
 # Don't require the theme for man build
-if sys.argv[2] != "man":
+if len(sys.argv) >= 3 and sys.argv[2] != "man":
     extensions += ['sphinxjp.themes.basicstrap']
 
 # Add any paths that contain templates here, relative to this directory.

@@ -71,3 +71,6 @@ target/
 
 # KDevelop
 *.kdev4
+
+# pyenv
+.python-version
