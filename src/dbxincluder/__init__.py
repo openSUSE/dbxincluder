@@ -44,7 +44,9 @@ __version__ = "0.10.0"
 
 def main(argv=None):
     """Default entry point.
-    Parses argv (sys.argv if None) and does stuff."""
+
+    Parses argv (sys.argv if None) and does stuff.
+    """
     argv = argv if argv else sys.argv
 
     try:

@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with dbxincluder. If not, see <http://www.gnu.org/licenses/>.
 
-"""Utility functions and classes used throughout dbxincluder"""
+"""Utility functions and classes used throughout dbxincluder."""
 
 import base64
 
@@ -50,7 +50,8 @@ def get_inherited_attribute(elem, attribute, default=None):
 
     :param elem: The element to query
     :param attribute: The name of the attribute
-    :return: Tuple of (str, None or default, element with value)"""
+    :return: Tuple of (str, None or default, element with value)
+    """
 
     values = elem.xpath("ancestor-or-self::*[@{0}][1]".format(attribute), namespaces=NS)
     if len(values) == 0:
@@ -84,16 +85,16 @@ def create_xinclude_stack(elem):
 
 
 class DBXIException(Exception):
-    """Exception type for XML errors"""
+    """Exception type for XML errors."""
 
     def __init__(self, elem, message=None, file=None, severity="Error"):
-        """Construct an DBXIException.
-        If file is none, it tries to get the file name by xml:base.
-        Prints a "stack trace" of xml:base of elem.
+        """Construct an DBXIException. If file is none, it tries to get the
+        file name by xml:base. Prints a "stack trace" of xml:base of elem.
 
         :param elem: Element that caused error
         :param message: Message to show. Can be None.
-        :param file: URL of source, can be None."""
+        :param file: URL of source, can be None.
+        """
 
         # Try xml:base if no file provided
         if file is None or len(file) == 0:
@@ -109,9 +110,10 @@ class DBXIException(Exception):
 
 
 def generate_id(elem):
-    """Generate a (per-document) unique ID for the XML element elem
+    """Generate a (per-document) unique ID for the XML element elem.
 
-    :return: str"""
+    :return: str
+    """
 
     # If you change this algorithm, you need to regenerate all testcase outputs
     path = bytes(elem.getroottree().getpath(elem), encoding="utf-8")
