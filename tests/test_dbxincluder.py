@@ -31,7 +31,10 @@ from dbxincluder.utils import DBXIException
 def test_main(capsys):
     """runs __main__.py"""
     with pytest.raises(SystemExit):
-        path = os.path.dirname(os.path.realpath(__file__)) + "/../src/dbxincluder/__main__.py"
+        path = (
+            os.path.dirname(os.path.realpath(__file__))
+            + "/../src/dbxincluder/__main__.py"
+        )
         exec(compile(open(path).read(), path, "exec"), {}, {"__name__": "__main__"})
 
 
@@ -43,7 +46,8 @@ def test_find_xmlcatalog():
         " openSUSE: libxml2-tools\n"
         " Ubuntu: libxml2-utils\n"
         " Fedora: libxml2"
-        )
+    )
+
 
 def test_version(capsys):
     assert dbxincluder.main(["", "--version"]) == 0
@@ -74,19 +78,21 @@ def test_stdin(capsys):
     assert outputxml == capsys.readouterr()[0]
 
 
-@pytest.mark.parametrize("func,configstr,expected", [
-    (is_, "", None),
-    (is_, "asdf=0", None),
-    (is_, "char=asdf", None),
-    (eq,  "char=0", ('char', 0, None)),
-    (eq,  "char=,320", ('char', 0, 320)),
-    (eq,  "line=0,3", ('line', 0, 3)),
-    (eq,  "line=1,", ('line', 1, None)),
-    # Integrity not validated, but parsed
-    (is_, "char=0;length=asdf", None),
-    (is_, "char=0;md5=0123456789abcdefDEADBEEFG00DBABE5", None),
-    (eq,  "char=0;length=10", ('char', 0, None)),
-    (eq,  "char=0;md5=0123456789abcdefDEADBEEFBADBABE5", ('char', 0, None)),
+@pytest.mark.parametrize(
+    "func,configstr,expected",
+    [
+        (is_, "", None),
+        (is_, "asdf=0", None),
+        (is_, "char=asdf", None),
+        (eq, "char=0", ("char", 0, None)),
+        (eq, "char=,320", ("char", 0, 320)),
+        (eq, "line=0,3", ("line", 0, 3)),
+        (eq, "line=1,", ("line", 1, None)),
+        # Integrity not validated, but parsed
+        (is_, "char=0;length=asdf", None),
+        (is_, "char=0;md5=0123456789abcdefDEADBEEFG00DBABE5", None),
+        (eq, "char=0;length=10", ("char", 0, None)),
+        (eq, "char=0;md5=0123456789abcdefDEADBEEFBADBABE5", ("char", 0, None)),
     ],
     ## If we want short names, enable the ids argument:
     # ids=('empty', 'somethingelse',
@@ -100,35 +106,60 @@ def test_rfc5147_parser(func, configstr, expected):
     assert func(dbxincluder.xinclude.parse_fragid_rfc5147(configstr), expected)
 
 
-@pytest.mark.parametrize("base_url,catalog", [
-    (os.path.curdir, ""),
-    ('file://' + os.path.abspath(os.path.curdir) + "/", ""),
-])
+@pytest.mark.parametrize(
+    "base_url,catalog",
+    [
+        (os.path.curdir, ""),
+        ("file://" + os.path.abspath(os.path.curdir) + "/", ""),
+    ],
+)
 def test_get_target(base_url, catalog):
     """Test dbxincluder.get_target"""
     # xi: namespace not looked at by get_target
     with pytest.raises(DBXIException):
-        dbxincluder.xinclude.get_target(lxml.etree.fromstring("<xinclude href='nonexistant'/>"), base_url, catalog)
+        dbxincluder.xinclude.get_target(
+            lxml.etree.fromstring("<xinclude href='nonexistant'/>"), base_url, catalog
+        )
 
 
 def test_get_target_withcatalog():
     """Test dbxincluder.get_target """
     # Try to load this file
     quine = "<xinclude href={0!r}/>".format(os.path.relpath(__file__))
-    assert dbxincluder.xinclude.get_target(lxml.etree.fromstring(quine), os.path.curdir+"/", "")[0] == open(__file__, "rb").read()
+    assert (
+        dbxincluder.xinclude.get_target(
+            lxml.etree.fromstring(quine), os.path.curdir + "/", ""
+        )[0]
+        == open(__file__, "rb").read()
+    )
 
 
 def test_with_catalog():
     """Test xml catalog usage"""
     location = os.path.relpath(os.path.dirname(os.path.realpath(__file__)))
-    assert dbxincluder.xinclude.get_target(lxml.etree.fromstring("<xinclude href='urn:x-dbxi:file.xml'/>"), os.path.curdir, location + "/cases/xmlcatalog.xml")[0] == open(location + "/cases/text.txt", "rb").read()
+    assert (
+        dbxincluder.xinclude.get_target(
+            lxml.etree.fromstring("<xinclude href='urn:x-dbxi:file.xml'/>"),
+            os.path.curdir,
+            location + "/cases/xmlcatalog.xml",
+        )[0]
+        == open(location + "/cases/text.txt", "rb").read()
+    )
 
 
 def test_xml(xmltestcase, capsys):
     """Runs one XML testcase"""
     filepart = xmltestcase[:-8]
-    outputxml = open(filepart + "out.xml", "r").read() if os.path.isfile(filepart + "out.xml") else ""
-    outputerr = open(filepart + "err.xml", "r").read() if os.path.isfile(filepart + "err.xml") else ""
+    outputxml = (
+        open(filepart + "out.xml", "r").read()
+        if os.path.isfile(filepart + "out.xml")
+        else ""
+    )
+    outputerr = (
+        open(filepart + "err.xml", "r").read()
+        if os.path.isfile(filepart + "err.xml")
+        else ""
+    )
     dbxincluder.main(["", os.path.relpath(xmltestcase)])
     out, err = capsys.readouterr()
     assert outputerr == err

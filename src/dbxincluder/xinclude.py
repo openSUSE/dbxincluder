@@ -62,13 +62,13 @@ def copy_attributes(elem, subtree):
         if qname.namespace is None and qname.localname == "set-xml-id":
             # Override/Remove xml:id on all top-level elements
             if value:
-                subtree.set(QN['xml:id'], value)
-            elif subtree.get(QN['xml:id']):
-                del subtree.attrib[QN['xml:id']]
-        elif qname.namespace == NS['local']:
+                subtree.set(QN["xml:id"], value)
+            elif subtree.get(QN["xml:id"]):
+                del subtree.attrib[QN["xml:id"]]
+        elif qname.namespace == NS["local"]:
             # Set attribute on all top-level elements
             subtree.set(qname.localname, value)
-        elif qname.namespace == NS['xml']:
+        elif qname.namespace == NS["xml"]:
             # Ignore xml: namespace
             continue
         elif qname.namespace is not None:
@@ -91,7 +91,9 @@ def get_target(elem, base_url, xmlcatalog=None, file=None):
     if href is None:
         url = href = file
         if href is None or elem.get("fragid") is None:
-            raise DBXIException(elem, "Missing href attribute and no fragid provided", file)
+            raise DBXIException(
+                elem, "Missing href attribute and no fragid provided", file
+            )
     else:
         url = lookup_url(href, xmlcatalog)
 
@@ -109,11 +111,16 @@ def get_target(elem, base_url, xmlcatalog=None, file=None):
         content = target.read()
         target.close()
     except urllib.error.URLError:
-        raise ResourceError(elem, "Could not get target {0!r}".format(url),
-                            file, severity="Warning")
+        raise ResourceError(
+            elem, "Could not get target {0!r}".format(url), file, severity="Warning"
+        )
     except IOError as ioex:  # pragma: no cover
-        raise ResourceError(elem, "Could not get target {0!r}: {1}".format(url, ioex),
-                            file, severity="Warning")
+        raise ResourceError(
+            elem,
+            "Could not get target {0!r}: {1}".format(url, ioex),
+            file,
+            severity="Warning",
+        )
 
     return content, url
 
@@ -129,7 +136,11 @@ def handle_xifallback(elem, xmlcatalog=None, file=None, xinclude_stack=None):
     :return: True if xi:fallback found"""
 
     # There can be only xi:fallback in a xi:include, so just use the first child
-    if len(elem) == 0 or not isinstance(elem.tag, str) or QName(elem[0]) != QN['xi:fallback']:
+    if (
+        len(elem) == 0
+        or not isinstance(elem.tag, str)
+        or QName(elem[0]) != QN["xi:fallback"]
+    ):
         return False
 
     # Save the tailing text
@@ -151,15 +162,22 @@ def validate_xinclude(elem, file):
     for attr in elem.keys():
         qname = QName(attr)
         if qname.namespace is None and qname.localname not in valid_attributes:
-            raise DBXIException(elem, "Invalid attribute {0!r}".format(str(qname)), file)
+            raise DBXIException(
+                elem, "Invalid attribute {0!r}".format(str(qname)), file
+            )
 
     parse = elem.get("parse", "xml")
     if parse not in ["xml", "text/plain"]:
-        raise DBXIException(elem, "Invalid value for parse: {0!r}. "
-                            "Expected 'xml' or 'text/plain'.".format(parse))
+        raise DBXIException(
+            elem,
+            "Invalid value for parse: {0!r}. "
+            "Expected 'xml' or 'text/plain'.".format(parse),
+        )
 
-    if len(elem) != 0 and (len(elem) > 1 or QName(elem[0]) != QN['xi:fallback']):
-        raise DBXIException(elem, "Only one xi:fallback can be a child of xi:include", file)
+    if len(elem) != 0 and (len(elem) > 1 or QName(elem[0]) != QN["xi:fallback"]):
+        raise DBXIException(
+            elem, "Only one xi:fallback can be a child of xi:include", file
+        )
 
 
 def parse_fragid_rfc5147(fragid):
@@ -169,7 +187,9 @@ def parse_fragid_rfc5147(fragid):
 
     # Validated, but ignored
     integrity = r";(?:length=(\d+)|md5=[0-9a-fA-F]{32})(?:,(\w+)?)?"
-    regex = re.compile(r"^(char|line)=(?:(?:(\d+)(?:,(\d+)?)?)|(?:,(\d+)))(?:" + integrity + r")?$")
+    regex = re.compile(
+        r"^(char|line)=(?:(?:(\d+)(?:,(\d+)?)?)|(?:,(\d+)))(?:" + integrity + r")?$"
+    )
 
     match = regex.match(fragid)
     if not match:
@@ -204,7 +224,7 @@ def text_fragid(content, fragid=None):
 
     rtype, start, end = parsed
 
-    if rtype == 'line':
+    if rtype == "line":
         split_content = content.splitlines()
         end = end if end is not None else len(split_content)
         end = min(end, len(split_content))
@@ -251,7 +271,9 @@ def handle_xinclude(elem, base_url, xmlcatalog=None, file=None, xinclude_stack=N
         print(str(rex), file=sys.stderr)
 
         if not handle_xifallback(elem, xmlcatalog, file, xinclude_stack):
-            raise DBXIException(elem, "Target not available and no fallback provided", file)
+            raise DBXIException(
+                elem, "Target not available and no fallback provided", file
+            )
 
         return
 
@@ -267,8 +289,16 @@ def handle_xinclude(elem, base_url, xmlcatalog=None, file=None, xinclude_stack=N
         content = "\n".join(str(content, encoding="utf-8").splitlines())
         content, success = text_fragid(content, fragid)
         if not success:
-            print(str(DBXIException(elem, "Invalid fragid for text/plain: {0!r}".format(fragid),
-                                    severity="Warning")), file=sys.stderr)
+            print(
+                str(
+                    DBXIException(
+                        elem,
+                        "Invalid fragid for text/plain: {0!r}".format(fragid),
+                        severity="Warning",
+                    )
+                ),
+                file=sys.stderr,
+            )
 
         prev = elem.getprevious()
         if prev is not None:
@@ -291,7 +321,9 @@ def handle_xinclude(elem, base_url, xmlcatalog=None, file=None, xinclude_stack=N
     try:
         subtree = fromstring(content, base_url=url)
     except (XMLSyntaxError, UnicodeDecodeError) as exc:
-        raise DBXIException(elem, "Could not parse {0!r}: {1}".format(url, str(exc)), file)
+        raise DBXIException(
+            elem, "Could not parse {0!r}: {1}".format(url, str(exc)), file
+        )
 
     # Get subdocument
     if fragid is not None:
@@ -301,9 +333,13 @@ def handle_xinclude(elem, base_url, xmlcatalog=None, file=None, xinclude_stack=N
             # Get xml:base of subdocument
             url = get_inherited_attribute(subtree, "xml:base", url)[0]
         else:
-            raise DBXIException(elem, file=file,
-                                message="Could not find fragid {0!r} in target {1!r}"
-                                .format(fragid, url))
+            raise DBXIException(
+                elem,
+                file=file,
+                message="Could not find fragid {0!r} in target {1!r}".format(
+                    fragid, url
+                ),
+            )
 
     # Copy certain attributes from xi:include to the target tree
     copy_attributes(elem, subtree)
@@ -313,7 +349,9 @@ def handle_xinclude(elem, base_url, xmlcatalog=None, file=None, xinclude_stack=N
     # Replace XInclude by subtree
     elem.getparent().replace(elem, subtree)
 
-    process_xinclude(subtree, url, xmlcatalog, url, elem.sourceline, xinclude_stack + [xinclude_id])
+    process_xinclude(
+        subtree, url, xmlcatalog, url, elem.sourceline, xinclude_stack + [xinclude_id]
+    )
 
 
 def process_subtree(tree, base_url, xmlcatalog, file, xinclude_stack):
@@ -341,7 +379,7 @@ def flatten_subtree(tree):
             i += 1
             continue
 
-        if QName(elem) == QN['xi:fallback']:
+        if QName(elem) == QN["xi:fallback"]:
             # Copy tail
             if len(elem):
                 append_to_tail(elem[-1], elem.tail)
@@ -365,8 +403,14 @@ def flatten_subtree(tree):
             flatten_subtree(elem)
 
 
-def process_xinclude(tree, base_url=None, xmlcatalog=None, file=None,
-                     parent_line=None, xinclude_stack=None):
+def process_xinclude(
+    tree,
+    base_url=None,
+    xmlcatalog=None,
+    file=None,
+    parent_line=None,
+    xinclude_stack=None,
+):
     """Processes an ElementTree:
     - Search and process xi:include
     - Add xml:base (=source) to the root element
@@ -382,11 +426,11 @@ def process_xinclude(tree, base_url=None, xmlcatalog=None, file=None,
     :param parent_line: line in the document where the source xi:include is
     :param xinclude_stack: Internal"""
 
-    if base_url and not tree.get(QN['xml:base']):
-        tree.set(QN['xml:base'], base_url)
+    if base_url and not tree.get(QN["xml:base"]):
+        tree.set(QN["xml:base"], base_url)
 
     if parent_line is not None:
-        tree.set(QN['dbxi:parentline'], str(parent_line))
+        tree.set(QN["dbxi:parentline"], str(parent_line))
 
     process_subtree(tree, base_url, xmlcatalog, file, xinclude_stack)
 

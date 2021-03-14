@@ -34,7 +34,9 @@ def xmlcatalog_lookup(url, catalog):
     catalog = catalog if catalog else "/etc/xml/catalog"
 
     try:
-        return subprocess.check_output(["xmlcatalog", catalog, url], universal_newlines=True)
+        return subprocess.check_output(
+            ["xmlcatalog", catalog, url], universal_newlines=True
+        )
     except subprocess.CalledProcessError:
         return None
 

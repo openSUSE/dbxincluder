@@ -24,21 +24,25 @@ from lxml.etree import QName
 
 
 # Commonly used XML namespaces
-NS = {'xml': "http://www.w3.org/XML/1998/namespace",
-      'local': "http://www.w3.org/2001/XInclude/local-attributes",
-      'xi': "http://www.w3.org/2001/XInclude",
-      'trans': "http://docbook.org/ns/transclude",
-      'db': "http://docbook.org/ns/docbook",
-      # Custom namespace for temporary attributes
-      'dbxi': "dbxincluder"}
+NS = {
+    "xml": "http://www.w3.org/XML/1998/namespace",
+    "local": "http://www.w3.org/2001/XInclude/local-attributes",
+    "xi": "http://www.w3.org/2001/XInclude",
+    "trans": "http://docbook.org/ns/transclude",
+    "db": "http://docbook.org/ns/docbook",
+    # Custom namespace for temporary attributes
+    "dbxi": "dbxincluder",
+}
 
 # Commonly used attributes
-QN = {'xml:id': QName(NS['xml'], "id"),
-      'xml:base': QName(NS['xml'], "base"),
-      'xi:include': QName(NS['xi'], "include"),
-      'xi:fallback': QName(NS['xi'], "fallback"),
-      'dbxi:newid': QName(NS['dbxi'], "newid"),
-      'dbxi:parentline': QName(NS['dbxi'], "line")}
+QN = {
+    "xml:id": QName(NS["xml"], "id"),
+    "xml:base": QName(NS["xml"], "base"),
+    "xi:include": QName(NS["xi"], "include"),
+    "xi:fallback": QName(NS["xi"], "fallback"),
+    "dbxi:newid": QName(NS["dbxi"], "newid"),
+    "dbxi:parentline": QName(NS["dbxi"], "line"),
+}
 
 
 def get_inherited_attribute(elem, attribute, default=None):
@@ -48,12 +52,11 @@ def get_inherited_attribute(elem, attribute, default=None):
     :param attribute: The name of the attribute
     :return: Tuple of (str, None or default, element with value)"""
 
-    values = elem.xpath("ancestor-or-self::*[@{0}][1]".format(attribute),
-                        namespaces=NS)
+    values = elem.xpath("ancestor-or-self::*[@{0}][1]".format(attribute), namespaces=NS)
     if len(values) == 0:
         return (default, None)
 
-    return (values[0].xpath("@"+attribute, namespaces=NS)[0], values[0])
+    return (values[0].xpath("@" + attribute, namespaces=NS)[0], values[0])
 
 
 def create_xinclude_stack(elem):
@@ -69,8 +72,8 @@ def create_xinclude_stack(elem):
     if len(parent_elems) < 2:
         return ""
 
-    xml_bases = [elem.get(QN['xml:base'], "<unknown>") for elem in parent_elems][:-1]
-    lines = [elem.get(QN['dbxi:parentline']) for elem in parent_elems][1:]
+    xml_bases = [elem.get(QN["xml:base"], "<unknown>") for elem in parent_elems][:-1]
+    lines = [elem.get(QN["dbxi:parentline"]) for elem in parent_elems][1:]
 
     result = [""]
     for filename, line in zip(xml_bases, lines):
@@ -82,6 +85,7 @@ def create_xinclude_stack(elem):
 
 class DBXIException(Exception):
     """Exception type for XML errors"""
+
     def __init__(self, elem, message=None, file=None, severity="Error"):
         """Construct an DBXIException.
         If file is none, it tries to get the file name by xml:base.
@@ -98,7 +102,9 @@ class DBXIException(Exception):
         stack = create_xinclude_stack(elem)
 
         message = ": " + message if message else ""
-        self.error = "{0} at {1}:{2}{3}{4}".format(severity, file, elem.sourceline, message, stack)
+        self.error = "{0} at {1}:{2}{3}{4}".format(
+            severity, file, elem.sourceline, message, stack
+        )
         super().__init__(self.error)
 
 

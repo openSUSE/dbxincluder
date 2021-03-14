@@ -48,7 +48,9 @@ def main(argv=None):
     argv = argv if argv else sys.argv
 
     try:
-        opts = docopt.docopt(__doc__, argv[1:], help=True, version="dbxincluder " + __version__)
+        opts = docopt.docopt(
+            __doc__, argv[1:], help=True, version="dbxincluder " + __version__
+        )
     except SystemExit as exc:
         sys.stderr.write(str(exc) + "\n")
         return 0 if exc.code is None else 1
@@ -75,8 +77,7 @@ def main(argv=None):
     # Process XML and write output
     try:
         docbook.process_tree(tree.getroot(), base_url, opts["-c"], path)
-        outfile.write(lxml.etree.tostring(tree, encoding='unicode',
-                                          pretty_print=True))
+        outfile.write(lxml.etree.tostring(tree, encoding="unicode", pretty_print=True))
     except utils.DBXIException as exc:
         sys.stderr.write(str(exc) + "\n")
         return 1
