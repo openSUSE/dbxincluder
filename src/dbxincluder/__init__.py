@@ -32,23 +32,27 @@ Options:
 
 """
 
-import docopt
 import sys
+
+import docopt
 import lxml.etree
 
-from . import docbook
-from . import utils
+from . import docbook, utils
 
 __version__ = "0.10.0"
 
 
 def main(argv=None):
     """Default entry point.
-    Parses argv (sys.argv if None) and does stuff."""
+
+    Parses argv (sys.argv if None) and does stuff.
+    """
     argv = argv if argv else sys.argv
 
     try:
-        opts = docopt.docopt(__doc__, argv[1:], help=True, version="dbxincluder " + __version__)
+        opts = docopt.docopt(
+            __doc__, argv[1:], help=True, version="dbxincluder " + __version__
+        )
     except SystemExit as exc:
         sys.stderr.write(str(exc) + "\n")
         return 0 if exc.code is None else 1
@@ -75,8 +79,7 @@ def main(argv=None):
     # Process XML and write output
     try:
         docbook.process_tree(tree.getroot(), base_url, opts["-c"], path)
-        outfile.write(lxml.etree.tostring(tree, encoding='unicode',
-                                          pretty_print=True))
+        outfile.write(lxml.etree.tostring(tree, encoding="unicode", pretty_print=True))
     except utils.DBXIException as exc:
         sys.stderr.write(str(exc) + "\n")
         return 1

@@ -16,33 +16,37 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
-"""xmlcat module: Provide xml-catalog lookups"""
+"""xmlcat module: Provide xml-catalog lookups."""
 
 import subprocess
-
 
 XMLCAT_CACHE = {}
 
 
 def xmlcatalog_lookup(url, catalog):
-    """Run the xmlcatalog tool to lookup url in catalog.
-    The code for xml catalogs in libxml2 is not exposed by lxml
-    and python3 binding for libxml2 are not commonly available.
+    """Run the xmlcatalog tool to lookup url in catalog. The code for xml
+    catalogs in libxml2 is not exposed by lxml and python3 binding for libxml2
+    are not commonly available.
 
-    :return: Either None on failure or a URL"""
+    :return: Either None on failure or a URL
+    """
 
     catalog = catalog if catalog else "/etc/xml/catalog"
 
     try:
-        return subprocess.check_output(["xmlcatalog", catalog, url], universal_newlines=True)
+        return subprocess.check_output(
+            ["xmlcatalog", catalog, url], universal_newlines=True
+        )
     except subprocess.CalledProcessError:
         return None
 
 
 def lookup_url(url, catalog):
     """Looks up url in the xml catalog.
+
     Warning: This caches lookups, so if you lookup the same URL for different catalogs,
-    the result will be the same."""
+    the result will be the same.
+    """
 
     try:
         return XMLCAT_CACHE[url]

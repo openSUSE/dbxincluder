@@ -16,10 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with dbxincluder. If not, see <http://www.gnu.org/licenses/>.
 
-"""This file is responsible for getting the invocation
-   as module working: python3 -m dbxincluder"""
+"""This file is responsible for getting the invocation as module working:
+python3 -m dbxincluder."""
 
 import sys
+
 import dbxincluder
 
 if __name__ == "__main__":
