@@ -20,6 +20,7 @@
 python3 -m dbxincluder."""
 
 import sys
+
 import dbxincluder
 
 if __name__ == "__main__":

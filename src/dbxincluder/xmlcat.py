@@ -20,7 +20,6 @@
 
 import subprocess
 
-
 XMLCAT_CACHE = {}
 
 

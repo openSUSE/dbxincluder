@@ -22,7 +22,6 @@ import base64
 
 from lxml.etree import QName
 
-
 # Commonly used XML namespaces
 NS = {
     "xml": "http://www.w3.org/XML/1998/namespace",

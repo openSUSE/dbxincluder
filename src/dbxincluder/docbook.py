@@ -19,10 +19,10 @@
 """Handle the DocBook specific part of transclusion."""
 
 import lxml.etree
-
 from lxml.etree import QName
+
 from . import xinclude
-from .utils import DBXIException, NS, QN, generate_id, get_inherited_attribute
+from .utils import NS, QN, DBXIException, generate_id, get_inherited_attribute
 
 
 def check_linkscope(elem, linkscope):

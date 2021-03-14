@@ -23,8 +23,9 @@ import re
 import sys
 import urllib.request
 
-from lxml.etree import fromstring, QName, XMLSyntaxError
-from .utils import DBXIException, NS, QN, get_inherited_attribute
+from lxml.etree import QName, XMLSyntaxError, fromstring
+
+from .utils import NS, QN, DBXIException, get_inherited_attribute
 from .xmlcat import lookup_url
 
 

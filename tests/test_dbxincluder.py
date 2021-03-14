@@ -17,12 +17,13 @@
 # along with dbxincluder. If not, see <http://www.gnu.org/licenses/>.
 
 import os.path
-from operator import is_, eq
 import shutil
 import sys
-import pytest
+from operator import eq, is_
 
 import lxml.etree
+import pytest
+
 import dbxincluder
 import dbxincluder.xinclude
 from dbxincluder.utils import DBXIException

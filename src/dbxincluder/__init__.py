@@ -32,12 +32,12 @@ Options:
 
 """
 
-import docopt
 import sys
+
+import docopt
 import lxml.etree
 
-from . import docbook
-from . import utils
+from . import docbook, utils
 
 __version__ = "0.10.0"
 
