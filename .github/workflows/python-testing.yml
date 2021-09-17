@@ -1,5 +1,5 @@
 ---
-name: Python CI
+name: CI
 
 on:
   push:
